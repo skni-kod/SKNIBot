@@ -61,6 +61,7 @@
     <Compile Include="Core\CommandsGroupAttribute.cs" />
     <Compile Include="Core\Commands\InuCommand.cs" />
     <Compile Include="Core\Commands\JSCommand.cs" />
+    <Compile Include="Core\Commands\LennyCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
     <Compile Include="Core\Settings\DogContainer.cs" />
     <Compile Include="Core\Settings\NekoContainer.cs" />
