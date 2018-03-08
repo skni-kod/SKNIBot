@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System.Net;
-using SKNIBot.Core.Settings;
-using Newtonsoft.Json;
 
 namespace SKNIBot.Core.Commands
 {
@@ -15,11 +12,8 @@ namespace SKNIBot.Core.Commands
         [Aliases("kot", "cat")]
         public async Task Neko(CommandContext ctx)
         {
-            var client = new WebClient();
-            var cat = client.DownloadString("http://random.cat/meow");
-            NekoContainer nekoContainer = JsonConvert.DeserializeObject<NekoContainer>(cat);
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"nekoContainer");
+            await ctx.RespondAsync($"Cute cat.jpg");
         }
     }
 }
