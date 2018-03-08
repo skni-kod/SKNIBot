@@ -13,7 +13,7 @@ namespace SKNIBot.Core.Commands
     public class HttpNekoCommand
     {
         [Command("httpneko")]
-        [Description("Display http codes using cats.")]
+        [Description("Składnia to '!httpneko {{kod}}' lub '!httpcode {{kod}}'. Napisz '!httpneko kody' lub '!httpcode kody' aby otrzymać listę dostępnych kodów.")]
         [Aliases("httpcode")]
         public async Task HttpNeko(CommandContext ctx)
         {
@@ -23,7 +23,7 @@ namespace SKNIBot.Core.Commands
                 await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync($"Składnia to '!httpneko {{kod}}' lub '!httpcode {{kod}}'. Napisz '!httpneko kody' lub '!httpcode kody' aby otrzymać listę dostępnych kodów.");
             }
-            //Jeżeli podano kod sprawdzamy czy można otrzymać takiego kota
+            //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego kota
             else if(HttpNekoConst.Codes.Contains(ctx.Message.Content.Split(' ')[1]))
             {
                 var client = new WebClient();
