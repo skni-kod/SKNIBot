@@ -11,9 +11,9 @@ namespace SKNIBot.Core.Commands
     [CommandsGroup]
     public class InuCommand
     {
-        [Command("inu")]
+        [Command("pies")]
         [Description("Display some cute dogs.")]
-        [Aliases("pies", "dog")]
+        [Aliases("inu", "dog")]
         public async Task Inu(CommandContext ctx)
         {
             var client = new WebClient();

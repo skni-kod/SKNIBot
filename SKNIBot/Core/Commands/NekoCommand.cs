@@ -11,9 +11,9 @@ namespace SKNIBot.Core.Commands
     [CommandsGroup]
     public class NekoCommand
     {
-        [Command("neko")]
+        [Command("kot")]
         [Description("Display some cute cat.")]
-        [Aliases("kot", "cat")]
+        [Aliases("neko", "cat")]
         public async Task Neko(CommandContext ctx)
         { 
             var client = new WebClient();

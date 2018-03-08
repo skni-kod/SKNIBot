@@ -12,9 +12,9 @@ namespace SKNIBot.Core.Commands
     [CommandsGroup]
     public class HttpNekoCommand
     {
-        [Command("httpneko")]
+        [Command("httpkod")]
         [Description("Składnia to '!httpneko {{kod}}' lub '!httpcode {{kod}}'. Napisz '!httpneko kody' lub '!httpcode kody' aby otrzymać listę dostępnych kodów.")]
-        [Aliases("httpcode")]
+        [Aliases("httpcode", "httpneko")]
         public async Task HttpNeko(CommandContext ctx)
         {
             //Jeżeli długość jest jeden nie podano kodu
