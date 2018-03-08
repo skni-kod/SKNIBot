@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands
             var client = new WebClient();
             var dog = client.DownloadString("https://random.dog/woof");         
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"Cute " + dog);
+            await ctx.RespondAsync($"Cute " + " https://random.dog/" + dog);
         }
     }
 }
