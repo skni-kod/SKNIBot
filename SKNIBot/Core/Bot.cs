@@ -1,4 +1,7 @@
-﻿using DSharpPlus;
+﻿using System.Linq;
+using System.Reflection;
+using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core
@@ -6,15 +9,17 @@ namespace SKNIBot.Core
     public class Bot
     {
         private DiscordClient Client { get; set; }
+        private CommandsNextModule Commands { get; set; }
 
         public void Run()
         {
-            Init();
+            Connect();
+            RegisterCommands();
         }
 
-        private async void Init()
+        private async void Connect()
         {
-            var config = new DiscordConfiguration
+            var connectionConfig = new DiscordConfiguration
             {
                 Token = SettingsLoader.Container.Token,
                 TokenType = TokenType.Bot,
@@ -24,8 +29,36 @@ namespace SKNIBot.Core
                 UseInternalLogHandler = true
             };
 
-            Client = new DiscordClient(config);
+            Client = new DiscordClient(connectionConfig);
+
+            var commandsConfig = new CommandsNextConfiguration
+            {
+                StringPrefix = SettingsLoader.Container.Prefix,
+                EnableDms = true,
+                EnableMentionPrefix = true
+            };
+
+            Commands = Client.UseCommandsNext(commandsConfig);
             await Client.ConnectAsync();
+        }
+
+        private void RegisterCommands()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyTypes = assembly.GetTypes();
+
+            var registerCommandsMethod = Commands.GetType().GetMethods()
+                .FirstOrDefault(p => p.Name == "RegisterCommands" && p.IsGenericMethod);
+
+            foreach (var type in assemblyTypes)
+            {
+                var attributes = type.GetCustomAttributes();
+                if (attributes.Any(p => p.GetType() == typeof(CommandsGroupAttribute)))
+                {
+                    var genericRegisterCommandMethod = registerCommandsMethod.MakeGenericMethod(type);
+                    genericRegisterCommandMethod.Invoke(Commands, null);
+                }
+            }
         }
     }
 }

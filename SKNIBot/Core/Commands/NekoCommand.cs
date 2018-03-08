@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 namespace SKNIBot.Core.Commands
 {
+    [CommandsGroup]
     public class NekoCommand
     {
         [Command("neko")]
