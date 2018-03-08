@@ -8,7 +8,7 @@ namespace SKNIBot.Core.Commands {
     public class JSCommand {
         [Command("js")]
         [Description("Just Javascript.")]
-        //[Aliases("pies", "dog")]
+        [Aliases("javascript")]
         public async Task JS(CommandContext ctx) {
           
             await ctx.TriggerTypingAsync();
