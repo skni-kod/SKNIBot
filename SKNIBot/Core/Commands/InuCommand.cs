@@ -2,6 +2,8 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Net;
+using Newtonsoft.Json;
+using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core.Commands
 {
@@ -14,9 +16,10 @@ namespace SKNIBot.Core.Commands
         public async Task Inu(CommandContext ctx)
         {
             var client = new WebClient();
-            var dog = client.DownloadString("https://random.dog/woof");
+            var dog = client.DownloadString("https://random.dog/woof.json");
+            DogContainer dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"Cute " + " https://random.dog/" + dog);
+            await ctx.RespondAsync($"Cute " + " https://random.dog/" + dogContainer.Url);
         }
     }
 }
