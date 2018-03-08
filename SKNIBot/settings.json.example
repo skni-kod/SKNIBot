@@ -1,3 +1,4 @@
 ﻿{
-  "token": "secret-value"
+  "token": "secret-value",
+  "prefix": "!"
 }
