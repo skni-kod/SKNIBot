@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Commands
             if(ctx.Message.Content.Split(' ').Length == 1)
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.RespondAsync($"Składnia to '!httpneko *kod*' lub '!httpcode *kod*'");
+                await ctx.RespondAsync($"Składnia to '!httpneko {{kod}}' lub '!httpcode {{kod}}'");
             }
             else
             {
