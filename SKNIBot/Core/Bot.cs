@@ -2,6 +2,7 @@
 using System.Reflection;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Net.WebSocket;
 using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core
@@ -30,6 +31,7 @@ namespace SKNIBot.Core
             };
 
             Client = new DiscordClient(connectionConfig);
+            Client.SetWebSocketClient<WebSocket4NetClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
