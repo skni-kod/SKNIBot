@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands
         public async Task Inu(CommandContext ctx)
         {
             var client = new WebClient();
-            var dog = client.DownloadString("https://random.dog/woof");         
+            var dog = client.DownloadString("https://random.dog/woof");
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync($"Cute " + " https://random.dog/" + dog);
         }
