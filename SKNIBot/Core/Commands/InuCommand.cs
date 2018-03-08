@@ -17,8 +17,15 @@ namespace SKNIBot.Core.Commands
         public async Task Inu(CommandContext ctx)
         {
             var client = new WebClient();
-            var dog = client.DownloadString("https://random.dog/woof.json");
-            DogContainer dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
+            string dog;
+            DogContainer dogContainer;
+            do
+            {
+                dog = client.DownloadString("https://random.dog/woof.json");
+                dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
+
+            }
+            while (dogContainer.Url.Split('.')[dogContainer.Url.Split('.').Length - 1] != "jpg");
             var dogPicture = client.DownloadData(dogContainer.Url);
             Stream stream = new MemoryStream(dogPicture);
             await ctx.TriggerTypingAsync();
