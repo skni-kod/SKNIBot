@@ -65,6 +65,7 @@
     <Compile Include="Core\Commands\LennyCommand.cs" />
     <Compile Include="Core\Commands\MikuAllStarsCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
+    <Compile Include="Core\Const\HttpNekoConst.cs" />
     <Compile Include="Core\Settings\DogContainer.cs" />
     <Compile Include="Core\Settings\NekoContainer.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
