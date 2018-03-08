@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands
             var dog = client.DownloadString("https://random.dog/woof.json");
             DogContainer dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"Cute " + " https://random.dog/" + dogContainer.Url);
+            await ctx.RespondAsync($"" + dogContainer.Url);
         }
     }
 }
