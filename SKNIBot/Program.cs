@@ -1,4 +1,5 @@
-﻿using SKNIBot.Core;
+﻿using System;
+using SKNIBot.Core;
 
 namespace SKNIBot
 {
@@ -7,6 +8,7 @@ namespace SKNIBot
         public static void Main(string[] args)
         {
             new Bot().Run();
+            while (Console.ReadLine() != "quit");
         }
     }
 }
