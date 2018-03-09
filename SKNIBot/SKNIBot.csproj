@@ -64,6 +64,9 @@
     <Compile Include="Core\Commands\MikuAllStarsCommand.cs" />
     <Compile Include="Core\Commands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
+    <Compile Include="Core\Commands\SpaceX\FlightData.cs" />
+    <Compile Include="Core\Commands\SpaceX\LinksContainer.cs" />
+    <Compile Include="Core\Commands\SpaceX\SpaceXCommand.cs" />
     <Compile Include="Core\Const\HttpNekoConst.cs" />
     <Compile Include="Core\Settings\DogContainer.cs" />
     <Compile Include="Core\Settings\NekoContainer.cs" />
