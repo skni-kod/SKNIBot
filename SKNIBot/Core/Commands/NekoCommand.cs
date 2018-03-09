@@ -15,12 +15,13 @@ namespace SKNIBot.Core.Commands
         [Description("Display some cute cat.")]
         [Aliases("neko", "cat")]
         public async Task Neko(CommandContext ctx)
-        { 
+        {
             var client = new WebClient();
             var cat = client.DownloadString("http://random.cat/meow");
-            NekoContainer nekoContainer = JsonConvert.DeserializeObject<NekoContainer>(cat);            
+            var nekoContainer = JsonConvert.DeserializeObject<NekoContainer>(cat);
             var catPicture = client.DownloadData(nekoContainer.File);
-            Stream stream = new MemoryStream(catPicture);
+            var stream = new MemoryStream(catPicture);
+
             await ctx.TriggerTypingAsync();
             await ctx.RespondWithFileAsync(stream, "neko.jpg");
         }

@@ -12,7 +12,7 @@ namespace SKNIBot.Core.Commands
         public async Task MikuAllStars(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync("https://www.youtube.com/watch?v=vLEs8iOFkAU"); ;
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=vLEs8iOFkAU");
         }
     }
 }

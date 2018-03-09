@@ -15,7 +15,7 @@ namespace SKNIBot.Core.Commands
         public async Task Lenny(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"( ͡° ͜ʖ ͡°)");
+            await ctx.RespondAsync("( ͡° ͜ʖ ͡°)");
         }
     }
 }

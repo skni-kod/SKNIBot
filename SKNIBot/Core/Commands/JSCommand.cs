@@ -3,16 +3,18 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Net;
 
-namespace SKNIBot.Core.Commands {
+namespace SKNIBot.Core.Commands
+{
     [CommandsGroup]
-    public class JSCommand {
+    public class JSCommand
+    {
         [Command("js")]
         [Description("Just Javascript.")]
         [Aliases("javascript")]
-        public async Task JS(CommandContext ctx) {
-          
+        public async Task JS(CommandContext ctx)
+        {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($"JavaScript ssie");
+            await ctx.RespondAsync("JavaScript ssie");
         }
     }
 }
