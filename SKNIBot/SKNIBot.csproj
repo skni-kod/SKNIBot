@@ -62,6 +62,7 @@
     <Compile Include="Core\Commands\JSCommand.cs" />
     <Compile Include="Core\Commands\LennyCommand.cs" />
     <Compile Include="Core\Commands\MikuAllStarsCommand.cs" />
+    <Compile Include="Core\Commands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
     <Compile Include="Core\Const\HttpNekoConst.cs" />
     <Compile Include="Core\Settings\DogContainer.cs" />
@@ -73,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="montypython.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
