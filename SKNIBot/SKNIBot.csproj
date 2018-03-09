@@ -57,16 +57,16 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
-    <Compile Include="Core\Commands\ChocolateCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\ChocolateCommand.cs" />
     <Compile Include="Core\Commands\HiCommand.cs" />
     <Compile Include="Core\Commands\HttpInuCommand.cs" />
     <Compile Include="Core\Commands\HttpNekoCommand.cs" />
     <Compile Include="Core\Commands\InuCommand.cs" />
     <Compile Include="Core\Commands\JSCommand.cs" />
-    <Compile Include="Core\Commands\KusokCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\KusokCommand.cs" />
     <Compile Include="Core\Commands\LennyCommand.cs" />
-    <Compile Include="Core\Commands\MikuAllStarsCommand.cs" />
-    <Compile Include="Core\Commands\MontyPythonCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\MikuAllStarsCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />

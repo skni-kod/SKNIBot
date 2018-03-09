@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.YouTubeCommands
 {
     [CommandsGroup]
     public class MontyPythonCommand
