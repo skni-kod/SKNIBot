@@ -16,7 +16,8 @@ namespace SKNIBot.Core.Commands.SpaceX
         private Random _random;
 
         private const string PastLaunchesURL = "https://api.spacexdata.com/v2/launches";
-        private const string UpcomingLaunchesURL = "https://api.spacexdata.com/v2/upcoming";
+        private const string UpcomingLaunchesURL = "https://api.spacexdata.com/v2/launches/upcoming";
+        private const string FHLaunchURL = "https://api.spacexdata.com/v2/launches?rocket_id=falconheavy";
 
         public SpaceXCommand()
         {
@@ -45,6 +46,12 @@ namespace SKNIBot.Core.Commands.SpaceX
                         await SendUpcomingFlight(ctx);
                         break;
                     }
+
+                    case "heavy":
+                    {
+                        await SendFHFlight(ctx);
+                        break;
+                    }
                 }
             }
         }
@@ -58,27 +65,9 @@ namespace SKNIBot.Core.Commands.SpaceX
             var flightIndex = _random.Next(0, flights.Count);
 
             var flightToDisplay = flights[flightIndex];
+            var response = GetResponse(flightToDisplay);
 
-            var responseBuilder = new StringBuilder();
-            responseBuilder.Append($"**{flightToDisplay.Rocket.Rocket_Name} {flightToDisplay.Rocket.Rocket_Type} ({flightToDisplay.Launch_Date_UTC})**\r\n");
-            responseBuilder.Append("\r\n");
-
-            responseBuilder.Append("**Payloads:**\r\n");
-            foreach (var payload in flightToDisplay.Rocket.Second_Stage.Payloads)
-            {
-                responseBuilder.Append($"{payload.Payload_ID} ({payload.Payload_Mass_KG} kg) to {payload.Orbit} orbit\r\n");
-            }
-
-            if (flightToDisplay.Details != null)
-            {
-                responseBuilder.Append("\r\n");
-                responseBuilder.Append($"{flightToDisplay.Details}\r\n");
-            }
-
-            responseBuilder.Append("\r\n");
-            responseBuilder.Append($"{flightToDisplay.Links.Video_Link}\r\n");
-
-            await ctx.RespondAsync(responseBuilder.ToString());
+            await ctx.RespondAsync(response);
         }
 
         private async Task SendUpcomingFlight(CommandContext ctx)
@@ -87,30 +76,48 @@ namespace SKNIBot.Core.Commands.SpaceX
 
             var upcomingLaunches = client.DownloadString(UpcomingLaunchesURL);
             var flights = JsonConvert.DeserializeObject<List<FlightData>>(upcomingLaunches);
-            var flightToDisplay = flights[0];
 
+            var flightToDisplay = flights[0];
+            var response = GetResponse(flightToDisplay);
+
+            await ctx.RespondAsync(response);
+        }
+
+        private async Task SendFHFlight(CommandContext ctx)
+        {
+            var client = new WebClient();
+
+            var upcomingLaunches = client.DownloadString(FHLaunchURL);
+            var flights = JsonConvert.DeserializeObject<List<FlightData>>(upcomingLaunches);
+
+            var flightToDisplay = flights[0];
+            var response = GetResponse(flightToDisplay);
+
+            await ctx.RespondAsync(response);
+        }
+
+        private string GetResponse(FlightData data)
+        {
             var responseBuilder = new StringBuilder();
-            responseBuilder.Append($"**{flightToDisplay.Rocket.Rocket_Name} {flightToDisplay.Rocket.Rocket_Type} ({flightToDisplay.Launch_Date_UTC})**\r\n");
+            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({data.Launch_Date_UTC})**\r\n");
             responseBuilder.Append("\r\n");
 
             responseBuilder.Append("**Payloads:**\r\n");
-            foreach (var payload in flightToDisplay.Rocket.Second_Stage.Payloads)
+            foreach (var payload in data.Rocket.Second_Stage.Payloads)
             {
                 responseBuilder.Append($"{payload.Payload_ID} ({payload.Payload_Mass_KG} kg) to {payload.Orbit} orbit\r\n");
             }
 
-            if (flightToDisplay.Details != null)
+            if (data.Details != null)
             {
                 responseBuilder.Append("\r\n");
-                responseBuilder.Append($"{flightToDisplay.Details}\r\n");
+                responseBuilder.Append($"{data.Details}\r\n");
             }
 
             responseBuilder.Append("\r\n");
-            responseBuilder.Append(flightToDisplay.Links.Video_Link != null
-                ? $"{flightToDisplay.Links.Video_Link}\r\n"
-                : "Video not available yet.\r\n");
+            responseBuilder.Append($"{data.Links.Video_Link}\r\n");
 
-            await ctx.RespondAsync(responseBuilder.ToString());
+            return responseBuilder.ToString();
         }
     }
 }
