@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.EventArgs;
 using DSharpPlus.Net.WebSocket;
 using SKNIBot.Core.Settings;
 
@@ -41,6 +44,9 @@ namespace SKNIBot.Core
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+            Commands.CommandExecuted += Commands_CommandExecuted;
+            Commands.CommandErrored += Commands_CommandErrored;
+
             await Client.ConnectAsync();
         }
 
@@ -61,6 +67,21 @@ namespace SKNIBot.Core
                     genericRegisterCommandMethod.Invoke(Commands, null);
                 }
             }
+        }
+
+        private Task Commands_CommandExecuted(CommandExecutionEventArgs e)
+        {
+            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "SKNI Bot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
+            return Task.FromResult(0);
+        }
+
+        private Task Commands_CommandErrored(CommandErrorEventArgs e)
+        {
+            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "ExampleBot",
+                $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' " +
+                $"but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
+
+            return Task.FromResult(0);
         }
     }
 }
