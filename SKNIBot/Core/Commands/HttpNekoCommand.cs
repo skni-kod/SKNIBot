@@ -10,16 +10,16 @@ namespace SKNIBot.Core.Commands
     [CommandsGroup]
     public class HttpNekoCommand
     {
-        [Command("httpkod")]
-        [Description("Składnia to '!httpneko {{kod}}' lub '!httpcode {{kod}}'. Napisz '!httpneko kody' lub '!httpcode kody' aby otrzymać listę dostępnych kodów.")]
-        [Aliases("httpcode", "httpneko")]
+        [Command("httpkot")]
+        [Description("Składnia to '!httpkot {kod}', '!httpneko {kod}' lub '!httpcat {kod}'. Napisz '!httpkot kody', '!httpneko kody' lub '!httpcode kody' aby otrzymać listę dostępnych kodów.")]
+        [Aliases("httpneko", "httpcat")]
         public async Task HttpNeko(CommandContext ctx)
         {
             //Jeżeli długość jest jeden nie podano kodu
             if(ctx.Message.Content.Split(' ').Length == 1)
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.RespondAsync("Składnia to \'!httpneko {kod}\' lub \'!httpcode {kod}\'. Napisz \'!httpneko kody\' lub \'!httpcode kody\' aby otrzymać listę dostępnych kodów.");
+                await ctx.RespondAsync("Składnia to \'!httpkot {kod}\', \'!httpneko {kod}\' lub \'!httpcode {kod}\'. Napisz \'!httpkot kody\', \'!httpneko kody\' lub \'!httpcode kody\' aby otrzymać listę dostępnych kodów.");
             }
             //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego kota
             else if(HttpNekoConst.Codes.Contains(ctx.Message.Content.Split(' ')[1]))
