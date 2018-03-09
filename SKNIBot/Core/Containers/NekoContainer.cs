@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Settings
+﻿namespace SKNIBot.Core.Containers
 {
     public class NekoContainer
     {

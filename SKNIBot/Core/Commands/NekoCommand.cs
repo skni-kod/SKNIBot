@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
-using SKNIBot.Core.Settings;
+using SKNIBot.Core.Containers;
 
 namespace SKNIBot.Core.Commands
 {

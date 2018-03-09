@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Commands.SpaceX
+﻿namespace SKNIBot.Core.Containers.SpaceX
 {
     public class LinksContainer
     {

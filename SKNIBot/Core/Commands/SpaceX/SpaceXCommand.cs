@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
+using SKNIBot.Core.Containers.SpaceX;
 
 namespace SKNIBot.Core.Commands.SpaceX
 {
