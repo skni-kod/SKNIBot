@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System.Net;
-using Newtonsoft.Json;
-using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core.Commands
 {
