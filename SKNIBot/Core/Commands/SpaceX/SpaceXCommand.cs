@@ -51,7 +51,16 @@ namespace SKNIBot.Core.Commands.SpaceX
             var flightToDisplay = flights[flightIndex];
 
             var responseBuilder = new StringBuilder();
-            responseBuilder.Append($"**{flightToDisplay.Launch_Date_UTC}**\r\n");
+            responseBuilder.Append($"**{flightToDisplay.Rocket.Rocket_Name} {flightToDisplay.Rocket.Rocket_Type} ({flightToDisplay.Launch_Date_UTC})**\r\n");
+            responseBuilder.Append($"\r\n");
+
+            responseBuilder.Append($"**Payloads:**\r\n");
+            foreach (var payload in flightToDisplay.Rocket.Second_Stage.Payloads)
+            {
+                responseBuilder.Append($"{payload.Payload_ID} ({payload.Payload_Mass_KG} kg) to {payload.Orbit} orbit\r\n");
+            }
+            responseBuilder.Append($"\r\n");
+
             responseBuilder.Append($"{flightToDisplay.Details}\r\n");
             responseBuilder.Append($"\r\n");
             responseBuilder.Append($"{flightToDisplay.Links.Video_Link}\r\n");
