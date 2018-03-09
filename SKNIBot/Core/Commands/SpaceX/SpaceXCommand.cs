@@ -25,7 +25,7 @@ namespace SKNIBot.Core.Commands.SpaceX
         }
 
         [Command("spacex")]
-        [Description("TODO.")]
+        [Description("Available parameters: random, upcoming, heavy.")]
         public async Task SpaceX(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -52,7 +52,17 @@ namespace SKNIBot.Core.Commands.SpaceX
                         await SendFHFlight(ctx);
                         break;
                     }
+
+                    default:
+                    {
+                        await SendParameterNotFoundError(ctx);
+                        break;
+                    }
                 }
+            }
+            else
+            {
+                await SendParameterNotFoundError(ctx);
             }
         }
 
@@ -94,6 +104,11 @@ namespace SKNIBot.Core.Commands.SpaceX
             var response = GetResponse(flightToDisplay);
 
             await ctx.RespondAsync(response);
+        }
+
+        private async Task SendParameterNotFoundError(CommandContext ctx)
+        {
+            await ctx.RespondAsync("Parameter not found, check description (!help spacex) to see more info.");
         }
 
         private string GetResponse(FlightData data)
