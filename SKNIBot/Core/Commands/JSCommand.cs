@@ -11,7 +11,7 @@ namespace SKNIBot.Core.Commands
         [Command("js")]
         [Description("Just Javascript.")]
         [Aliases("javascript")]
-        public async Task JS(CommandContext ctx, [Description("The user to say hi to.")] DiscordMember member = null)
+        public async Task JS(CommandContext ctx, [Description("Użytkownik do wzmienienia.")] DiscordMember member = null)
         {
             //Jeżeli długość jest jeden nie podano kodu
             if (member == null)
