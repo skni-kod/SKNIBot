@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
+    <Compile Include="Core\Commands\HttpInuCommand.cs" />
     <Compile Include="Core\Commands\HttpNekoCommand.cs" />
     <Compile Include="Core\Commands\InuCommand.cs" />
     <Compile Include="Core\Commands\JSCommand.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Core\Commands\MikuAllStarsCommand.cs" />
     <Compile Include="Core\Commands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
+    <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
     <Compile Include="Core\Containers\SpaceX\PayloadsData.cs" />
