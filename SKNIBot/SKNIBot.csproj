@@ -68,6 +68,7 @@
     <Compile Include="Core\Commands\YouTubeCommands\MikuAllStarsCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\PostMovieCommand.cs" />
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
