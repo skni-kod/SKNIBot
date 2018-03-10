@@ -54,7 +54,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
         private string GetAvailableParameters()
         {
-            return string.Join(", ", _videos.Select(p => p.Names[0]).ToArray());
+            return string.Join(", ", _videos.OrderBy(p => p.Names[0]).Select(p => p.Names[0]).ToArray());
         }
     }
 }
