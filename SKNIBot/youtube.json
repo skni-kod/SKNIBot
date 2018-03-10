@@ -1,85 +1,102 @@
 ﻿[
   {
     "name": "aaaa",
-    "description": "aaaa!",
     "link": "https://www.youtube.com/watch?v=rvrZJ5C_Nwg"
   },
 
   {
     "name": "chocolate",
-    "description": "Czekolada!",
     "link": "https://www.youtube.com/watch?v=WIKqgE4BwAY"
   },
 
   {
     "name": "doflop",
-    "description": "Do flop!",
     "link": "https://www.youtube.com/watch?v=tBJNYdHPcDE"
   },
 
   {
     "name": "facepalm",
-    "description": "Face palm!",
     "link": "https://www.youtube.com/watch?v=XZxzJGgox_E"
   },
 
   {
     "name": "kusok",
-    "description": "Kanał Kusoka.",
     "link": "https://www.youtube.com/channel/UC6qnBvPmCZEOHOVaaXPLZhg"
   },
 
   {
     "name": "llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch",
-    "description": "llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch!",
     "link": "https://www.youtube.com/watch?v=fHxO0UdpoxM"
   },
 
   {
     "name": "mikuallstars",
-    "description": "Sing Miku!",
     "link": "https://www.youtube.com/watch?v=vLEs8iOFkAU"
   },
 
   {
     "name": "nikonikonii",
-    "description": "Nico Nico Nii!",
     "link": "https://www.youtube.com/watch?v=3oD8tj3eBls"
   },
 
   {
     "name": "rasputin",
-    "description": "Rasputin!",
     "link": "https://www.youtube.com/watch?v=3AeN-5PXaaQ"
   },
 
   {
     "name": "russia",
-    "description": "Russia!",
     "link": "https://www.youtube.com/watch?v=9B1M3IPVcXs"
   },
 
   {
     "name": "shakaron",
-    "description": "Shakaron!",
     "link": "https://www.youtube.com/watch?v=YTcYqLKfuac"
   },
 
   {
     "name": "shukareally",
-    "description": "Shuka really!",
     "link": "https://www.youtube.com/watch?v=DCZPWAnXmx4"
   },
 
   {
     "name": "spin",
-    "description": "You spin me!",
     "link": "https://www.youtube.com/watch?v=C3MeVGuqsbA"
   },
 
   {
     "name": "todokete",
-    "description": "Snow halation!",
     "link": "https://www.youtube.com/watch?v=TnLMlQJHAUU"
+  },
+
+  {
+    "name": "ducks",
+    "link": "https://www.youtube.com/watch?v=SO1NvBd72L4"
+  },
+
+  {
+    "name": "dejavu",
+    "link": "https://www.youtube.com/watch?v=4ezd24krgiQ"
+  },
+
+  {
+    "name": "itsjoke",
+    "link": "https://www.youtube.com/watch?v=PsARNhjWdHc"
+  },
+
+  {
+    "name": "transcendence",
+    "link": "https://www.youtube.com/watch?v=uwmeH6Rnj2E"
+  },
+
+  {
+    "name": "hanayoahh",
+    "link": "https://www.youtube.com/watch?v=jJQXshfncfc"
+  },
+
+  {
+    "name": "lovelivecharacters",
+    "link": "https://www.youtube.com/watch?v=cpXGSQ0Y9aU"
   }
 ]
+
