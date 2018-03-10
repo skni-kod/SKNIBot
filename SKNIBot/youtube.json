@@ -1,102 +1,101 @@
 ﻿[
   {
-    "name": "aaaa",
+    "name": [ "aaaa" ],
     "link": "https://www.youtube.com/watch?v=rvrZJ5C_Nwg"
   },
 
   {
-    "name": "chocolate",
+    "name": [ "chocolate" ],
     "link": "https://www.youtube.com/watch?v=WIKqgE4BwAY"
   },
 
   {
-    "name": "doflop",
+    "name": [ "doflop" ],
     "link": "https://www.youtube.com/watch?v=tBJNYdHPcDE"
   },
 
   {
-    "name": "facepalm",
+    "name": [ "facepalm" ],
     "link": "https://www.youtube.com/watch?v=XZxzJGgox_E"
   },
 
   {
-    "name": "kusok",
+    "name": [ "kusok" ],
     "link": "https://www.youtube.com/channel/UC6qnBvPmCZEOHOVaaXPLZhg"
   },
 
   {
-    "name": "llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch",
+    "name": [ "llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch" ],
     "link": "https://www.youtube.com/watch?v=fHxO0UdpoxM"
   },
 
   {
-    "name": "mikuallstars",
+    "name": [ "mikuallstars" ],
     "link": "https://www.youtube.com/watch?v=vLEs8iOFkAU"
   },
 
   {
-    "name": "nikonikonii",
+    "name": [ "nikonikonii", "niconiconii" ],
     "link": "https://www.youtube.com/watch?v=3oD8tj3eBls"
   },
 
   {
-    "name": "rasputin",
+    "name": [ "rasputin" ],
     "link": "https://www.youtube.com/watch?v=3AeN-5PXaaQ"
   },
 
   {
-    "name": "russia",
+    "name": [ "russia" ],
     "link": "https://www.youtube.com/watch?v=9B1M3IPVcXs"
   },
 
   {
-    "name": "shakaron",
+    "name": [ "shakaron" ],
     "link": "https://www.youtube.com/watch?v=YTcYqLKfuac"
   },
 
   {
-    "name": "shukareally",
+    "name": [ "shukareally" ],
     "link": "https://www.youtube.com/watch?v=DCZPWAnXmx4"
   },
 
   {
-    "name": "spin",
+    "name": [ "spin" ],
     "link": "https://www.youtube.com/watch?v=C3MeVGuqsbA"
   },
 
   {
-    "name": "todokete",
+    "name": [ "todokete" ],
     "link": "https://www.youtube.com/watch?v=TnLMlQJHAUU"
   },
 
   {
-    "name": "ducks",
+    "name": [ "ducks" ],
     "link": "https://www.youtube.com/watch?v=SO1NvBd72L4"
   },
 
   {
-    "name": "dejavu",
+    "name": [ "dejavu" ],
     "link": "https://www.youtube.com/watch?v=4ezd24krgiQ"
   },
 
   {
-    "name": "itsjoke",
+    "name": [ "itsjoke" ],
     "link": "https://www.youtube.com/watch?v=PsARNhjWdHc"
   },
 
   {
-    "name": "transcendence",
+    "name": [ "transcendence" ],
     "link": "https://www.youtube.com/watch?v=uwmeH6Rnj2E"
   },
 
   {
-    "name": "hanayoahh",
+    "name": [ "hanayoahh" ],
     "link": "https://www.youtube.com/watch?v=jJQXshfncfc"
   },
 
   {
-    "name": "lovelivecharacters",
+    "name": [ "lovelivecharacters" ],
     "link": "https://www.youtube.com/watch?v=cpXGSQ0Y9aU"
   }
 ]
-

@@ -36,7 +36,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
                 return;
             }
 
-            var videoData = _videos.FirstOrDefault(p => p.Name == videoName);
+            var videoData = _videos.FirstOrDefault(vid => vid.Name.Exists(p => p == videoName));
             if (videoData == null)
             {
                 await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");
@@ -54,7 +54,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
         private string GetAvailableParameters()
         {
-            return string.Join(", ", _videos.Select(p => p.Name).ToArray());
+            return string.Join(", ", _videos.Select(p => p.Name[0]).ToArray());
         }
     }
 }
