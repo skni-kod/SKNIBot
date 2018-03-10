@@ -15,7 +15,6 @@ namespace SKNIBot.Core.Commands
         public async Task Avatar(CommandContext ctx, [Description("Użytkownik, którego awatar chcesz.")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            //Jeżeli długość jest jeden nie podano kodu
             string url;
             if (member == null)
             {
