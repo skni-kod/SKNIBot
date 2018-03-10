@@ -7,7 +7,7 @@ using SKNIBot.Core.Const;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Koty")]
+    [CommandsGroup("Obrazki")]
     public class HttpNekoCommand
     {
         [Command("httpkot")]

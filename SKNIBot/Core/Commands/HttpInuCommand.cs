@@ -7,7 +7,7 @@ using SKNIBot.Core.Const;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Psy")]
+    [CommandsGroup("Obrazki")]
     public class HttpInuCommand
     {
         [Command("httppies")]

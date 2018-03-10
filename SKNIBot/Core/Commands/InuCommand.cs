@@ -8,7 +8,7 @@ using SKNIBot.Core.Containers;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Psy")]
+    [CommandsGroup("Obrazki")]
     public class InuCommand
     {
         [Command("pies")]
