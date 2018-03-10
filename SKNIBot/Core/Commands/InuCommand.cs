@@ -12,7 +12,7 @@ namespace SKNIBot.Core.Commands
     public class InuCommand
     {
         [Command("pies")]
-        [Description("Display some cute dogs.")]
+        [Description("Wyświetla słodkie pieski.")]
         [Aliases("inu", "dog")]
         public async Task Inu(CommandContext ctx)
         {
