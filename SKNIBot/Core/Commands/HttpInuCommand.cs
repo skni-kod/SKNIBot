@@ -13,17 +13,17 @@ namespace SKNIBot.Core.Commands
         [Command("httppies")]
         [Description("Składnia to '!httppies {kod}'. Napisz '!httppies kody' aby otrzymać listę dostępnych kodów.")]
         [Aliases("httpninu", "httpdog")]
-        public async Task HttpInu(CommandContext ctx)
+        public async Task HttpInu(CommandContext ctx, [Description("Numer kodu")] string numer = null)
         {
             await ctx.TriggerTypingAsync();
 
             //Jeżeli długość jest jeden nie podano kodu
-            if (ctx.Message.Content.Split(' ').Length == 1)
+            if (numer == null)
             {
                 await ctx.RespondAsync("Składnia to \'!httppies {kod}\'. Napisz \'!httppies kody\' aby otrzymać listę dostępnych kodów.");
             }
             //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego psa
-            else if (HttpInuConst.Codes.Contains(ctx.Message.Content.Split(' ')[1]))
+            else if (HttpInuConst.Codes.Contains(numer))
             {
                 var client = new WebClient();
                 var httpInuPicture = client.DownloadData("https://httpstatusdogs.com/img/" + ctx.Message.Content.Split(' ')[1] + ".jpg");
@@ -32,7 +32,7 @@ namespace SKNIBot.Core.Commands
                 await ctx.RespondWithFileAsync(stream, "httpinu.jpg");
             }
             //Jeżeli użytkownik prosi o kody ppsów podajemy je
-            else if (ctx.Message.Content.Split(' ')[1] == "kody")
+            else if (numer == "kody")
             {
                 var availableCodes = "";
                 foreach (var code in HttpInuConst.Codes)
