@@ -57,18 +57,24 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\AaaaCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\ChocolateCommand.cs" />
     <Compile Include="Core\Commands\HiCommand.cs" />
     <Compile Include="Core\Commands\HttpInuCommand.cs" />
     <Compile Include="Core\Commands\HttpNekoCommand.cs" />
     <Compile Include="Core\Commands\InuCommand.cs" />
     <Compile Include="Core\Commands\JSCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\DoFlopCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\FacePalmCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\KusokCommand.cs" />
     <Compile Include="Core\Commands\LennyCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\LlanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogochCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\MikuAllStarsCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\PostMovieCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\RussiaCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\SpinCommand.cs" />
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
@@ -86,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Core\Commands\YouTubeCommands\RasputinCommand.cs" />
     <None Include="montypython.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
