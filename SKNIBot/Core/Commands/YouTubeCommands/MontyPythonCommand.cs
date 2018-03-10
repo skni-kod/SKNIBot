@@ -30,9 +30,9 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
         [Description("Display random Monty Python.")]
         public async Task MontyPython(CommandContext ctx)
         {
-            var videoIndex = _random.Next(_videos.Count);
-
             await ctx.TriggerTypingAsync();
+
+            var videoIndex = _random.Next(_videos.Count);
             await ctx.RespondAsync(_videos[videoIndex]);
         }
     }

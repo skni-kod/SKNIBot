@@ -16,6 +16,8 @@ namespace SKNIBot.Core.Commands
         [Aliases("inu", "dog")]
         public async Task Inu(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
+
             var client = new WebClient();
             DogContainer dogContainer;
 
@@ -29,7 +31,6 @@ namespace SKNIBot.Core.Commands
             var dogPicture = client.DownloadData(dogContainer.Url);
             var stream = new MemoryStream(dogPicture);
 
-            await ctx.TriggerTypingAsync();
             await ctx.RespondWithFileAsync(stream, "inu.jpg");
         }
     }

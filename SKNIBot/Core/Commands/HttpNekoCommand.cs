@@ -15,10 +15,11 @@ namespace SKNIBot.Core.Commands
         [Aliases("httpneko", "httpcat")]
         public async Task HttpNeko(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
+
             //Jeżeli długość jest jeden nie podano kodu
-            if(ctx.Message.Content.Split(' ').Length == 1)
+            if (ctx.Message.Content.Split(' ').Length == 1)
             {
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync("Składnia to \'!httpkot {kod}\', \'!httpneko {kod}\' lub \'!httpcat {kod}\'. Napisz \'!httpkot kody\', \'!httpneko kody\' lub \'!httpcat kody\' aby otrzymać listę dostępnych kodów.");
             }
             //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego kota
@@ -28,7 +29,6 @@ namespace SKNIBot.Core.Commands
                 var httpCatPicture = client.DownloadData("https://http.cat/" + ctx.Message.Content.Split(' ')[1]);
                 var stream = new MemoryStream(httpCatPicture);
 
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondWithFileAsync(stream, "httpneko.jpg");
             }
             //Jeżeli użytkownik prosi o kody kotów podajemy je
@@ -41,13 +41,11 @@ namespace SKNIBot.Core.Commands
                     availableCodes += " ";
                 }
 
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync("Kody: " + availableCodes);
             }
             //Jeżeli nie można otrzymać kota informujemy o błędnym kodzie
             else
             {
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync("Błędny kod http. Napisz '!httpkot kody', '!httpneko kody' lub '!httpcat kody' aby otrzymać listę dostępnych kodów.");
             }
         }

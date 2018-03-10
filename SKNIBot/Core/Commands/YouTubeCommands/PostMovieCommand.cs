@@ -9,14 +9,14 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
     {
         public async Task postMovie(CommandContext ctx, string movieUrl, DiscordMember member = null)
         {
+            await ctx.TriggerTypingAsync();
+
             if (member == null)
             {
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync(movieUrl);
             }
             else
             {
-                await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync(movieUrl + " " + member.Mention);
             }
         }
