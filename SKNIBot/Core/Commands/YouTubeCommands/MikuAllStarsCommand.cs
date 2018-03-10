@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
@@ -9,10 +10,18 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
     {
         [Command("mikuallstars")]
         [Description("Sing!")]
-        public async Task MikuAllStars(CommandContext ctx)
+        public async Task MikuAllStars(CommandContext ctx, [Description("Użytkownik do wzmienienia.")] DiscordMember member = null)
         {
-            await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync("https://www.youtube.com/watch?v=vLEs8iOFkAU");
+            if (member == null)
+            {
+                await ctx.TriggerTypingAsync();
+                await ctx.RespondAsync("https://www.youtube.com/watch?v=vLEs8iOFkAU");
+            }
+            else
+            {
+                await ctx.TriggerTypingAsync();
+                await ctx.RespondAsync("https://www.youtube.com/watch?v=vLEs8iOFkAU " + member.Mention);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
@@ -9,10 +10,18 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
     {
         [Command("kusok")]
         [Description("Kanał Kusoka.")]
-        public async Task Kusok(CommandContext ctx)
+        public async Task Kusok(CommandContext ctx, [Description("Użytkownik do wzmienienia.")] DiscordMember member = null)
         {
-            await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync("https://www.youtube.com/channel/UC6qnBvPmCZEOHOVaaXPLZhg");
+            if (member == null)
+            {
+                await ctx.TriggerTypingAsync();
+                await ctx.RespondAsync("https://www.youtube.com/channel/UC6qnBvPmCZEOHOVaaXPLZhg");
+            }
+            else
+            {
+                await ctx.TriggerTypingAsync();
+                await ctx.RespondAsync("https://www.youtube.com/channel/UC6qnBvPmCZEOHOVaaXPLZhg " + member.Mention);
+            }
         }
     }
 }
