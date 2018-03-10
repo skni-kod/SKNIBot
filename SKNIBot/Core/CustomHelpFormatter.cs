@@ -77,7 +77,9 @@ namespace SKNIBot.Core
             foreach (var type in assemblyTypes)
             {
                 var attributes = type.GetCustomAttributes();
-                if (attributes.Any(p => p is CommandsGroupAttribute))
+                var commandGroupAttribute = attributes.FirstOrDefault(p => p is CommandsGroupAttribute);
+
+                if (commandGroupAttribute != null)
                 {
                     var groupAttribute = (CommandsGroupAttribute)attributes.First(p => p is CommandsGroupAttribute);
                     var commandHandlers = type.GetMethods();
@@ -85,14 +87,16 @@ namespace SKNIBot.Core
                     foreach (var method in commandHandlers)
                     {
                         var methodAttributes = method.GetCustomAttributes();
-                        if (methodAttributes.Any(p => p is CommandAttribute))
+                        var commandAttribute = (CommandAttribute)methodAttributes.FirstOrDefault(p => p is CommandAttribute);
+
+                        if (commandAttribute != null)
                         {
                             if (!_subCommands.ContainsKey(groupAttribute.Group))
                             {
                                 _subCommands.Add(groupAttribute.Group, new List<string>());
                             }
 
-                            _subCommands[groupAttribute.Group].Add($"`{method.Name}`");
+                            _subCommands[groupAttribute.Group].Add($"`{commandAttribute.Name}`");
                         }
                     }
                 }
