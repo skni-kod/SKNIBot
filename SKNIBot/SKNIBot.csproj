@@ -66,6 +66,7 @@
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\NekoCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\PostMovieCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\YouTubeCommand.cs" />
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Core\Const\HttpNekoConst.cs" />
     <Compile Include="Core\Containers\DogContainer.cs" />
     <Compile Include="Core\Containers\NekoContainer.cs" />
+    <Compile Include="Core\Containers\YouTube\VideoData.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
