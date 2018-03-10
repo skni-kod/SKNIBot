@@ -8,7 +8,7 @@ using SKNIBot.Core.Containers;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup]
+    [CommandsGroup("Koty")]
     public class NekoCommand
     {
         [Command("kot")]

@@ -10,7 +10,7 @@ using SKNIBot.Core.Containers.YouTube;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
-    [CommandsGroup]
+    [CommandsGroup("YouTube")]
     public class YouTubeCommand
     {
         private List<VideoData> _videos;

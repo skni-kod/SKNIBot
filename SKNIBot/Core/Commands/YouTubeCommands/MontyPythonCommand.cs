@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
-    [CommandsGroup]
+    [CommandsGroup("YouTube")]
     public class MontyPythonCommand
     {
         private List<string> _videos;

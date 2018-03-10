@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SKNIBot.Core.Commands {
-    [CommandsGroup]
+    [CommandsGroup("Różne")]
     class RandomCommand {
         private Random _random;
 
