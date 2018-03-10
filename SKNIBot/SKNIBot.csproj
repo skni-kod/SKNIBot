@@ -77,6 +77,7 @@
     <Compile Include="Core\Commands\YouTubeCommands\RussiaCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\ShukaReally.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\SpinCommand.cs" />
+    <Compile Include="Core\Commands\YouTubeCommands\TodoketeCommand.cs" />
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
