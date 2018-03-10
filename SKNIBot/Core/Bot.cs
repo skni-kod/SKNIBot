@@ -44,6 +44,7 @@ namespace SKNIBot.Core
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+            Commands.SetHelpFormatter<CustomHelpFormatter>();
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
 

@@ -78,6 +78,7 @@
     <Compile Include="Core\Containers\DogContainer.cs" />
     <Compile Include="Core\Containers\NekoContainer.cs" />
     <Compile Include="Core\Containers\YouTube\VideoData.cs" />
+    <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
