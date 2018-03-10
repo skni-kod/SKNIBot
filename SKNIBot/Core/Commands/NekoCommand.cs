@@ -12,7 +12,7 @@ namespace SKNIBot.Core.Commands
     public class NekoCommand
     {
         [Command("kot")]
-        [Description("Display some cute cat.")]
+        [Description("Wyświetla słodkie kotki.")]
         [Aliases("neko", "cat")]
         public async Task Neko(CommandContext ctx)
         {

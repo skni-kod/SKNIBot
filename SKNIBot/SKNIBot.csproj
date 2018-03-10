@@ -59,6 +59,7 @@
     <Compile Include="Core\CommandsGroupAttribute.cs" />
     <Compile Include="Core\Commands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\MonthyPythonQuatesCommand.cs" />
+    <Compile Include="Core\Commands\AvatarCommand.cs" />
     <Compile Include="Core\Commands\RandomCommand.cs" />
     <Compile Include="Core\Commands\HiCommand.cs" />
     <Compile Include="Core\Commands\HttpInuCommand.cs" />

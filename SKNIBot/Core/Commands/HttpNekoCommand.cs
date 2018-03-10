@@ -11,7 +11,7 @@ namespace SKNIBot.Core.Commands
     public class HttpNekoCommand
     {
         [Command("httpkot")]
-        [Description("Składnia to '!httpkot {kod}', '!httpneko {kod}' lub '!httpcat {kod}'. Napisz '!httpkot kody', '!httpneko kody' lub '!httpcat kody' aby otrzymać listę dostępnych kodów.")]
+        [Description("Składnia to '!httpkot {kod}'. Napisz '!httpkot kody' aby otrzymać listę dostępnych kodów.")]
         [Aliases("httpneko", "httpcat")]
         public async Task HttpNeko(CommandContext ctx)
         {
@@ -20,7 +20,7 @@ namespace SKNIBot.Core.Commands
             //Jeżeli długość jest jeden nie podano kodu
             if (ctx.Message.Content.Split(' ').Length == 1)
             {
-                await ctx.RespondAsync("Składnia to \'!httpkot {kod}\', \'!httpneko {kod}\' lub \'!httpcat {kod}\'. Napisz \'!httpkot kody\', \'!httpneko kody\' lub \'!httpcat kody\' aby otrzymać listę dostępnych kodów.");
+                await ctx.RespondAsync("Składnia to \'!httpkot {kod}\'. Napisz \'!httpkot kody\' aby otrzymać listę dostępnych kodów.");
             }
             //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego kota
             else if(HttpNekoConst.Codes.Contains(ctx.Message.Content.Split(' ')[1]))
@@ -46,7 +46,7 @@ namespace SKNIBot.Core.Commands
             //Jeżeli nie można otrzymać kota informujemy o błędnym kodzie
             else
             {
-                await ctx.RespondAsync("Błędny kod http. Napisz '!httpkot kody', '!httpneko kody' lub '!httpcat kody' aby otrzymać listę dostępnych kodów.");
+                await ctx.RespondAsync("Błędny kod http. Napisz '!httpkot kody' aby otrzymać listę dostępnych kodów.");
             }
         }
     }

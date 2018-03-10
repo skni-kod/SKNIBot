@@ -11,7 +11,7 @@ namespace SKNIBot.Core.Commands
     public class HttpInuCommand
     {
         [Command("httppies")]
-        [Description("Składnia to '!httppies {kod}', '!httpninu {kod}' lub '!httpdog {kod}'. Napisz '!httppies kody', '!httpninu kody' lub '!httpdog kody' aby otrzymać listę dostępnych kodów.")]
+        [Description("Składnia to '!httppies {kod}'. Napisz '!httppies kody' aby otrzymać listę dostępnych kodów.")]
         [Aliases("httpninu", "httpdog")]
         public async Task HttpInu(CommandContext ctx)
         {
@@ -20,7 +20,7 @@ namespace SKNIBot.Core.Commands
             //Jeżeli długość jest jeden nie podano kodu
             if (ctx.Message.Content.Split(' ').Length == 1)
             {
-                await ctx.RespondAsync("Składnia to \'!httppies {kod}\', \'!httpninu {kod}\' lub \'!httpdog {kod}\'. Napisz \'!httppies kody\', \'!httpninu kody\' lub \'!httpdog kody\' aby otrzymać listę dostępnych kodów.");
+                await ctx.RespondAsync("Składnia to \'!httppies {kod}\'. Napisz \'!httppies kody\' aby otrzymać listę dostępnych kodów.");
             }
             //Jeżeli podano kod, sprawdzamy czy można otrzymać takiego psa
             else if (HttpInuConst.Codes.Contains(ctx.Message.Content.Split(' ')[1]))
@@ -46,7 +46,7 @@ namespace SKNIBot.Core.Commands
             //Jeżeli nie można otrzymać psa informujemy o błędnym kodzie
             else
             {
-                await ctx.RespondAsync("Błędny kod http. Napisz '!httppies kody', '!httpninu kody' lub '!httpdog kody' aby otrzymać listę dostępnych kodów.");
+                await ctx.RespondAsync("Błędny kod http. Napisz '!httppies kody' aby otrzymać listę dostępnych kodów.");
             }
         }
     }
