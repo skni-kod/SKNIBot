@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
+    <Compile Include="Core\Commands\RandomCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\AaaaCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\ChocolateCommand.cs" />
     <Compile Include="Core\Commands\HiCommand.cs" />
