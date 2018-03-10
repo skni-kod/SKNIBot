@@ -26,44 +26,41 @@ namespace SKNIBot.Core.Commands.SpaceX
         }
 
         [Command("spacex")]
-        [Description("Available parameters: random, upcoming, heavy.")]
-        public async Task SpaceX(CommandContext ctx)
+        [Description("In Elon we trust, in thrust we trust.")]
+        public async Task SpaceX(CommandContext ctx, [Description("random, upcoming, heavy")] string type = null)
         {
             await ctx.TriggerTypingAsync();
-
-            var parameters = ctx.Message.Content.Split(' ').Skip(1).ToList();
-            if (parameters.Count > 0)
-            {
-                switch (parameters[0])
-                {
-                    case "random":
-                    {
-                        await SendRandomFlight(ctx);
-                        break;
-                    }
-
-                    case "upcoming":
-                    {
-                        await SendUpcomingFlight(ctx);
-                        break;
-                    }
-
-                    case "heavy":
-                    {
-                        await SendFHFlight(ctx);
-                        break;
-                    }
-
-                    default:
-                    {
-                        await SendParameterNotFoundError(ctx);
-                        break;
-                    }
-                }
-            }
-            else
+            if (type == null)
             {
                 await SendParameterNotFoundError(ctx);
+                return;
+            }
+
+            switch (type)
+            {
+                case "random":
+                {
+                    await SendRandomFlight(ctx);
+                    break;
+                }
+
+                case "upcoming":
+                {
+                    await SendUpcomingFlight(ctx);
+                    break;
+                }
+
+                case "heavy":
+                {
+                    await SendFHFlight(ctx);
+                    break;
+                }
+
+                default:
+                {
+                    await SendParameterNotFoundError(ctx);
+                    break;
+                }
             }
         }
 
