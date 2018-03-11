@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
+    <Compile Include="Core\Commands\DescriptionCommand.cs" />
     <Compile Include="Core\Commands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\MonthyPythonQuatesCommand.cs" />
     <Compile Include="Core\Commands\AvatarCommand.cs" />
