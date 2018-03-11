@@ -69,6 +69,7 @@
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\LizardCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekosLifeImage.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\PatCommand.cs" />
+    <Compile Include="Core\Commands\TextCommands\JokeCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\NekosLife\WhyCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\PicturesCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\RandomCommand.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
     <Compile Include="Core\Containers\PicturesContainers\PictureData.cs" />
+    <Compile Include="Core\Containers\TextContainers\JokesData.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />
@@ -107,6 +109,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="images.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="jokes.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="montypython.json">
