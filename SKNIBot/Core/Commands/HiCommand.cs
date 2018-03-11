@@ -6,7 +6,7 @@ using System;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Tekst")]
     public class HiCommand
     {
         private List<string> _developers = new List<string> { { "Azux Dario2860" }, { "TemporaryNick7229" }, { "Coedo2037" } };

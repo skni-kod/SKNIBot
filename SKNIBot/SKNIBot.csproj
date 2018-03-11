@@ -61,8 +61,15 @@
     <Compile Include="Core\Commands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\MonthyPythonQuatesCommand.cs" />
     <Compile Include="Core\Commands\AvatarCommand.cs" />
-    <Compile Include="Core\Commands\NekosLife\CatGirl.cs" />
+    <Compile Include="Core\Commands\NekosLife\CatGirlCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\CuddleCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\HugCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\KissCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\LewdCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\LizardCommand.cs" />
     <Compile Include="Core\Commands\NekosLife\NekosLifeImage.cs" />
+    <Compile Include="Core\Commands\NekosLife\PatCommand.cs" />
+    <Compile Include="Core\Commands\NekosLife\WhyCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommand.cs" />
     <Compile Include="Core\Commands\RandomCommand.cs" />
     <Compile Include="Core\Commands\HiCommand.cs" />
@@ -77,6 +84,7 @@
     <Compile Include="Core\Const\HttpInuConst.cs" />
     <Compile Include="Core\Const\NekosLife\NekosLifeEndpoints.cs" />
     <Compile Include="Core\Containers\NekosLife\NekosFileImage.cs" />
+    <Compile Include="Core\Containers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\SpaceX\LinksContainer.cs" />
     <Compile Include="Core\Containers\SpaceX\PayloadsData.cs" />
