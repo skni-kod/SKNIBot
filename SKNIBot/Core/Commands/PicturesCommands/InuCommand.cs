@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
-using SKNIBot.Core.Containers;
+using SKNIBot.Core.Containers.PicturesContainers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {

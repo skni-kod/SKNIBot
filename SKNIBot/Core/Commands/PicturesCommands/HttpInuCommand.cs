@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using SKNIBot.Core.Const;
+using SKNIBot.Core.Const.PicturesConst;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {

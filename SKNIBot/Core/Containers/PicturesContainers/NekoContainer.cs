@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Containers
+﻿namespace SKNIBot.Core.Containers.PicturesContainers
 {
     public class NekoContainer
     {

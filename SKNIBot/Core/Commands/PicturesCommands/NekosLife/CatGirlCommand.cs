@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using SKNIBot.Core.Const.NekosLife;
+using SKNIBot.Core.Const.PicturesConst.NekosLife;
 using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
         public async Task CatGirl(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            await SendImage(ctx, NekosLifeEndpoints.neko, member);
+            await SendImage(ctx, NekosLifePicturesEndpoints.neko, member);
         }
     }
 }

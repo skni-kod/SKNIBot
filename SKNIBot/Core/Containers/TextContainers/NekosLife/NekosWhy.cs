@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Containers.NekosLife
+﻿namespace SKNIBot.Core.Containers.TextContainers.NekosLife
 {
     public class NekosWhy
     {

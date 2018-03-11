@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SKNIBot.Core.Containers.SpaceX
+namespace SKNIBot.Core.Containers.TechContainers.SpaceX
 {
     public class FlightData
     {

@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
-using SKNIBot.Core.Containers.YouTube;
+using SKNIBot.Core.Containers.YouTubeContainers;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SKNIBot.Core.Containers.SpaceX
+namespace SKNIBot.Core.Containers.TechContainers.SpaceX
 {
     public class SecondStageData
     {

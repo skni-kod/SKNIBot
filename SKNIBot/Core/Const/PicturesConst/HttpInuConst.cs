@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SKNIBot.Core.Const
+namespace SKNIBot.Core.Const.PicturesConst
 {
     public class HttpInuConst
     {

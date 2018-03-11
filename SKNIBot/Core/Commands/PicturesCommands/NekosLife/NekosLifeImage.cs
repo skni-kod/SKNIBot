@@ -2,8 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
-using SKNIBot.Core.Const.NekosLife;
-using SKNIBot.Core.Containers.NekosLife;
+using SKNIBot.Core.Containers.PicturesContainers.NekosLife;
 using System;
 using System.Collections.Generic;
 using System.IO;
