@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.YouTube;
 
-namespace SKNIBot.Core.Commands.YouTubeCommands
+namespace SKNIBot.Core.Commands.PicturesCommands.PicturesCommand
 {
     [CommandsGroup("Obrazki")]
     public class PicturesCommand

@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
     public class JSCommand

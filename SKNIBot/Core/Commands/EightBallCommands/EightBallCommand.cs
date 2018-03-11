@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands {
+namespace SKNIBot.Core.Commands.EightBallCommands
+{
     [CommandsGroup("8Ball")]
     class EightBallCommand {
         List<string> _responses;

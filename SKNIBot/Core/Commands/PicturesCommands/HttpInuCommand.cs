@@ -5,7 +5,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Const;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     public class HttpInuCommand

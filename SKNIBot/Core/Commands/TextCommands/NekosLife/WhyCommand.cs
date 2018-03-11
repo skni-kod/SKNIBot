@@ -8,10 +8,10 @@ using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.NekosLife;
 
-namespace SKNIBot.Core.Commands.NekosLife
+namespace SKNIBot.Core.Commands.TextCommands.NekosLife
 {
     [CommandsGroup("Tekst")]
-    public class WhyCommand : NekosLifeImage
+    public class WhyCommand
     {
         [Command("why")]
         [Description("Dlaczego.")]

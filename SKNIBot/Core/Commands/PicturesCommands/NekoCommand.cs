@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     public class NekoCommand

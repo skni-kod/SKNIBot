@@ -9,7 +9,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
     public class DescriptionCommand

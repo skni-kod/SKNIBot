@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Const.NekosLife;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands.NekosLife
+namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {
     [CommandsGroup("Obrazki")]
     public class LewdCommand : NekosLifeImage

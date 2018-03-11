@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
     public class LennyCommand

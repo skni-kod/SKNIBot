@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System.Collections.Generic;
 using System;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
     public class HiCommand

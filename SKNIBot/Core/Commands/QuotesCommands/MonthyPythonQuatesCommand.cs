@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands {
+namespace SKNIBot.Core.QuotesCommands.Commands
+{
     //PÓŹNIEJ TO POPRAWIE, NIE BIJCIE :<
     [CommandsGroup("Cytaty")]
     class MonthyPythonQuatesCommand {

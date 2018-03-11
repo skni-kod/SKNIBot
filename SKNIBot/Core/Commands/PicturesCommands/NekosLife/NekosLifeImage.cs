@@ -12,7 +12,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands.NekosLife
+namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {
     public class NekosLifeImage
     {

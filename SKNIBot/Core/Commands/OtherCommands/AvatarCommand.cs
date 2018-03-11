@@ -5,7 +5,7 @@ using DSharpPlus.Entities;
 using System.Net;
 using System.IO;
 
-namespace SKNIBot.Core.Commands
+namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
     public class AvatarCommand
