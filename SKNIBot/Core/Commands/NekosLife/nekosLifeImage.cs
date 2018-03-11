@@ -23,17 +23,25 @@ namespace SKNIBot.Core.Commands.NekosLife
             var client = new WebClient();
             var url = client.DownloadString(endpoint);
             var pictureContainer = JsonConvert.DeserializeObject<NekosFileImage>(url);
-            var picture = client.DownloadData(pictureContainer.Url);
-            var stream = new MemoryStream(picture);
+            /*var picture = client.DownloadData(pictureContainer.Url);
+            var stream = new MemoryStream(picture);*/
 
             if (member != null)
             {
-                await ctx.RespondWithFileAsync(stream, "picture.jpg", member.Mention);
+                //await ctx.RespondWithFileAsync(stream, "picture" + GetExtension(url), member.Mention);
+                await ctx.RespondAsync(pictureContainer.Url + " " + member.Mention);
             }
             else
             {
-                await ctx.RespondWithFileAsync(stream, "picture.jpg");
+                //await ctx.RespondWithFileAsync(stream, "picture" + GetExtension(url));
+                await ctx.RespondAsync(pictureContainer.Url);
             }
+        }
+
+        public string GetExtension(string url)
+        {
+            string[] array = url.Split('.');
+            return array[array.Length - 1];
         }
     }
 }

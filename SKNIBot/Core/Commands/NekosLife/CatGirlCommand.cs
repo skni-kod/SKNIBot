@@ -3,15 +3,13 @@ using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using Newtonsoft.Json;
-using SKNIBot.Core.Containers.NekosLife;
 using SKNIBot.Core.Const.NekosLife;
 using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.NekosLife
 {
     [CommandsGroup("Obrazki")]
-    public class NekoCommand : NekosLifeImage
+    public class CatGirlCommand : NekosLifeImage
     {
         [Command("catgirl")]
         [Description("Wyświetla słodkie catgirl.")]
