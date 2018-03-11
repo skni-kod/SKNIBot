@@ -86,6 +86,7 @@
     <Compile Include="Core\Const\PicturesConst\NekosLife\NekosLifePicturesEndpoints.cs" />
     <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
+    <Compile Include="Core\Containers\PicturesContainers\PictureData.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />

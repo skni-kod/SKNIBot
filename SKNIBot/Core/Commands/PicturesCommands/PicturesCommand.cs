@@ -6,21 +6,21 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
-using SKNIBot.Core.Containers.YouTubeContainers;
+using SKNIBot.Core.Containers.PicturesContainers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.PicturesCommand
 {
     [CommandsGroup("Obrazki")]
     public class PicturesCommand
     {
-        private List<VideoData> _images;
+        private List<PictureData> _images;
         private const string _imagesFile = "images.json";
 
         public PicturesCommand()
         {
             using (var file = new StreamReader(_imagesFile))
             {
-                _images = JsonConvert.DeserializeObject<List<VideoData>>(file.ReadToEnd());
+                _images = JsonConvert.DeserializeObject<List<PictureData>>(file.ReadToEnd());
             }
         }
 
