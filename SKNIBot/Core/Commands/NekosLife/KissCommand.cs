@@ -11,8 +11,9 @@ namespace SKNIBot.Core.Commands.NekosLife
     [CommandsGroup("Obrazki")]
     public class KissCommand : NekosLifeImage
     {
-        [Command("kiss")]
-        [Description("Wyświetla obrazki kiss.")]
+        //Zablokowana na życzenie innego developera
+        //[Command("kiss")]
+        //[Description("Wyświetla obrazki kiss.")]
         public async Task Kiss(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
