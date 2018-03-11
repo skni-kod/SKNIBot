@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -32,7 +33,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
             await ctx.TriggerTypingAsync();
             if (videoName == "list")
             {
-                await ctx.RespondAsync($"Dostępne filmy:\r\n{GetAvailableParameters()}");
+                await ctx.RespondAsync($"Dostępne filmy:\r\n\r\n{GetAvailableParameters()}");
                 return;
             }
 
@@ -54,7 +55,23 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
         private string GetAvailableParameters()
         {
-            return string.Join(", ", _videos.OrderBy(p => p.Names[0]).Select(p => p.Names[0]).ToArray());
+            var stringBuilder = new StringBuilder();
+            var categories = _videos.GroupBy(p => p.Category).OrderBy(p => p.Key).ToList();
+
+            foreach (var category in categories)
+            {
+                var sortedCategory = category.OrderBy(p => p.Names[0]);
+
+                stringBuilder.Append($"**{category.Key}**:\r\n");
+                foreach (var item in sortedCategory)
+                {
+                    stringBuilder.Append(item.Names[0] + " ");
+                }
+
+                stringBuilder.Append("\r\n\r\n");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }
