@@ -9,5 +9,6 @@
         public static readonly string pat = "https://nekos.life/api/v2/img/pat";
         public static readonly string cuddle = "https://nekos.life/api/v2/img/cuddle";
         public static readonly string lizard = "https://nekos.life/api/v2/img/lizard";
+        public static readonly string why = "https://nekos.life/api/v2/why";
     }
 }

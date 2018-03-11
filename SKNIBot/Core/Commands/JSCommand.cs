@@ -5,7 +5,7 @@ using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Tekst")]
     public class JSCommand
     {
         [Command("js")]

@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 namespace SKNIBot.Core.Commands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Tekst")]
     public class LennyCommand
     {
         [Command("lenny")]
