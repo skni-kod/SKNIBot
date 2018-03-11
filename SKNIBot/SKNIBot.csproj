@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
+    <Compile Include="Core\Commands\GameCommands\HangmanCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\DescriptionCommand.cs" />
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\YouTubeCommand.cs" />
+    <Compile Include="Core\Const\GamesConst\HangmanConst.cs" />
     <Compile Include="Core\Const\PicturesConst\HttpInuConst.cs" />
     <Compile Include="Core\Const\PicturesConst\NekosLife\NekosLifePicturesEndpoints.cs" />
     <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
