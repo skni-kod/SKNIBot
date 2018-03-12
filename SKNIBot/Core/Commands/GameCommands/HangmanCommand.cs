@@ -74,6 +74,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _gameStarted = false;
                 output += "Przegrana";
             }
+
             await ctx.RespondAsync(output);
         }
 
