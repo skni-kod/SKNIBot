@@ -25,36 +25,49 @@ namespace SKNIBot.Core.Commands.GameCommands
             _word = "";
             _guessWord = "";
         }
+
         [Command("wisielec")]
         [Description("Gra w wisielca.")]
         [Aliases("hangman")]
         public async Task Czesc(CommandContext ctx, [Description("Kategoria")] string type = null)
         {
             await ctx.TriggerTypingAsync();
+
             string output = "";
-            if(_gameStarted == false)
+            //Jeżeli gra nie jest rozpoczęta, rozpocznij
+            if (_gameStarted == false)
             {
                 StartGame(type);
             }
-            else if(CheckLetter(type[0]))
+            //Gdy brak litery
+            else if(type == null)
+            {
+                output += "Podaj literę \n";
+            }
+            //W innym wypadku sprawdź czy dana litera występuje
+            else if (CheckLetter(type[0]))
             {
                 _guessWord = AddLetters(type[0]);
             }
+            //W razie pomyłki zwiększ licznik błędów
             else
             {
                 _actualStage++;
             }
-            output += _guessWord += "\n";
+            //Generuj wyjście
+            output += _guessWord;
+            output += "\n";
             for (int j = 0; j < HangmanConst.stages[_actualStage - 1].Length; j++)
             {
                 output += HangmanConst.stages[_actualStage - 1][j] += "\n";
             }
-
-            if(_guessWord == _word)
+            //W razie wygranej
+            if(_guessWord.Equals(_word))
             {
                 _gameStarted = false;
                 output += "Wygrana";
             }
+            //W razie przegranej
             if(_actualStage == Stages)
             {
                 _gameStarted = false;
