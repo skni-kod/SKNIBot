@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -32,7 +33,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.PicturesCommand
             await ctx.TriggerTypingAsync();
             if (pictureName == "list")
             {
-                await ctx.RespondAsync($"Dostępne obrazki:\r\n{GetAvailableParameters()}");
+                await ctx.RespondAsync($"Dostępne obrazki:\r\n\r\n{GetAvailableParameters()}");
                 return;
             }
 
@@ -54,7 +55,20 @@ namespace SKNIBot.Core.Commands.PicturesCommands.PicturesCommand
 
         private string GetAvailableParameters()
         {
-            return string.Join(", ", _images.Select(p => p.Names[0]).ToArray());
+            var stringBuilder = new StringBuilder();
+            var categories = _images.GroupBy(p => p.Category).OrderBy(p => p.Key).ToList();
+
+            foreach (var category in categories)
+            {
+                var sortedCategory = category.OrderBy(p => p.Names[0]);
+                var items = sortedCategory.Select(p => p.Names[0]);
+
+                stringBuilder.Append($"**{category.Key}**:\r\n");
+                stringBuilder.Append(string.Join(", ", items));
+                stringBuilder.Append("\r\n\r\n");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }
