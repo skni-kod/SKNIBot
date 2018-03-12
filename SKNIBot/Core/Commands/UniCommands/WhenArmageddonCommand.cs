@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         /// <param name="member">Użytkownik do wzmienienia</param>
         /// <returns></returns>
         [Command("kiedyArmageddon")]
-        [Description("Przywitaj się.")]
+        [Description("Zwraca kiedy są najbliższe wykłady z systemów wbudowanych.")]
         [Aliases("whenArmageddon", "kiedyŚwider", "kiedyWbudowane")]
         public async Task WhenArmageddon(CommandContext ctx, [Description("Użytkownik do wzmienienia.")] DiscordMember member = null)
         {
