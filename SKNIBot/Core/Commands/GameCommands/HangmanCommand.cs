@@ -59,7 +59,8 @@ namespace SKNIBot.Core.Commands.GameCommands
             output += "\n";
             for (int j = 0; j < HangmanConst.stages[_actualStage - 1].Length; j++)
             {
-                output += HangmanConst.stages[_actualStage - 1][j] += "\n";
+                output += HangmanConst.stages[_actualStage - 1][j];
+                output += "\n";
             }
             //W razie wygranej
             if(_guessWord.Equals(_word))
