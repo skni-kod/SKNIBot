@@ -61,13 +61,10 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
             foreach (var category in categories)
             {
                 var sortedCategory = category.OrderBy(p => p.Names[0]);
+                var items = sortedCategory.Select(p => p.Names[0]);
 
                 stringBuilder.Append($"**{category.Key}**:\r\n");
-                foreach (var item in sortedCategory)
-                {
-                    stringBuilder.Append(item.Names[0] + " ");
-                }
-
+                stringBuilder.Append(string.Join(", ", items));
                 stringBuilder.Append("\r\n\r\n");
             }
 
