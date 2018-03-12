@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         [Command("wisielec")]
         [Description("Gra w wisielca.")]
         [Aliases("hangman")]
-        public async Task Czesc(CommandContext ctx, [Description("Kategoria")] string type = null)
+        public async Task Hangman(CommandContext ctx, [Description("Kategoria")] string type = null)
         {
             await ctx.TriggerTypingAsync();
 
@@ -77,11 +77,15 @@ namespace SKNIBot.Core.Commands.GameCommands
             await ctx.RespondAsync(output);
         }
 
-        public void StartGame(string type = null)
+        /// <summary>
+        /// Rozpoczyna grę
+        /// </summary>
+        /// <param name="type">Kategoria</param>
+        public void StartGame(string category = null)
         {
             _gameStarted = true;
             _actualStage = 1;
-            _word = GetWord(type);
+            _word = GetWord(category);
             _guessWord = "";
             for (int i = 0; i < _word.Length; i++)
             {
@@ -89,11 +93,21 @@ namespace SKNIBot.Core.Commands.GameCommands
             }
         }
 
+        /// <summary>
+        /// Losuje słowo
+        /// </summary>
+        /// <param name="Category">kategoria</param>
+        /// <returns></returns>
         public string GetWord(string Category = null)
         {
             return "słowo";
         }
 
+        /// <summary>
+        /// Sprawdza czy litera występuje w słowie
+        /// </summary>
+        /// <param name="letter">Litera do sprawdzenia</param>
+        /// <returns></returns>
         public bool CheckLetter(char letter)
         {
             if(_word.Contains(letter.ToString()))
@@ -106,6 +120,11 @@ namespace SKNIBot.Core.Commands.GameCommands
             }
         }
 
+        /// <summary>
+        /// Dodaje literę do ciągu znaków w miejscu w którym występuje w haśle
+        /// </summary>
+        /// <param name="letter">Litera</param>
+        /// <returns></returns>
         public string AddLetters(char letter)
         {
             char[] guessWord = _guessWord.ToCharArray();
