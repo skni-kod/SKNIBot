@@ -13,6 +13,9 @@ namespace SKNIBot.Core.Commands.GameCommands
     {
         private const int Stages = 9;
 
+        private Random _random;
+        private List<string> _words = new List<string> { { "słowo" }, { "shuka" }, { "naleśniki" } };
+
         private bool _gameStarted;
         private int _actualStage;
         private string _word;
@@ -24,6 +27,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             _actualStage = 0;
             _word = "";
             _guessWord = "";
+            _random = new Random();
         }
 
         [Command("wisielec")]
@@ -101,7 +105,9 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <returns></returns>
         public string GetWord(string Category = null)
         {
-            return "słowo";
+            var wordIndex = _random.Next(0, _words.Count);
+            var word = _words[wordIndex];
+            return word;
         }
 
         /// <summary>
