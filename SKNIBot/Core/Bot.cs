@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -17,6 +18,7 @@ namespace SKNIBot.Core
         public void Run()
         {
             Connect();
+            SetNetworkParameters();
             RegisterCommands();
         }
 
@@ -49,6 +51,12 @@ namespace SKNIBot.Core
             Commands.CommandErrored += Commands_CommandErrored;
 
             await Client.ConnectAsync();
+        }
+
+        private void SetNetworkParameters()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 |
+                                                   SecurityProtocolType.Tls12;
         }
 
         private void RegisterCommands()
