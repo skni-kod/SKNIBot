@@ -39,7 +39,8 @@ namespace SKNIBot.Core
             {
                 StringPrefix = SettingsLoader.Container.Prefix,
                 EnableDms = true,
-                EnableMentionPrefix = true
+                EnableMentionPrefix = true,
+                CaseSensitive = false
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
