@@ -34,7 +34,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             await ctx.TriggerTypingAsync();
 
             var jokeIndex = _random.Next(0, _jokes.Count);
-            var jokeToDisplay = _jokes[jokeIndex]; 
+            var jokeToDisplay = _jokes[jokeIndex];
             //Jeżeli długość jest jeden nie podano kodu
             if (member == null)
             {

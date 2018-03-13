@@ -8,7 +8,7 @@ namespace SKNIBot.Core.Commands.TextCommands
     [CommandsGroup("Tekst")]
     public class HiCommand
     {
-        private List<string> _developers = new List<string> { { "Azux Dario2860" }, { "TemporaryNick7229" }, { "Coedo2037" } };
+        private List<string> _developers = new List<string> { "Azux Dario2860", "TemporaryNick7229", "Coedo2037"};
 
         [Command("cześć")]
         [Description("Przywitaj się.")]
@@ -24,7 +24,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             else
             {
                 await ctx.RespondAsync("Cześć " + ctx.User.Mention);
-            }            
+            }
         }
     }
 }

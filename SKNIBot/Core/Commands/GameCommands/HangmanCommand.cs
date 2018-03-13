@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         private const int Stages = 9;
 
         private Random _random;
-        private List<string> _words = new List<string> { { "słowo" }, { "shuka" }, { "naleśniki" } };
+        private List<string> _words = new List<string> { "słowo", "shuka", "naleśniki" };
 
         private bool _gameStarted;
         private int _actualStage;
@@ -136,7 +136,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         {
             char[] guessWord = _guessWord.ToCharArray();
             for (int i = 0; i < _word.Length; i++)
-            { 
+            {
                 if(_word[i] == letter)
                 {
                     guessWord[i] =_word[i];

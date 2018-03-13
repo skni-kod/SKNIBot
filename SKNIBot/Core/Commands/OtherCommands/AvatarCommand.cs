@@ -21,7 +21,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
                 url = ctx.User.AvatarUrl;
             }
             else
-            {             
+            {
                 url = member.AvatarUrl;
             }
             var client = new WebClient();

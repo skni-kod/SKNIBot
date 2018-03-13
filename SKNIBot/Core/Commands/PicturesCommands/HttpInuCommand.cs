@@ -28,7 +28,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var client = new WebClient();
                 var httpInuPicture = client.DownloadData("https://httpstatusdogs.com/img/" + ctx.Message.Content.Split(' ')[1] + ".jpg");
                 var stream = new MemoryStream(httpInuPicture);
-                
+
                 await ctx.RespondWithFileAsync(stream, "httpinu.jpg");
             }
             //Jeżeli użytkownik prosi o kody ppsów podajemy je
@@ -40,7 +40,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     availableCodes += code;
                     availableCodes += " ";
                 }
-                
+
                 await ctx.RespondAsync("Kody: " + availableCodes);
             }
             //Jeżeli nie można otrzymać psa informujemy o błędnym kodzie
