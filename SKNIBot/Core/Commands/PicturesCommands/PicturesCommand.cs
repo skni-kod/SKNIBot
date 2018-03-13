@@ -9,7 +9,7 @@ using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.PicturesContainers;
 
-namespace SKNIBot.Core.Commands.PicturesCommands.PicturesCommand
+namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     public class PicturesCommand

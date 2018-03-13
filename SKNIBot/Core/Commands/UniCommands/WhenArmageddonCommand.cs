@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands.TextCommands
+namespace SKNIBot.Core.Commands.UniCommands
 {
     [CommandsGroup("Uczelnia")]
     public class WhenArmageddonCommand

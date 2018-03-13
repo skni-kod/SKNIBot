@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-namespace SKNIBot.Core.QuotesCommands.Commands
+namespace SKNIBot.Core.Commands.QuotesCommands
 {
     //PÓŹNIEJ TO POPRAWIE, NIE BIJCIE :<
     [CommandsGroup("Cytaty")]
