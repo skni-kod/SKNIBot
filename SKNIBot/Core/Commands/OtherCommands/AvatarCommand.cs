@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System.Net;
-using System.IO;
 
 namespace SKNIBot.Core.Commands.OtherCommands
 {

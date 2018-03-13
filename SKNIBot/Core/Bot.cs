@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Net.WebSocket;
 using SKNIBot.Core.Settings;
 

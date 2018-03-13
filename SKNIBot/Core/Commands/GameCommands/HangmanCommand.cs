@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System.Collections.Generic;
-using System;
 using SKNIBot.Core.Const.GamesConst;
-using System.Text;
 
 namespace SKNIBot.Core.Commands.GameCommands
 {

@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using System.Collections.Generic;
-using System;
 using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.TextCommands

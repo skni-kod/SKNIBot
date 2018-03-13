@@ -1,10 +1,7 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 
 namespace SKNIBot.Core.Commands.OtherCommands
 {
@@ -24,7 +21,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
             if (n > 0) {
                 int rnd = _random.Next(1, n);
 
-                await ctx.RespondAsync(String.Format("Kość wyrzuciła: {0}", rnd));
+                await ctx.RespondAsync(string.Format("Kość wyrzuciła: {0}", rnd));
             }
             else {
                 await ctx.RespondAsync("Invalid Parametr, type '!help K' for more info!");
@@ -38,7 +35,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
             if (a <= b) {
                 int rnd = _random.Next(a, b);
-                await ctx.RespondAsync(String.Format("Wylosowano: {0}", rnd));
+                await ctx.RespondAsync(string.Format("Wylosowano: {0}", rnd));
             }
             else {
                 await ctx.RespondAsync("Invalid Parametr, type '!help K' for more info!");

@@ -1,11 +1,9 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using SKNIBot.Core.Const.TextConst.NekosLife;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
+using SKNIBot.Core.Const.TextConst.NekosLife;
 using SKNIBot.Core.Containers.TextContainers.NekosLife;
 
 namespace SKNIBot.Core.Commands.TextCommands.NekosLife

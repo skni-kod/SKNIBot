@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
@@ -129,7 +127,7 @@ namespace SKNIBot.Core
                 embed.AddField(group.Key, string.Join(", ", group.Value));
             }
 
-            return new CommandHelpMessage(String.Empty, embed);
+            return new CommandHelpMessage(string.Empty, embed);
         }
 
         private CommandHelpMessage BuildCommandHelp(DiscordEmbedBuilder embed)
@@ -139,7 +137,7 @@ namespace SKNIBot.Core
             if(_aliases.Count > 0) embed.AddField("Aliasy", string.Join(", ", _aliases));
             if(_parameters.Count > 0) embed.AddField("Parametry", string.Join("\r\n", _parameters));
 
-            return new CommandHelpMessage(String.Empty, embed);
+            return new CommandHelpMessage(string.Empty, embed);
         }
     }
 }

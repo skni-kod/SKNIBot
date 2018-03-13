@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SKNIBot.Core.Containers.TextContainers
+﻿namespace SKNIBot.Core.Containers.TextContainers
 {
     public class CatFactContainer
     {
