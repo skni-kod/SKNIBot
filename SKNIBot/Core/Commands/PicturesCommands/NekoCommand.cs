@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             await ctx.TriggerTypingAsync();
 
             var client = new WebClient();
-            var cat = client.DownloadString("http://random.cat/meow");
+            var cat = client.DownloadString("http://aws.random.cat/meow");
             var nekoContainer = JsonConvert.DeserializeObject<NekoContainer>(cat);
             var catPicture = client.DownloadData(nekoContainer.File);
             var stream = new MemoryStream(catPicture);
