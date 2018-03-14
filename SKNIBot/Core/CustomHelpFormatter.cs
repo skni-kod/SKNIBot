@@ -96,6 +96,8 @@ namespace SKNIBot.Core
 
                             _subCommands[groupAttribute.Group].Add($"`{commandAttribute.Name}`");
                         }
+
+                        _subCommands[groupAttribute.Group] = _subCommands[groupAttribute.Group].OrderBy(p => p).ToList();
                     }
                 }
             }
@@ -122,7 +124,8 @@ namespace SKNIBot.Core
         {
             embed.AddField("HELP", "Wpisz !help <command_name> aby uzyskać więcej informacji.");
 
-            foreach (var group in _subCommands)
+            var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
+            foreach (var group in orderedSubCommands)
             {
                 embed.AddField(group.Key, string.Join(", ", group.Value));
             }
