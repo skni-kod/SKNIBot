@@ -30,6 +30,10 @@ namespace SKNIBot.Core.Commands.UniCommands
             DateTime nextLectures = nextWednesday.AddHours(14);
 
             TimeSpan timeSpan = nextLectures - DateTime.Now;
+            if (timeSpan.TotalSeconds < 0)
+            {
+                timeSpan = timeSpan.Add(new TimeSpan(7, 0, 0, 0));
+            }
 
             if (member == null)
             {
