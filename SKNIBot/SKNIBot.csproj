@@ -60,6 +60,7 @@
     <Compile Include="Core\Commands\GameCommands\HangmanCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\DescriptionCommand.cs" />
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
+    <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoAltCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\XkcdCommand.cs" />
     <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
