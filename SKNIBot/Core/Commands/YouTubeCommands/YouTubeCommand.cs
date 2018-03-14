@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
                 return;
             }
 
-            var videoData = _videos.FirstOrDefault(vid => vid.Names.Exists(p => p == videoName));
+            var videoData = _videos.FirstOrDefault(vid => vid.Names.Exists(p => p.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
             if (videoData == null)
             {
                 await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");

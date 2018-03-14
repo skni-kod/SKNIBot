@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 return;
             }
 
-            var videoData = _images.FirstOrDefault(vid => vid.Names.Exists(p => p == pictureName));
+            var videoData = _images.FirstOrDefault(vid => vid.Names.Exists(p => p.Equals(pictureName, StringComparison.InvariantCultureIgnoreCase)));
             if (videoData == null)
             {
                 await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");
