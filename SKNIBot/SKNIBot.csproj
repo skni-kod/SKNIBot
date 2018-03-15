@@ -84,6 +84,7 @@
     <Compile Include="Core\Commands\PicturesCommands\InuCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\JSCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\LennyCommand.cs" />
+    <Compile Include="Core\Commands\TextCommands\TalkCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\WikipediaCommand.cs" />
     <Compile Include="Core\Commands\UniCommands\WhenArmageddonCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Core\Const\PicturesConst\HttpNekoConst.cs" />
     <Compile Include="Core\Containers\PicturesContainers\DogContainer.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekoContainer.cs" />
+    <Compile Include="Core\Containers\TextContainers\TalkData.cs" />
     <Compile Include="Core\Containers\YouTubeContainers\VideoData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />

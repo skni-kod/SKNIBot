@@ -1,4 +1,6 @@
 ﻿{
   "token": "secret-value",
-  "prefix": "!"
+  "prefix": "!",
+
+  "clever_key": "secret-key"
 }
