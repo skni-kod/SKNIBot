@@ -23,6 +23,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         [Command("talk")]
         [Description("Porozmawiaj ze mną!")]
+        [Aliases("tell")]
         public async Task Lenny(CommandContext ctx, string message)
         {
             await ctx.TriggerTypingAsync();
