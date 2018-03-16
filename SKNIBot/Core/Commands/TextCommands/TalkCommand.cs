@@ -24,10 +24,30 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Command("talk")]
         [Description("Porozmawiaj ze mną!")]
         [Aliases("tell")]
-        public async Task Lenny(CommandContext ctx, string message)
+        public async Task Talk(CommandContext ctx, [Description("Co chcesz mi powiedzieć? Wpisz 'clear' aby zresetować kontekst rozmowy.")] string message)
         {
             await ctx.TriggerTypingAsync();
 
+            switch (message)
+            {
+                case "clear":
+                {
+                    _cs = string.Empty;
+                    await ctx.RespondAsync("Kontekst zresetowany.");
+
+                    break;
+                }
+
+                default:
+                {
+                    await ctx.RespondAsync(GetResponseFromCleverBot(message));
+                    break;
+                }
+            }
+        }
+
+        private string GetResponseFromCleverBot(string message)
+        {
             var webClient = new WebClient();
             webClient.Encoding = Encoding.UTF8;
 
@@ -37,7 +57,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             var talkData = JsonConvert.DeserializeObject<TalkData>(response);
             _cs = talkData.CS;
 
-            await ctx.RespondAsync(talkData.Output);
+            return talkData.Output;
         }
     }
 }
