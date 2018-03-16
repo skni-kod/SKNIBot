@@ -1,6 +1,6 @@
-# Bocik
+Ôªø# Bocik
 
-Discord bot developed by the SKNI (Studenckie Ko≥o Naukowe InformatykÛw "KOD") members. It contains a lot of various commands
+Discord bot developed by the SKNI (Studenckie Ko≈Ço Naukowe Informatyk√≥w "KOD") members. It contains a lot of various commands
 which includes: random cats, dogs, animu, xkcd comics, SpaceX launches, 8Ball, wiki articles, CleverBot integration, hangman, Monty Python,
 lizards and more.
 
