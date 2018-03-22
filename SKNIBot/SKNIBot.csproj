@@ -116,7 +116,6 @@
     <Compile Include="Core\Containers\PicturesContainers\PictureData.cs" />
     <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
-    <Compile Include="Core\Containers\TextContainers\JokesData.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />
@@ -131,6 +130,8 @@
     <Compile Include="Core\Containers\YouTubeContainers\VideoData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
+    <Compile Include="Core\Database\Helpers\RandomRowHelper.cs" />
+    <Compile Include="Core\Database\Models\Joke.cs" />
     <Compile Include="Core\Database\Models\MontyPythonVideo.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.TextContainers;
+using SKNIBot.Core.Database;
+using SKNIBot.Core.Database.Helpers;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
@@ -14,16 +17,10 @@ namespace SKNIBot.Core.Commands.TextCommands
     public class JokeCommand
     {
         private Random _random;
-        private List<JokesData> _jokes;
-        private const string _jokesFile = "jokes.json";
 
         public JokeCommand()
         {
             _random = new Random();
-            using (var file = new StreamReader(_jokesFile))
-            {
-                _jokes = JsonConvert.DeserializeObject<List<JokesData>>(file.ReadToEnd());
-            }
         }
 
         [Command("żart")]
@@ -33,16 +30,18 @@ namespace SKNIBot.Core.Commands.TextCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var jokeIndex = _random.Next(0, _jokes.Count);
-            var jokeToDisplay = _jokes[jokeIndex];
-            //Jeżeli długość jest jeden nie podano kodu
-            if (member == null)
+            using (var databaseContext = new DatabaseContext())
             {
-                await ctx.RespondAsync(jokeToDisplay.Joke);
-            }
-            else
-            {
-                await ctx.RespondAsync(jokeToDisplay.Joke + " " + member.Mention);
+                var jokeToDisplay = databaseContext.Jokes.Random();
+                var jokeContent = jokeToDisplay.Content;
+
+                //Jeżeli długość jest jeden nie podano kodu
+                if (member != null)
+                {
+                    jokeContent += " " + member.Mention;
+                }
+
+                await ctx.RespondAsync(jokeToDisplay.Content);
             }
         }
     }
