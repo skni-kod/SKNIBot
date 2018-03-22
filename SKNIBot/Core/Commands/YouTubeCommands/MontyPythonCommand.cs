@@ -1,29 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
+using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
     [CommandsGroup("YouTube")]
     public class MontyPythonCommand
     {
-        private List<string> _videos;
         private Random _random;
-
-        private const string _videosFile = "montypython.json";
 
         public MontyPythonCommand()
         {
             _random = new Random();
-
-            using (var file = new StreamReader(_videosFile))
-            {
-                _videos = JsonConvert.DeserializeObject<List<string>>(file.ReadToEnd());
-            }
         }
 
         [Command("montypython")]
@@ -32,8 +26,13 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var videoIndex = _random.Next(_videos.Count);
-            await ctx.RespondAsync(_videos[videoIndex]);
+            using (var databaseContext = new DatabaseContext())
+            {
+                var videoIndex = _random.Next(databaseContext.MontyPythonVideos.Count());
+                var video = databaseContext.MontyPythonVideos.First(p => p.ID == videoIndex);
+
+                await ctx.RespondAsync(video.Link);
+            }
         }
     }
 }

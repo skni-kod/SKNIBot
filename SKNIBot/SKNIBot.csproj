@@ -131,6 +131,7 @@
     <Compile Include="Core\Containers\YouTubeContainers\VideoData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
+    <Compile Include="Core\Database\Models\MontyPythonVideo.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
@@ -145,9 +146,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="jokes.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="montypython.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
