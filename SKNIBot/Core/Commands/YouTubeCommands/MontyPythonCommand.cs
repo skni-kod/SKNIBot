@@ -7,6 +7,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Database.Helpers;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
@@ -28,9 +29,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var videoIndex = _random.Next(databaseContext.MontyPythonVideos.Count());
-                var video = databaseContext.MontyPythonVideos.First(p => p.ID == videoIndex);
-
+                var video = databaseContext.MontyPythonVideos.Random();
                 await ctx.RespondAsync(video.Link);
             }
         }
