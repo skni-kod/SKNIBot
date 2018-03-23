@@ -11,8 +11,8 @@ namespace SKNIBot.Core.Database.Models
         public int ID { get; set; }
         public string Link { get; set; }
 
-        public int CategoryID { get; set; }
-        public virtual ImageCategory Category { get; set; }
+        public int ImageCategoryID { get; set; }
+        public virtual ImageCategory ImageCategory { get; set; }
 
         public virtual IList<ImageName> Names { get; set; }
     }

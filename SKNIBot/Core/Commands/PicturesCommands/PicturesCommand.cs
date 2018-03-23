@@ -57,7 +57,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var stringBuilder = new StringBuilder();
                 var categories = databaseContext.Images
                     .Include(p => p.Names)
-                    .GroupBy(p => p.Category.Name)
+                    .GroupBy(p => p.ImageCategory.Name)
                     .OrderBy(p => p.Key)
                     .ToList();
 
