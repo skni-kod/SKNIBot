@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Newtonsoft.Json;
-using SKNIBot.Core.Containers.PicturesContainers;
 using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
