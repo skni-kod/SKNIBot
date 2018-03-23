@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
         {
             await ctx.TriggerTypingAsync();
 
-            string url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
+            var url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
             var client = new WebClient();
             var catPicture = client.DownloadData(url);
             var stream = new MemoryStream(catPicture);

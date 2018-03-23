@@ -8,7 +8,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.EightBallCommands
 {
     [CommandsGroup("8Ball")]
-    class EightBallCommand {
+    public class EightBallCommand {
         List<string> _responses;
         Random _rand;
 
@@ -27,8 +27,8 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] string question) {
             await ctx.TriggerTypingAsync();
 
-            int responseIndex = _rand.Next(0, _responses.Count);
-            string response = string.Format("8Ball mówi: `{0}`", _responses[responseIndex]);
+            var responseIndex = _rand.Next(0, _responses.Count);
+            var response = string.Format("8Ball mówi: `{0}`", _responses[responseIndex]);
 
             await ctx.RespondAsync(response);
         }
@@ -52,8 +52,8 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         public async Task EightBallList(CommandContext ctx) {
             await ctx.TriggerTypingAsync();
 
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < _responses.Count; i++) {
+            var builder = new StringBuilder();
+            for (var i = 0; i < _responses.Count; i++) {
                 builder.AppendFormat("{0}: {1}\n", i + 1, _responses[i]);
             }
 

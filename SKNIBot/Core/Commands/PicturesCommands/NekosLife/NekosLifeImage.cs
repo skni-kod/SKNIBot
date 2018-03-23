@@ -34,7 +34,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 
         public string GetExtension(string url)
         {
-            string[] array = url.Split('.');
+            var array = url.Split('.');
             return array[array.Length - 1];
         }
     }

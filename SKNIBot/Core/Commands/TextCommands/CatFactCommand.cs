@@ -8,7 +8,7 @@ using SKNIBot.Core.Containers.TextContainers;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    class CatFactCommand
+    public class CatFactCommand
     {
         [Command("kotciekawostka")]
         [Description("Ciekawostki o kotach.")]

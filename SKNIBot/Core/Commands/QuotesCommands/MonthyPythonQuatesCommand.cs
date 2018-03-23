@@ -6,7 +6,7 @@ namespace SKNIBot.Core.Commands.QuotesCommands
 {
     //PÓŹNIEJ TO POPRAWIE, NIE BIJCIE :<
     [CommandsGroup("Cytaty")]
-    class MonthyPythonQuatesCommand {
+    public class MonthyPythonQuatesCommand {
         string _grenade;
 
         public MonthyPythonQuatesCommand() {

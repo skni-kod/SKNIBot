@@ -23,13 +23,13 @@ namespace SKNIBot.Core.Commands.UniCommands
 
             await ctx.TriggerTypingAsync();
 
-            DateTime today = DateTime.Today;
+            var today = DateTime.Today;
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
-            int daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)today.DayOfWeek + 7) % 7;
-            DateTime nextWednesday = today.AddDays(daysUntilWednesday);
-            DateTime nextLectures = nextWednesday.AddHours(14);
+            var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)today.DayOfWeek + 7) % 7;
+            var nextWednesday = today.AddDays(daysUntilWednesday);
+            var nextLectures = nextWednesday.AddHours(14);
 
-            TimeSpan timeSpan = nextLectures - DateTime.Now;
+            var timeSpan = nextLectures - DateTime.Now;
             if (timeSpan.TotalSeconds < 0)
             {
                 timeSpan = timeSpan.Add(new TimeSpan(7, 0, 0, 0));

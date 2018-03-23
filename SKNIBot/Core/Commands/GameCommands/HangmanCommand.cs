@@ -37,7 +37,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         {
             await ctx.TriggerTypingAsync();
 
-            string output = "";
+            var output = "";
             //Jeżeli gra nie jest rozpoczęta, rozpocznij
             if (_gameStarted == false)
             {
@@ -61,7 +61,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             //Generuj wyjście
             output += _guessWord;
             output += "\n";
-            for (int j = 0; j < HangmanConst.Stages[_actualStage - 1].Length; j++)
+            for (var j = 0; j < HangmanConst.Stages[_actualStage - 1].Length; j++)
             {
                 output += HangmanConst.Stages[_actualStage - 1][j];
                 output += "\n";
@@ -85,14 +85,14 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <summary>
         /// Rozpoczyna grę
         /// </summary>
-        /// <param name="type">Kategoria</param>
+        /// <param name="category">Kategoria</param>
         public void StartGame(string category = null)
         {
             _gameStarted = true;
             _actualStage = 1;
             _word = GetWord(category);
             _guessWord = "";
-            for (int i = 0; i < _word.Length; i++)
+            for (var i = 0; i < _word.Length; i++)
             {
                 _guessWord += "◯";
             }
@@ -117,14 +117,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <returns></returns>
         public bool CheckLetter(char letter)
         {
-            if(_word.Contains(letter.ToString()))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return _word.Contains(letter.ToString());
         }
 
         /// <summary>
@@ -134,15 +127,15 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <returns></returns>
         public string AddLetters(char letter)
         {
-            char[] guessWord = _guessWord.ToCharArray();
-            for (int i = 0; i < _word.Length; i++)
+            var guessWord = _guessWord.ToCharArray();
+            for (var i = 0; i < _word.Length; i++)
             {
                 if(_word[i] == letter)
                 {
                     guessWord[i] =_word[i];
-                }        
+                }
             }
-            StringBuilder returnValue = new StringBuilder();
+            var returnValue = new StringBuilder();
             returnValue.Append(guessWord);
             return returnValue.ToString();
         }

@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    class RandomCommand {
+    public class RandomCommand {
         private Random _random;
 
         public RandomCommand() {
@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
             await ctx.TriggerTypingAsync();
 
             if (n > 0) {
-                int rnd = _random.Next(1, n);
+                var rnd = _random.Next(1, n);
 
                 await ctx.RespondAsync(string.Format("Kość wyrzuciła: {0}", rnd));
             }
@@ -34,7 +34,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
             await ctx.TriggerTypingAsync();
 
             if (a <= b) {
-                int rnd = _random.Next(a, b);
+                var rnd = _random.Next(a, b);
                 await ctx.RespondAsync(string.Format("Wylosowano: {0}", rnd));
             }
             else {
