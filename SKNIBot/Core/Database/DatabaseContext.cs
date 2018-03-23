@@ -7,6 +7,9 @@ namespace SKNIBot.Core.Database
     {
         public virtual IDbSet<MontyPythonVideo> MontyPythonVideos { get; set; }
         public virtual IDbSet<Joke> Jokes { get; set; }
+        public virtual IDbSet<Image> Images { get; set; }
+        public virtual IDbSet<ImageName> ImageNames { get; set; }
+        public virtual IDbSet<ImageCategory> ImageCategories { get; set; }
 
         public DatabaseContext() : base("SQLiteConnectionString")
         {

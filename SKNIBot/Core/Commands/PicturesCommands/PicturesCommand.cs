@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,67 +10,69 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.PicturesContainers;
+using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     public class PicturesCommand
     {
-        private List<PictureData> _images;
-        private const string _imagesFile = "images.json";
-
-        public PicturesCommand()
-        {
-            using (var file = new StreamReader(_imagesFile))
-            {
-                _images = JsonConvert.DeserializeObject<List<PictureData>>(file.ReadToEnd());
-            }
-        }
-
         [Command("picture")]
         [Description("Wyświetl obrazek!")]
         [Aliases("pic")]
         public async Task Picture(CommandContext ctx, [Description("Wpisz !pic help aby uzyskać listę dostępnych opcji.")] string pictureName = null, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            if (pictureName == "list")
-            {
-                await ctx.RespondAsync($"Dostępne obrazki:\r\n\r\n{GetAvailableParameters()}");
-                return;
-            }
 
-            var videoData = _images.FirstOrDefault(vid => vid.Names.Exists(p => p.Equals(pictureName, StringComparison.InvariantCultureIgnoreCase)));
-            if (videoData == null)
+            using (var databaseContext = new DatabaseContext())
             {
-                await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");
-                return;
-            }
+                if (pictureName == "list")
+                {
+                    await ctx.RespondAsync($"Dostępne obrazki:\r\n\r\n{GetAvailableParameters()}");
+                    return;
+                }
 
-            var response = videoData.Link;
-            if (member != null)
-            {
-                response += $" {member.Mention}";
-            }
+                var pictureData = databaseContext.Images.FirstOrDefault(vid =>
+                    vid.Names.Any(p => p.Name.Equals(pictureName, StringComparison.InvariantCultureIgnoreCase)));
+                if (pictureData == null)
+                {
+                    await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");
+                    return;
+                }
 
-            await ctx.RespondAsync(response);
+                var response = pictureData.Link;
+                if (member != null)
+                {
+                    response += $" {member.Mention}";
+                }
+
+                await ctx.RespondAsync(response);
+            }
         }
 
         private string GetAvailableParameters()
         {
-            var stringBuilder = new StringBuilder();
-            var categories = _images.GroupBy(p => p.Category).OrderBy(p => p.Key).ToList();
-
-            foreach (var category in categories)
+            using (var databaseContext = new DatabaseContext())
             {
-                var sortedCategory = category.OrderBy(p => p.Names[0]);
-                var items = sortedCategory.Select(p => p.Names[0]);
+                var stringBuilder = new StringBuilder();
+                var categories = databaseContext.Images
+                    .Include(p => p.Names)
+                    .GroupBy(p => p.Category.Name)
+                    .OrderBy(p => p.Key)
+                    .ToList();
 
-                stringBuilder.Append($"**{category.Key}**:\r\n");
-                stringBuilder.Append(string.Join(", ", items));
-                stringBuilder.Append("\r\n\r\n");
+                foreach (var category in categories)
+                {
+                    var sortedCategory = category.OrderBy(p => p.Names[0].Name);
+                    var items = sortedCategory.Select(p => p.Names[0].Name);
+
+                    stringBuilder.Append($"**{category.Key}**:\r\n");
+                    stringBuilder.Append(string.Join(", ", items));
+                    stringBuilder.Append("\r\n\r\n");
+                }
+
+                return stringBuilder.ToString();
             }
-
-            return stringBuilder.ToString();
         }
     }
 }

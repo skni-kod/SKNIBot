@@ -113,7 +113,6 @@
     <Compile Include="Core\Const\PicturesConst\NekosLife\NekosLifePicturesEndpoints.cs" />
     <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
-    <Compile Include="Core\Containers\PicturesContainers\PictureData.cs" />
     <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
@@ -131,6 +130,9 @@
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
     <Compile Include="Core\Database\Helpers\RandomRowHelper.cs" />
+    <Compile Include="Core\Database\Models\Image.cs" />
+    <Compile Include="Core\Database\Models\ImageCategory.cs" />
+    <Compile Include="Core\Database\Models\ImageName.cs" />
     <Compile Include="Core\Database\Models\Joke.cs" />
     <Compile Include="Core\Database\Models\MontyPythonVideo.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
@@ -141,9 +143,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Database.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="images.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
