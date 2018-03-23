@@ -29,8 +29,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
                     return;
                 }
 
-                var videoData = databaseContext.Videos
-                    .FirstOrDefault(vid => vid.Names.Any(p => p.Name.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
+                var videoData = databaseContext.Videos.FirstOrDefault(vid => vid.Names.Any(p => p.Name.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
                 if (videoData == null)
                 {
                     await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");

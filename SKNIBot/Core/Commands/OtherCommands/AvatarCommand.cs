@@ -15,15 +15,8 @@ namespace SKNIBot.Core.Commands.OtherCommands
         public async Task Avatar(CommandContext ctx, [Description("Użytkownik, którego awatar chcesz.")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            string url;
-            if (member == null)
-            {
-                url = ctx.User.AvatarUrl;
-            }
-            else
-            {
-                url = member.AvatarUrl;
-            }
+
+            string url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
             var client = new WebClient();
             var catPicture = client.DownloadData(url);
             var stream = new MemoryStream(catPicture);

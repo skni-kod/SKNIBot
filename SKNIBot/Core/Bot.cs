@@ -86,7 +86,7 @@ namespace SKNIBot.Core
 
         private Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "ExampleBot",
+            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "SKNI Bot",
                 $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' " +
                 $"but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
 

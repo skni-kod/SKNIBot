@@ -14,13 +14,6 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
     [CommandsGroup("YouTube")]
     public class MontyPythonCommand
     {
-        private Random _random;
-
-        public MontyPythonCommand()
-        {
-            _random = new Random();
-        }
-
         [Command("montypython")]
         [Description("Display random Monty Python.")]
         public async Task MontyPython(CommandContext ctx)

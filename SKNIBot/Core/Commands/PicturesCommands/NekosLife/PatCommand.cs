@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
         public async Task Pat(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            await SendImage(ctx, NekosLifePicturesEndpoints.pat, member);
+            await SendImage(ctx, NekosLifePicturesEndpoints.Pat, member);
         }
     }
 }

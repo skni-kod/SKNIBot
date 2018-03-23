@@ -16,9 +16,11 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task CatFact(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+
             var client = new WebClient();
             var url = client.DownloadString("https://catfact.ninja/fact");
             var catContainer = JsonConvert.DeserializeObject<CatFactContainer>(url);
+
             await ctx.RespondAsync(catContainer.Fact);
         }
     }

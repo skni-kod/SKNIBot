@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Commands.TextCommands.NekosLife
         {
             await ctx.TriggerTypingAsync();
             var client = new WebClient();
-            var url = client.DownloadString(NekosLifeTextsEndpoints.why);
+            var url = client.DownloadString(NekosLifeTextsEndpoints.Why);
             var whyContainer = JsonConvert.DeserializeObject<NekosWhy>(url);
             await ctx.RespondAsync(whyContainer.Why);
         }

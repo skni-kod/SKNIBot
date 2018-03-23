@@ -2,6 +2,6 @@
 {
     public class NekosLifeTextsEndpoints
     {
-        public static readonly string why = "https://nekos.life/api/v2/why";
+        public static readonly string Why = "https://nekos.life/api/v2/why";
     }
 }

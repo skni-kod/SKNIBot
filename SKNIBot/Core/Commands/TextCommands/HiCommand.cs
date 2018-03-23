@@ -15,8 +15,8 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("hello", "hi")]
         public async Task Czesc(CommandContext ctx)
         {
-
             await ctx.TriggerTypingAsync();
+
             if (_developers.Contains(ctx.User.Username + ctx.User.Discriminator ))
             {
                 await ctx.RespondAsync("Cześć mój programisto " + ctx.User.Mention);
