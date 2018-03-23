@@ -126,7 +126,6 @@
     <Compile Include="Core\Containers\PicturesContainers\DogContainer.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekoContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\TalkData.cs" />
-    <Compile Include="Core\Containers\YouTubeContainers\VideoData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
     <Compile Include="Core\Database\Helpers\RandomRowHelper.cs" />
@@ -135,6 +134,9 @@
     <Compile Include="Core\Database\Models\ImageName.cs" />
     <Compile Include="Core\Database\Models\Joke.cs" />
     <Compile Include="Core\Database\Models\MontyPythonVideo.cs" />
+    <Compile Include="Core\Database\Models\Video.cs" />
+    <Compile Include="Core\Database\Models\VideoCategory.cs" />
+    <Compile Include="Core\Database\Models\VideoName.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
@@ -150,9 +152,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="settings.json.example" />
-    <None Include="youtube.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets')" />

@@ -7,69 +7,65 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Newtonsoft.Json;
-using SKNIBot.Core.Containers.YouTubeContainers;
+using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
     [CommandsGroup("YouTube")]
     public class YouTubeCommand
     {
-        private List<VideoData> _videos;
-        private const string _videosFile = "youtube.json";
-
-        public YouTubeCommand()
-        {
-            using (var file = new StreamReader(_videosFile))
-            {
-                _videos = JsonConvert.DeserializeObject<List<VideoData>>(file.ReadToEnd());
-            }
-        }
-
         [Command("youtube")]
         [Description("Display video!")]
         [Aliases("yt")]
         public async Task YouTube(CommandContext ctx, [Description("Wpisz !yt help aby uzyskać listę dostępnych opcji.")] string videoName = null, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            if (videoName == "list")
-            {
-                await ctx.RespondAsync($"Dostępne filmy:\r\n\r\n{GetAvailableParameters()}");
-                return;
-            }
 
-            var videoData = _videos.FirstOrDefault(vid => vid.Names.Exists(p => p.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
-            if (videoData == null)
+            using (var databaseContext = new DatabaseContext())
             {
-                await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");
-                return;
-            }
+                if (videoName == "list")
+                {
+                    await ctx.RespondAsync($"Dostępne filmy:\r\n\r\n{GetAvailableParameters()}");
+                    return;
+                }
 
-            var response = videoData.Link;
-            if (member != null)
-            {
-                response += $" {member.Mention}";
-            }
+                var videoData = databaseContext.Videos
+                    .FirstOrDefault(vid => vid.Names.Any(p => p.Name.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
+                if (videoData == null)
+                {
+                    await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");
+                    return;
+                }
 
-            await ctx.RespondAsync(response);
+                var response = videoData.Link;
+                if (member != null)
+                {
+                    response += $" {member.Mention}";
+                }
+
+                await ctx.RespondAsync(response);
+            }
         }
 
         private string GetAvailableParameters()
         {
-            var stringBuilder = new StringBuilder();
-            var categories = _videos.GroupBy(p => p.Category).OrderBy(p => p.Key).ToList();
-
-            foreach (var category in categories)
+            using (var databaseContext = new DatabaseContext())
             {
-                var sortedCategory = category.OrderBy(p => p.Names[0]);
-                var items = sortedCategory.Select(p => p.Names[0]);
+                var stringBuilder = new StringBuilder();
+                var categories = databaseContext.Videos.GroupBy(p => p.VideoCategory.Name).OrderBy(p => p.Key).ToList();
 
-                stringBuilder.Append($"**{category.Key}**:\r\n");
-                stringBuilder.Append(string.Join(", ", items));
-                stringBuilder.Append("\r\n\r\n");
+                foreach (var category in categories)
+                {
+                    var sortedCategory = category.OrderBy(p => p.Names[0].Name);
+                    var items = sortedCategory.Select(p => p.Names[0].Name);
+
+                    stringBuilder.Append($"**{category.Key}**:\r\n");
+                    stringBuilder.Append(string.Join(", ", items));
+                    stringBuilder.Append("\r\n\r\n");
+                }
+
+                return stringBuilder.ToString();
             }
-
-            return stringBuilder.ToString();
         }
     }
 }
