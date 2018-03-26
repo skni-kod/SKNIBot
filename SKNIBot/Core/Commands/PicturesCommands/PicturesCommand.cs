@@ -28,8 +28,9 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     return;
                 }
 
-                var pictureData = databaseContext.Images.FirstOrDefault(vid =>
-                    vid.Names.Any(p => p.Name.Equals(pictureName, StringComparison.InvariantCultureIgnoreCase)));
+                // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
+                var pictureData = databaseContext.Images.FirstOrDefault(pic => pic.Names.Any(p => DbFunctions.Like(p.Name, pictureName)));
+
                 if (pictureData == null)
                 {
                     await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");

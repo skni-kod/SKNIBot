@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,9 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
                     return;
                 }
 
-                var videoData = databaseContext.Videos.FirstOrDefault(vid => vid.Names.Any(p => p.Name.Equals(videoName, StringComparison.InvariantCultureIgnoreCase)));
+                // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
+                var videoData = databaseContext.Videos.FirstOrDefault(vid => vid.Names.Any(p => DbFunctions.Like(p.Name, videoName)));
+
                 if (videoData == null)
                 {
                     await ctx.RespondAsync("Nieznany parametr, wpisz !yt list aby uzyskać listę dostępnych.");
