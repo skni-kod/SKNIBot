@@ -10,12 +10,13 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
     public class LewdCommand : NekosLifeImage
     {
         //Z uwagi na możliwy ostry (zboczony) content na razie zakomentowane XD XD
-        //[Command("lewd")]
-        //[Description("Wyświetla obrazki lewd.")]
+        [Command("lewd")]
+        [Description("Wyświetla obrazki lewd.")]
         public async Task Lewd(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            await SendImage(ctx, NekosLifePicturesEndpoints.Lewd, member);
+            //await SendImage(ctx, NekosLifePicturesEndpoints.Lewd, member);
+            await ctx.RespondAsync("Chciałbyś ;)");
         }
     }
 }
