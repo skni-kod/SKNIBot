@@ -10,7 +10,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
     {
         [Command("opis")]
         [Description("Zmienia opis bota.")]
-        [RequireRolesAttribute("Bot")]
+        [RequireRolesAttribute("Projekt - Bot")]
         public async Task Description(CommandContext ctx, [Description("Nowy opis.")] string description = null)
         {
             await ctx.Client.UpdateStatusAsync(new DiscordGame(description));
