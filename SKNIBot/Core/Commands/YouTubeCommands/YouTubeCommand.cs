@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
         [Command("youtube")]
         [Description("Display video!")]
         [Aliases("yt")]
-        public async Task YouTube(CommandContext ctx, [Description("Wpisz !yt help aby uzyskać listę dostępnych opcji.")] string videoName = null, [Description("Wzmianka")] DiscordMember member = null)
+        public async Task YouTube(CommandContext ctx, [Description("Wpisz !yt list aby uzyskać listę dostępnych opcji.")] string videoName = null, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
 
