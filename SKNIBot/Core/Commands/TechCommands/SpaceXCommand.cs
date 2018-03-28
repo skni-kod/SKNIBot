@@ -8,7 +8,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.TechContainers.SpaceX;
 
-namespace SKNIBot.Core.Commands.TechCommands.SpaceX
+namespace SKNIBot.Core.Commands.TechCommands
 {
     [CommandsGroup("Tech")]
     public class SpaceXCommand

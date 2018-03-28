@@ -121,7 +121,7 @@
     <Compile Include="Core\Containers\TechContainers\SpaceX\PayloadsData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\RocketData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\SecondStageData.cs" />
-    <Compile Include="Core\Commands\TechCommands\SpaceX\SpaceXCommand.cs" />
+    <Compile Include="Core\Commands\TechCommands\SpaceXCommand.cs" />
     <Compile Include="Core\Const\PicturesConst\HttpNekoConst.cs" />
     <Compile Include="Core\Containers\PicturesContainers\DogContainer.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekoContainer.cs" />
