@@ -29,7 +29,9 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 }
 
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
-                var pictureData = databaseContext.Images.FirstOrDefault(pic => pic.Names.Any(p => DbFunctions.Like(p.Name, pictureName)));
+                var pictureData = databaseContext.Media
+                    .FirstOrDefault(pic => pic.Command.Name == "Picture" &&
+                                           pic.Names.Any(p => DbFunctions.Like(p.Name, pictureName)));
 
                 if (pictureData == null)
                 {
@@ -52,9 +54,9 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             using (var databaseContext = new DatabaseContext())
             {
                 var stringBuilder = new StringBuilder();
-                var categories = databaseContext.Images
-                    .Include(p => p.Names)
-                    .GroupBy(p => p.ImageCategory.Name)
+                var categories = databaseContext.Media
+                    .Where(p => p.Command.Name == "Picture")
+                    .GroupBy(p => p.Category.Name)
                     .OrderBy(p => p.Key)
                     .ToList();
 

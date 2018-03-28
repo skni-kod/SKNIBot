@@ -29,7 +29,9 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
                 }
 
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
-                var videoData = databaseContext.Videos.FirstOrDefault(vid => vid.Names.Any(p => DbFunctions.Like(p.Name, videoName)));
+                var videoData = databaseContext.Media
+                    .FirstOrDefault(vid => vid.Command.Name == "YouTube" &&
+                                           vid.Names.Any(p => DbFunctions.Like(p.Name, videoName)));
 
                 if (videoData == null)
                 {
@@ -52,7 +54,11 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
             using (var databaseContext = new DatabaseContext())
             {
                 var stringBuilder = new StringBuilder();
-                var categories = databaseContext.Videos.GroupBy(p => p.VideoCategory.Name).OrderBy(p => p.Key).ToList();
+                var categories = databaseContext.Media
+                    .Where(p => p.Command.Name == "YouTube")
+                    .GroupBy(p => p.Category.Name)
+                    .OrderBy(p => p.Key)
+                    .ToList();
 
                 foreach (var category in categories)
                 {

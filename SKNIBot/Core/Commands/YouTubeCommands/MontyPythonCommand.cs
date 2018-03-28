@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
@@ -17,8 +18,8 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var video = databaseContext.MontyPythonVideos.Random();
-                await ctx.RespondAsync(video.Link);
+                var video = databaseContext.Commands.First(p => p.Name == "MontyPython").SimpleResponses.Random();
+                await ctx.RespondAsync(video.Content);
             }
         }
     }

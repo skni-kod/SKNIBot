@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -27,7 +29,12 @@ namespace SKNIBot.Core.Commands.TextCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var jokeToDisplay = databaseContext.Jokes.Random();
+                var jokeToDisplay = databaseContext.Commands
+                    .Include(p => p.SimpleResponses)
+                    .First(p => p.Name == "Joke")
+                    .SimpleResponses
+                    .Random();
+
                 var jokeContent = jokeToDisplay.Content;
 
                 //Jeżeli długość jest jeden nie podano kodu
