@@ -1,36 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.EightBallCommands
 {
     [CommandsGroup("8Ball")]
     public class EightBallCommand {
-        List<string> _responses;
         Random _rand;
 
         public EightBallCommand() {
             _rand = new Random();
-
-            _responses = new List<string> { "Zapytaj Andrzeja",
-                                            "Masz ty w ogóle rozum i godność człowieka?!",
-                                            "Na pewno być może",
-                                            "Odpowiedź jest bliżej niż myślisz",
-                                            "Zapytaj później"};
         }
 
         [Command("8Ball")]
         [Description("Magic 8 ball odpowie na wszystkie twoje pytania!")]
-        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] string question) {
+        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] string question)
+        {
             await ctx.TriggerTypingAsync();
 
-            var responseIndex = _rand.Next(0, _responses.Count);
-            var response = string.Format("8Ball mówi: `{0}`", _responses[responseIndex]);
+            using (var databaseContext = new DatabaseContext())
+            {
+                var eightBallResponses = databaseContext.SimpleResponses.Where(p => p.Command.Name == "8Ball");
+                var randomIndex = _rand.Next(eightBallResponses.Count());
 
-            await ctx.RespondAsync(response);
+                var randomResponse = eightBallResponses
+                    .OrderBy(p => p.ID)
+                    .Select(p => p.Content)
+                    .Skip(randomIndex)
+                    .First();
+
+                await ctx.RespondAsync($"8Ball mówi: {randomResponse}");
+            }
         }
 
         //[Command("8BallAdd")]
@@ -49,15 +54,27 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         //}
 
         [Command("8BallList")]
-        public async Task EightBallList(CommandContext ctx) {
+        public async Task EightBallList(CommandContext ctx)
+        {
             await ctx.TriggerTypingAsync();
 
-            var builder = new StringBuilder();
-            for (var i = 0; i < _responses.Count; i++) {
-                builder.AppendFormat("{0}: {1}\n", i + 1, _responses[i]);
-            }
+            using (var databaseContext = new DatabaseContext())
+            {
+                var builder = new StringBuilder();
 
-            await ctx.RespondAsync(builder.ToString());
+                var eightBallResponses = databaseContext.SimpleResponses
+                    .Where(p => p.Command.Name == "8Ball")
+                    .OrderBy(p => p.ID)
+                    .Select(p => p.Content)
+                    .ToList();
+
+                for(var i=0; i< eightBallResponses.Count; i++)
+                {
+                    builder.Append($"{i + 1}: {eightBallResponses[i]}\n");
+                }
+
+                await ctx.RespondAsync(builder.ToString());
+            }
         }
     }
 }
