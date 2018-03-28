@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using SKNIBot.Core.Const.PicturesConst.NekosLife;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {

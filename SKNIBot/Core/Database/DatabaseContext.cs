@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Database
