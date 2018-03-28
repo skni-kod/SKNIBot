@@ -69,8 +69,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 foreach (var category in categories)
                 {
-                    var sortedCategory = category.OrderBy(p => p.CategoryName);
-                    var items = sortedCategory.Select(p => p.CategoryName);
+                    var sortedCategory = category.OrderBy(p => p.MediaName);
+                    var items = sortedCategory.Select(p => p.MediaName);
 
                     stringBuilder.Append($"**{category.Key}**:\r\n");
                     stringBuilder.Append(string.Join(", ", items));
