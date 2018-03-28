@@ -6,7 +6,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
-using SKNIBot.Core.Database.Helpers;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
@@ -29,13 +28,14 @@ namespace SKNIBot.Core.Commands.TextCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var jokeToDisplay = databaseContext.Commands
-                    .Include(p => p.SimpleResponses)
-                    .First(p => p.Name == "Joke")
-                    .SimpleResponses
-                    .Random();
+                var jokes = databaseContext.SimpleResponses.Where(p => p.Command.Name == "Joke");
+                var randomIndex = _random.Next(jokes.Count());
 
-                var jokeContent = jokeToDisplay.Content;
+                var jokeContent = jokes
+                    .OrderBy(p => p.ID)
+                    .Select(p => p.Content)
+                    .Skip(randomIndex)
+                    .First();
 
                 //Jeżeli długość jest jeden nie podano kodu
                 if (member != null)
@@ -43,7 +43,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                     jokeContent += " " + member.Mention;
                 }
 
-                await ctx.RespondAsync(jokeToDisplay.Content);
+                await ctx.RespondAsync(jokeContent);
             }
         }
     }

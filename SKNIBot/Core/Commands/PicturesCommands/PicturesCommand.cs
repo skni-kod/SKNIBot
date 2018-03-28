@@ -29,17 +29,18 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 }
 
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
-                var pictureData = databaseContext.Media
-                    .FirstOrDefault(pic => pic.Command.Name == "Picture" &&
-                                           pic.Names.Any(p => DbFunctions.Like(p.Name, pictureName)));
+                var pictureLink = databaseContext.Media
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => DbFunctions.Like(p.Name, pictureName)))
+                    .Select(p => p.Link)
+                    .FirstOrDefault();
 
-                if (pictureData == null)
+                if (pictureLink == null)
                 {
                     await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");
                     return;
                 }
 
-                var response = pictureData.Link;
+                var response = pictureLink;
                 if (member != null)
                 {
                     response += $" {member.Mention}";
@@ -56,14 +57,21 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var stringBuilder = new StringBuilder();
                 var categories = databaseContext.Media
                     .Where(p => p.Command.Name == "Picture")
-                    .GroupBy(p => p.Category.Name)
+                    .Select(p =>
+                        new
+                        {
+                            CategoryName = p.Category.Name,
+                            MediaName = p.Names.FirstOrDefault().Name
+                        })
+                    .AsEnumerable()
+                    .GroupBy(p => p.CategoryName)
                     .OrderBy(p => p.Key)
                     .ToList();
 
                 foreach (var category in categories)
                 {
-                    var sortedCategory = category.OrderBy(p => p.Names[0].Name);
-                    var items = sortedCategory.Select(p => p.Names[0].Name);
+                    var sortedCategory = category.OrderBy(p => p.CategoryName);
+                    var items = sortedCategory.Select(p => p.CategoryName);
 
                     stringBuilder.Append($"**{category.Key}**:\r\n");
                     stringBuilder.Append(string.Join(", ", items));

@@ -128,7 +128,6 @@
     <Compile Include="Core\Containers\TextContainers\TalkData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
-    <Compile Include="Core\Database\Helpers\RandomRowHelper.cs" />
     <Compile Include="Core\Database\Models\Command.cs" />
     <Compile Include="Core\Database\Models\Media.cs" />
     <Compile Include="Core\Database\Models\MediaCategory.cs" />

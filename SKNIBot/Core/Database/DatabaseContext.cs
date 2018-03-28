@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Database
@@ -14,7 +15,9 @@ namespace SKNIBot.Core.Database
 
         public DatabaseContext() : base("SQLiteConnectionString")
         {
-
+#if DEBUG
+            Database.Log = Console.Write;
+#endif
         }
     }
 }
