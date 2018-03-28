@@ -79,7 +79,7 @@
     <Compile Include="Core\Commands\OtherCommands\DescriptionCommand.cs" />
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekoAltCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\XkcdCommand.cs" />
     <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\AvatarCommand.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Core\Commands\TextCommands\WikipediaCommand.cs" />
     <Compile Include="Core\Commands\UniCommands\WhenArmageddonCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\NekoAltCommand.cs" />
     <Compile Include="Core\Commands\YouTubeCommands\YouTubeCommand.cs" />
     <Compile Include="Core\Const\GamesConst\HangmanConst.cs" />
     <Compile Include="Core\Const\PicturesConst\HttpInuConst.cs" />

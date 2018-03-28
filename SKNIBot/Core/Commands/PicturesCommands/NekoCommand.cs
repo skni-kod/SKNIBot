@@ -1,30 +1,29 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using Newtonsoft.Json;
-using SKNIBot.Core.Containers.PicturesContainers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     public class NekoCommand
     {
+        private const string _randomSiteURL = "http://thecatapi.com/api/images/get?format=src";
+
         [Command("kot")]
-        [Description("Wyświetla słodkie kotki.")]
+        [Description("Wyświetla słodkie kotki w postaci gifów.")]
         [Aliases("neko", "cat")]
         public async Task Neko(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
-            var client = new WebClient();
-            var cat = client.DownloadString("http://aws.random.cat/meow");
-            var nekoContainer = JsonConvert.DeserializeObject<NekoContainer>(cat);
-            var catPicture = client.DownloadData(nekoContainer.File);
-            var stream = new MemoryStream(catPicture);
+            var request = (HttpWebRequest)WebRequest.Create(_randomSiteURL);
+            request.AllowAutoRedirect = false;
 
-            await ctx.RespondWithFileAsync(stream, "neko.jpg");
+            using (var response = request.GetResponse())
+            {
+                await ctx.RespondAsync(response.Headers["Location"]);
+            }
         }
     }
 }
