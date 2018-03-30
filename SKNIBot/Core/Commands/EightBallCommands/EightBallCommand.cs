@@ -37,20 +37,24 @@ namespace SKNIBot.Core.Commands.EightBallCommands
             }
         }
 
-        //[Command("8BallAdd")]
-        //[RequirePermissions(DSharpPlus.Permissions.Administrator)]
-        //public async Task EightBallAdd(CommandContext ctx, params string[] newResponse) {
-        //    await ctx.TriggerTypingAsync();
+        [Command("8BallAdd")]
+        //[RequirePermissions(DSharpPlus.Permissions.ManageChannels)]
+        [RequireRolesAttribute("Core", "Projekt - Bot")]
+        public async Task EightBallAdd(CommandContext ctx, string newResponse) {
+            await ctx.TriggerTypingAsync();
 
-        //    StringBuilder builder = new StringBuilder();
-        //    foreach (var item in newResponse) {
-        //        builder.AppendFormat("{0} ", item);
-        //    }
+           using(var db = new DatabaseContext()) {
+                var command = db.Commands.Where(c => c.Name == "8Ball").FirstOrDefault();
 
-        //    _responses.Add(builder.ToString());
+                db.SimpleResponses.Add(new Database.Models.SimpleResponse {
+                    Content = newResponse,
+                    CommandID = command.ID
+                });
 
-        //    await ctx.RespondAsync("Odpowiedź dodana");
-        //}
+                await db.SaveChangesAsync();
+                await ctx.RespondAsync($"Odpowiedź '{newResponse}' dodana");
+            }
+        }
 
         [Command("8BallList")]
         public async Task EightBallList(CommandContext ctx)
