@@ -2,5 +2,6 @@
   "token": "secret-value",
   "prefix": "!",
 
-  "clever_key": "secret-key"
+  "clever_key": "secret-key",
+  "waaai_key" : "link-key"
 }
