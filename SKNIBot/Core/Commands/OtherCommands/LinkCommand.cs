@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SKNIBot.Core.Containers.TextContainers;
+using SKNIBot.Core.Containers.OtherContainers;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext;
 using System.Net;
 using Newtonsoft.Json;
 using SKNIBot.Core.Settings;
 
-namespace SKNIBot.Core.Commands.TextCommands
+namespace SKNIBot.Core.Commands.OtherCommands
 {
-    [CommandsGroup("Tekst")]
+    [CommandsGroup("Różne")]
     class LinkCommand
     {
         [Command("link")]

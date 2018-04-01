@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Containers.TextContainers
+﻿namespace SKNIBot.Core.Containers.OtherContainers
 {
     public class LinkContainer
     {
