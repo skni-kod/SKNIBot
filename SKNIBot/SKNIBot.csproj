@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Core\Commands\ModerationCommands\RemoveMessageCommand.cs" />
     <None Include="Database.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
