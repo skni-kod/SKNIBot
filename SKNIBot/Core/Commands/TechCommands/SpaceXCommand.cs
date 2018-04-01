@@ -38,28 +38,28 @@ namespace SKNIBot.Core.Commands.TechCommands
             switch (type)
             {
                 case "random":
-                {
-                    await SendRandomFlight(ctx);
-                    break;
-                }
+                    {
+                        await SendRandomFlight(ctx);
+                        break;
+                    }
 
                 case "upcoming":
-                {
-                    await SendUpcomingFlight(ctx);
-                    break;
-                }
+                    {
+                        await SendUpcomingFlight(ctx);
+                        break;
+                    }
 
                 case "heavy":
-                {
-                    await SendFHFlight(ctx);
-                    break;
-                }
+                    {
+                        await SendFHFlight(ctx);
+                        break;
+                    }
 
                 default:
-                {
-                    await SendParameterNotFoundError(ctx);
-                    break;
-                }
+                    {
+                        await SendParameterNotFoundError(ctx);
+                        break;
+                    }
             }
         }
 
@@ -111,7 +111,7 @@ namespace SKNIBot.Core.Commands.TechCommands
         private string GetResponse(FlightData data)
         {
             var responseBuilder = new StringBuilder();
-            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({data.Launch_Date_UTC.ToLocalTime()})**\r\n");
+            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({data.Launch_Date_UTC:yyyy-MM-dd HH:mm:ss})**\r\n");
             responseBuilder.Append("\r\n");
 
             responseBuilder.Append("**Payloads:**\r\n");
