@@ -104,6 +104,7 @@
     <Compile Include="Core\Commands\PicturesCommands\InuCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\JSCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\LennyCommand.cs" />
+    <Compile Include="Core\Commands\TextCommands\SayCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\TalkCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\WikipediaCommand.cs" />
     <Compile Include="Core\Commands\UniCommands\WhenArmageddonCommand.cs" />
