@@ -79,6 +79,7 @@
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesAltCommand.cs" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesCommand.cs" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesGroupCommand.cs" />
+    <Compile Include="Core\Commands\ModerationCommands\RemoveMessagesToCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\DescriptionCommand.cs" />
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
