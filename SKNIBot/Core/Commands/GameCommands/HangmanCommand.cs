@@ -67,8 +67,12 @@ namespace SKNIBot.Core.Commands.GameCommands
             {
                 output += "Podaj literę \n";
             }
+            else if (type == _word)
+            {
+                _guessWord = _word;
+            }
             //W innym wypadku sprawdź czy dana litera występuje
-            else
+            else if(type.Length == 1)
             {
                 if (CheckLetter(type[0]))
                 {
