@@ -215,13 +215,13 @@ namespace SKNIBot.Core.Commands.GameCommands
             if (_guessWord.Equals(_word))
             {
                 _gameStarted = false;
-                output += "Wygrana Słowo: " + _word;
+                output += "Wygrana \nSłowo: " + _word;
             }
             //W razie przegranej
             if (_actualStage == Stages)
             {
                 _gameStarted = false;
-                output += "Przegrana Słowo: " + _word;
+                output += "Przegrana \nSłowo: " + _word;
             }
             return output;
         }
