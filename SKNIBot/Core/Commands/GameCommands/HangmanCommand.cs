@@ -7,6 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Const.GamesConst;
 using SKNIBot.Core.Database;
 using System.Linq;
+using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.GameCommands
 {
@@ -72,7 +73,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _guessWord = _word;
             }
             //W innym wypadku sprawdź czy dana litera występuje
-            else if(type.Length == 1)
+            else if (type.Length == 1)
             {
                 if (CheckLetter(type[0]))
                 {
@@ -92,7 +93,15 @@ namespace SKNIBot.Core.Commands.GameCommands
 
             //Generuj wyjście
             output += GenerateOutput();
-            await ctx.RespondAsync(output);
+
+            //Generuj wyjście
+            var embed = new DiscordEmbedBuilder
+            {
+                Color = new DiscordColor("#5588EE")
+            };
+            embed.AddField("Hangman", output);
+
+            await ctx.RespondAsync("", false, embed);
         }
 
         /// <summary>
@@ -109,7 +118,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             _guessedLetters = new List<char>();
             for (var i = 0; i < word.Length; i++)
             {
-                if(word[i] != ' ')
+                if (word[i] != ' ')
                 {
                     _guessWord += "◯";
                 }
@@ -117,7 +126,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 {
                     _guessWord += " ";
                 }
-                
+
             }
         }
 
@@ -156,8 +165,8 @@ namespace SKNIBot.Core.Commands.GameCommands
                         .Where(p => p.HangmanCategoryID == 3)
                         .Select(p => p.Word);
                 }
-                var words = wordList.ToList();      
-                
+                var words = wordList.ToList();
+
                 var wordIndex = _random.Next(0, words.Count);
                 var word = words[wordIndex];
                 return word;
@@ -185,7 +194,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             var word = _word.ToLower();
             for (var i = 0; i < _word.Length; i++)
             {
-                if(word[i] == letter)
+                if (word[i] == letter)
                 {
                     guessWord[i] = _word[i];
                 }
