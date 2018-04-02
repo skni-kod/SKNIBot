@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         private const int Stages = 9;
 
         private Random _random;
-        private List<string> _words = new List<string> { "słowo", "shuka", "naleśniki" };
+        private List<string> _words = new List<string> { "słowo", "shuka", "naleśniki", "pies", "krzesło", "powała", "komputer", "drzewo", "chiny" };
 
         private bool _gameStarted;
         private int _actualStage;
