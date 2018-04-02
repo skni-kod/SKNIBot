@@ -210,6 +210,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 output += _guessedLetters[j];
                 output += " ";
             }
+            output += "\n";
             //W razie wygranej
             if (_guessWord.Equals(_word))
             {
