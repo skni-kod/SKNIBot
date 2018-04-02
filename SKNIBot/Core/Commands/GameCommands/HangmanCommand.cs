@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Const.GamesConst;
+using SKNIBot.Core.Database;
+using System.Linq;
 
 namespace SKNIBot.Core.Commands.GameCommands
 {
@@ -14,12 +16,28 @@ namespace SKNIBot.Core.Commands.GameCommands
         private const int Stages = 9;
 
         private Random _random;
-        private List<string> _words = new List<string> { "słowo", "shuka", "naleśniki", "pies", "krzesło", "powała", "komputer", "drzewo", "chiny" };
 
+        /// <summary>
+        /// Czu gra rozpoczęta
+        /// </summary>
         private bool _gameStarted;
+        /// <summary>
+        /// Aktualny poziom
+        /// </summary>
         private int _actualStage;
+        /// <summary>
+        /// Słowo do odgadnięcia
+        /// </summary>
         private string _word;
+        /// <summary>
+        /// Aktualnie odgadywane słowo
+        /// </summary>
         private string _guessWord;
+
+        /// <summary>
+        /// Podane wcześniej litery
+        /// </summary>
+        private List<char> _guessedLetters;
 
         public HangmanCommand()
         {
@@ -27,11 +45,12 @@ namespace SKNIBot.Core.Commands.GameCommands
             _actualStage = 0;
             _word = "";
             _guessWord = "";
+            _guessedLetters = new List<char>();
             _random = new Random();
         }
 
         [Command("wisielec")]
-        [Description("Gra w wisielca.")]
+        [Description("Gra w wisielca. Możliwe kategorie `państwa`, `zwierzęta`, `rzeczy` lub brak kategrii.")]
         [Aliases("hangman")]
         public async Task Hangman(CommandContext ctx, [Description("Kategoria")] string type = null)
         {
@@ -44,41 +63,31 @@ namespace SKNIBot.Core.Commands.GameCommands
                 StartGame(type);
             }
             //Gdy brak litery
-            else if(type == null)
+            else if (type == null)
             {
                 output += "Podaj literę \n";
             }
             //W innym wypadku sprawdź czy dana litera występuje
-            else if (CheckLetter(type[0]))
-            {
-                _guessWord = AddLetters(type[0]);
-            }
-            //W razie pomyłki zwiększ licznik błędów
             else
             {
-                _actualStage++;
-            }
-            //Generuj wyjście
-            output += _guessWord;
-            output += "\n";
-            for (var j = 0; j < HangmanConst.Stages[_actualStage - 1].Length; j++)
-            {
-                output += HangmanConst.Stages[_actualStage - 1][j];
-                output += "\n";
-            }
-            //W razie wygranej
-            if(_guessWord.Equals(_word))
-            {
-                _gameStarted = false;
-                output += "Wygrana";
-            }
-            //W razie przegranej
-            if(_actualStage == Stages)
-            {
-                _gameStarted = false;
-                output += "Przegrana";
+                if (CheckLetter(type[0]))
+                {
+                    _guessWord = AddLetters(type[0]);
+                }
+                //W razie pomyłki zwiększ licznik błędów
+                else
+                {
+                    _actualStage++;
+                }
+                //Dodaj literę do listy
+                if (!_guessedLetters.Contains(type[0]))
+                {
+                    _guessedLetters.Add(type[0]);
+                }
             }
 
+            //Generuj wyjście
+            output += GenerateOutput();
             await ctx.RespondAsync(output);
         }
 
@@ -86,15 +95,25 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// Rozpoczyna grę
         /// </summary>
         /// <param name="category">Kategoria</param>
-        public void StartGame(string category = null)
+        private void StartGame(string category = null)
         {
             _gameStarted = true;
             _actualStage = 1;
             _word = GetWord(category);
+            var word = _word.ToCharArray();
             _guessWord = "";
-            for (var i = 0; i < _word.Length; i++)
+            _guessedLetters = new List<char>();
+            for (var i = 0; i < word.Length; i++)
             {
-                _guessWord += "◯";
+                if(word[i] != ' ')
+                {
+                    _guessWord += "◯";
+                }
+                else
+                {
+                    _guessWord += " ";
+                }
+                
             }
         }
 
@@ -103,11 +122,42 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// </summary>
         /// <param name="Category">kategoria</param>
         /// <returns></returns>
-        public string GetWord(string Category = null)
+        private string GetWord(string Category = null)
         {
-            var wordIndex = _random.Next(0, _words.Count);
-            var word = _words[wordIndex];
-            return word;
+
+            using (var databaseContext = new DatabaseContext())
+            {
+                IQueryable<string> wordList = null;
+
+                if (Category == null)
+                {
+                    wordList = databaseContext.HangmanWords
+                        .Select(p => p.Word);
+                }
+                else if (Category == "państwa")
+                {
+                    wordList = databaseContext.HangmanWords
+                        .Where(p => p.HangmanCategoryID == 1)
+                        .Select(p => p.Word);
+                }
+                else if (Category == "zwierzęta")
+                {
+                    wordList = databaseContext.HangmanWords
+                        .Where(p => p.HangmanCategoryID == 2)
+                        .Select(p => p.Word);
+                }
+                else if (Category == "rzeczy")
+                {
+                    wordList = databaseContext.HangmanWords
+                        .Where(p => p.HangmanCategoryID == 3)
+                        .Select(p => p.Word);
+                }
+                var words = wordList.ToList();      
+                
+                var wordIndex = _random.Next(0, words.Count);
+                var word = words[wordIndex];
+                return word;
+            }
         }
 
         /// <summary>
@@ -115,9 +165,9 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// </summary>
         /// <param name="letter">Litera do sprawdzenia</param>
         /// <returns></returns>
-        public bool CheckLetter(char letter)
+        private bool CheckLetter(char letter)
         {
-            return _word.Contains(letter.ToString());
+            return _word.ToLower().Contains(letter.ToString());
         }
 
         /// <summary>
@@ -125,19 +175,54 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// </summary>
         /// <param name="letter">Litera</param>
         /// <returns></returns>
-        public string AddLetters(char letter)
+        private string AddLetters(char letter)
         {
             var guessWord = _guessWord.ToCharArray();
+            var word = _word.ToLower();
             for (var i = 0; i < _word.Length; i++)
             {
-                if(_word[i] == letter)
+                if(word[i] == letter)
                 {
-                    guessWord[i] =_word[i];
+                    guessWord[i] = _word[i];
                 }
             }
             var returnValue = new StringBuilder();
             returnValue.Append(guessWord);
             return returnValue.ToString();
+        }
+
+        /// <summary>
+        /// Dodaje do wyjścia szybienicę
+        /// </summary>
+        /// <param name="output"></param>
+        private string GenerateOutput()
+        {
+            string output = "";
+            output += _guessWord;
+            output += "\n";
+            for (var j = 0; j < HangmanConst.Stages[_actualStage - 1].Length; j++)
+            {
+                output += HangmanConst.Stages[_actualStage - 1][j];
+                output += "\n";
+            }
+            for (var j = 0; j < _guessedLetters.Count; j++)
+            {
+                output += _guessedLetters[j];
+                output += " ";
+            }
+            //W razie wygranej
+            if (_guessWord.Equals(_word))
+            {
+                _gameStarted = false;
+                output += "Wygrana Słowo: " + _word;
+            }
+            //W razie przegranej
+            if (_actualStage == Stages)
+            {
+                _gameStarted = false;
+                output += "Przegrana Słowo: " + _word;
+            }
+            return output;
         }
     }
 }
