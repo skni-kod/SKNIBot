@@ -135,6 +135,8 @@
     <Compile Include="Core\CustomHelpFormatter.cs" />
     <Compile Include="Core\Database\DatabaseContext.cs" />
     <Compile Include="Core\Database\Models\Command.cs" />
+    <Compile Include="Core\Database\Models\HangmanCategory.cs" />
+    <Compile Include="Core\Database\Models\HangmanWord.cs" />
     <Compile Include="Core\Database\Models\Media.cs" />
     <Compile Include="Core\Database\Models\MediaCategory.cs" />
     <Compile Include="Core\Database\Models\MediaName.cs" />

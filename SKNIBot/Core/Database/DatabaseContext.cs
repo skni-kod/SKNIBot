@@ -13,6 +13,9 @@ namespace SKNIBot.Core.Database
         public virtual IDbSet<MediaName> MediaNames { get; set; }
         public virtual IDbSet<MediaCategory> MediaCategories { get; set; }
 
+        public virtual IDbSet<HangmanCategory> HangmanCategories { get; set; }
+        public virtual IDbSet<HangmanWord> HangmanWords { get; set; }
+
         public DatabaseContext() : base("SQLiteConnectionString")
         {
 #if DEBUG
