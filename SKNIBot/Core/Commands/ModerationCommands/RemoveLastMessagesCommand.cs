@@ -9,7 +9,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     public class RemoveLastMessagesCommand
     {
         [Command("usuń")]
-        [Aliases("usun")]
+        [Aliases("usun", "delete")]
         [Description("Usuwa ostatnie x wiadomości.")]
         [RequireRolesAttribute("Projekt - Bot")]
         public async Task RemoveLastMessages(CommandContext ctx, [Description("Liczba ostatnich wiadomości do usunięcia.")] int messagesCount)

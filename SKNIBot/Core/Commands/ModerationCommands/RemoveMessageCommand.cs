@@ -12,7 +12,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     class RemoveMessageCommand
     {
         [Command("usuńID")]
-        [Aliases("usunID")]
+        [Aliases("usunID", "deleteID")]
         [Description("Usuwa konkretną wiadomość.")]
         [RequireRolesAttribute("Projekt - Bot")]
         public async Task RemoveTest(CommandContext ctx, [Description("ID wiadomości.")] ulong ID)

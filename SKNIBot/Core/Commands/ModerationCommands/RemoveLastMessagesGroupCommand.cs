@@ -12,7 +12,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     class RemoveLastMessagesGroupCommand
     {
         [Command("usuńGrupowo")]
-        [Aliases("usunGrupowo")]
+        [Aliases("usunGrupowo", "deleteGroup")]
         [Description("Usuwa ostatnie x wiadomości w grupach.")]
         [RequireRolesAttribute("Projekt - Bot")]
         public async Task RemoveLastMessagesGroup(CommandContext ctx, [Description("Liczba usunięć.")] int deleteCount, [Description("Liczba wiadomości do usunięcia w grupie.")] int messagesCount)
