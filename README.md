@@ -5,8 +5,8 @@ which includes: random cats, dogs, animu, xkcd comics, SpaceX launches, 8Ball, w
 lizards and more.
 
 # Used libraries
-  * [DSharpPlus](https://github.com/DSharpPlus/)
+  * [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)
   * [Entity Framework](https://github.com/aspnet/EntityFramework6)
   * [System.Data.Sqlite](https://github.com/aspnet/Microsoft.Data.Sqlite)
   * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
-  * [Websocket4net](https://github.com/kerryjiang/WebSocket4Net)
+  * [WebSocket4Net](https://github.com/kerryjiang/WebSocket4Net)
