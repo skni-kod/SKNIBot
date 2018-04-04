@@ -51,7 +51,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         [Command("wisielec")]
         [Description("Gra w wisielca. Możliwe kategorie `państwa`, `zwierzęta`, `rzeczy` lub brak kategrii.")]
-        [Aliases("hangman")]
+        [Aliases("hangman", "w", "h")]
         public async Task Hangman(CommandContext ctx, [Description("Kategoria")] string type = null)
         {
             await ctx.TriggerTypingAsync();
