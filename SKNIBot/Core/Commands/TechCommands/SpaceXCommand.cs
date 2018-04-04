@@ -111,7 +111,9 @@ namespace SKNIBot.Core.Commands.TechCommands
         private string GetResponse(FlightData data)
         {
             var responseBuilder = new StringBuilder();
-            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({data.Launch_Date_UTC:yyyy-MM-dd HH:mm:ss})**\r\n");
+            var launchDate = TimeZoneInfo.ConvertTimeFromUtc(data.Launch_Date_UTC, TimeZoneInfo.Local);
+
+            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({launchDate:yyyy-MM-dd HH:mm:ss})**\r\n");
             responseBuilder.Append("\r\n");
 
             responseBuilder.Append("**Payloads:**\r\n");
