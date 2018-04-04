@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Net;
 using System.Threading.Tasks;
-using SKNIBot.Core.Containers.OtherContainers;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext;
-using System.Net;
+using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
+using SKNIBot.Core.Containers.OtherContainers;
 using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core.Commands.OtherCommands

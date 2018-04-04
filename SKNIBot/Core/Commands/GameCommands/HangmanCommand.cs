@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using SKNIBot.Core.Const.GamesConst;
 using SKNIBot.Core.Database;
-using System.Linq;
-using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.GameCommands
 {
