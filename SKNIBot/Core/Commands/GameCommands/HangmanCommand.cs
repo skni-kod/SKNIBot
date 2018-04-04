@@ -34,7 +34,6 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// Aktualnie odgadywane słowo
         /// </summary>
         private string _guessWord;
-
         /// <summary>
         /// Podane wcześniej litery
         /// </summary>
@@ -73,7 +72,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _guessWord = _word;
             }
             //W innym wypadku sprawdź czy dana litera występuje
-            else if (type.Length == 1)
+            else if (type.Length == 1 && char.IsLetter(type[0]))
             {
                 if (CheckLetter(type[0]))
                 {
@@ -118,7 +117,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             _guessedLetters = new List<char>();
             for (var i = 0; i < word.Length; i++)
             {
-                if (word[i] != ' ')
+                if (char.IsLetter(word[i]))
                 {
                     _guessWord += "◯";
                 }
