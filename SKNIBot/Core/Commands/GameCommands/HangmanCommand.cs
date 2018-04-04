@@ -123,7 +123,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 }
                 else
                 {
-                    _guessWord += " ";
+                    _guessWord += word[i];
                 }
 
             }
