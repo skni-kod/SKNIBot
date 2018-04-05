@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -11,7 +12,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("usuńDoID")]
         [Aliases("usunDoID", "deleteToID")]
         [Description("Usuwa wiadomości do wiadomości o podanym id włącznie.")]
-        [RequireRolesAttribute("Projekt - Bot")]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task RemoveLastMessagesTo(CommandContext ctx, [Description("Liczba ostatnich wiadomości do usunięcia.")] ulong messageID)
         {
             var messages = await ctx.Channel.GetMessagesAsync(1);

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -27,7 +28,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
         [Command("opis")]
         [Description("Zmienia opis bota.")]
-        [RequireRolesAttribute("Projekt - Bot")]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task Description(CommandContext ctx, [Description("Nowy opis.")] string description = null)
         {
             _ctx = ctx;

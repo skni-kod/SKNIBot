@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -10,7 +11,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("usuńID")]
         [Aliases("usunID", "deleteID")]
         [Description("Usuwa konkretną wiadomość.")]
-        [RequireRolesAttribute("Projekt - Bot")]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task RemoveTest(CommandContext ctx, [Description("ID wiadomości.")] ulong ID)
         {
             var message = await ctx.Channel.GetMessageAsync(ID);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -11,7 +12,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("usuńGrupowo")]
         [Aliases("usunGrupowo", "deleteGroup")]
         [Description("Usuwa ostatnie x wiadomości w grupach.")]
-        [RequireRolesAttribute("Projekt - Bot")]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task RemoveLastMessagesGroup(CommandContext ctx, [Description("Liczba usunięć.")] int deleteCount, [Description("Liczba wiadomości do usunięcia w grupie.")] int messagesCount)
         {
             var messages = await ctx.Channel.GetMessagesAsync(1);

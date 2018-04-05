@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
@@ -38,8 +39,7 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         }
 
         [Command("8BallAdd")]
-        //[RequirePermissions(DSharpPlus.Permissions.ManageChannels)]
-        [RequireRolesAttribute("Core", "Projekt - Bot")]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task EightBallAdd(CommandContext ctx, string newResponse) {
             await ctx.TriggerTypingAsync();
 
