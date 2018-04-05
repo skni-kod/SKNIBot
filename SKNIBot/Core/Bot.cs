@@ -5,6 +5,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.Entities;
 using DSharpPlus.Net.WebSocket;
 using SKNIBot.Core.Settings;
 
@@ -86,6 +89,36 @@ namespace SKNIBot.Core
 
         private Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
+            var response = string.Empty;
+            if (e.Exception is CommandNotFoundException)
+            {
+                response = "Nieznana komenda, wpisz !help aby uzyskać listę wszystkich dostępnych.";
+            }
+            else if (e.Exception is ChecksFailedException)
+            {
+                var failedCheck = ((ChecksFailedException)e.Exception).FailedChecks.First();
+                switch (failedCheck)
+                {
+                    case RequirePermissionsAttribute test:
+                    {
+                        response = "Nie masz uprawnień do wykonania tej akcji :<\n";
+                        response += $"Wymagane: *{test.Permissions.ToPermissionString()}*";
+                        break;
+                    }
+                }
+            }
+
+            if (response != string.Empty)
+            {
+                var embed = new DiscordEmbedBuilder
+                {
+                    Color = new DiscordColor("#CD171E")
+                };
+                embed.AddField("Błąd", response);
+
+                e.Context.RespondAsync("", false, embed);
+            }
+
             e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "SKNI Bot",
                 $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' " +
                 $"but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
