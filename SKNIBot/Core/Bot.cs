@@ -112,7 +112,7 @@ namespace SKNIBot.Core
 
                 case ArgumentException _:
                 {
-                    responseBuilder.Append($"**Nieprawidłowe parametry komendy, wpisz `!help {e.Command.Name}` aby uzyskać ich listę.**\n");
+                    responseBuilder.Append($"Nieprawidłowe parametry komendy, wpisz `!help {e.Command.Name}` aby uzyskać ich listę.\n");
                     break;
                 }
 
