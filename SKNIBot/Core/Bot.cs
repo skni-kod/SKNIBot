@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -89,32 +90,47 @@ namespace SKNIBot.Core
 
         private Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
-            var response = string.Empty;
-            if (e.Exception is CommandNotFoundException)
+            var responseBuilder = new StringBuilder();
+
+            switch (e.Exception)
             {
-                response = "Nieznana komenda, wpisz !help aby uzyskać listę wszystkich dostępnych.";
-            }
-            else if (e.Exception is ChecksFailedException)
-            {
-                var failedCheck = ((ChecksFailedException)e.Exception).FailedChecks.First();
-                switch (failedCheck)
+                case CommandNotFoundException _:
                 {
-                    case RequirePermissionsAttribute test:
-                    {
-                        response = "Nie masz uprawnień do wykonania tej akcji :<\n";
-                        response += $"Wymagane: *{test.Permissions.ToPermissionString()}*";
-                        break;
-                    }
+                    responseBuilder.Append("Nieznana komenda, wpisz !help aby uzyskać listę wszystkich dostępnych.");
+                    break;
+                }
+
+                case ChecksFailedException _:
+                {
+                    var failedCheck = ((ChecksFailedException)e.Exception).FailedChecks.First();
+                    var permission = (RequirePermissionsAttribute)failedCheck;
+
+                    responseBuilder.Append("Nie masz uprawnień do wykonania tej akcji :<\n");
+                    responseBuilder.Append($"Wymagane: *{permission.Permissions.ToPermissionString()}*");
+                    break;
+                }
+
+                case ArgumentException _:
+                {
+                    responseBuilder.Append($"**Nieprawidłowe parametry komendy, wpisz `!help {e.Command.Name}` aby uzyskać ich listę.**\n");
+                    break;
+                }
+
+                default:
+                {
+                    responseBuilder.Append($"**{e.Exception.Message}**\n");
+                    responseBuilder.Append($"{e.Exception.StackTrace}\n");
+                    break;
                 }
             }
 
-            if (response != string.Empty)
+            if (responseBuilder.Length != 0)
             {
                 var embed = new DiscordEmbedBuilder
                 {
                     Color = new DiscordColor("#CD171E")
                 };
-                embed.AddField("Błąd", response);
+                embed.AddField("Błąd", responseBuilder.ToString());
 
                 e.Context.RespondAsync("", false, embed);
             }
