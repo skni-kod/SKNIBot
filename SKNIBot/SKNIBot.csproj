@@ -76,6 +76,7 @@
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandsGroupAttribute.cs" />
     <Compile Include="Core\Commands\GameCommands\HangmanCommand.cs" />
+    <Compile Include="Core\Commands\ModerationCommands\StatsCommand.cs" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesAltCommand.cs" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesCommand.cs" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesGroupCommand.cs" />
