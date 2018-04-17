@@ -63,33 +63,36 @@ namespace SKNIBot.Core.Commands.GameCommands
                 StartGame(type);
             }
             //Gdy brak litery
-            else if (type == null)
+            else
             {
-                output += "Podaj literę \n";
-            }
-            else if (type == _word)
-            {
-                _guessWord = _word;
-            }
-            //W innym wypadku sprawdź czy dana litera występuje
-            else if (type.Length == 1 && char.IsLetter(type[0]))
-            {
-                if (CheckLetter(type[0]))
+                if (type == null)
                 {
-                    _guessWord = AddLetters(type[0]);
+                    output += "Podaj literę \n";
                 }
-                //W razie pomyłki zwiększ licznik błędów
-                else
+                else if (type == _word)
                 {
-                    _actualStage++;
+                    _guessWord = _word;
                 }
-                //Dodaj literę do listy
-                if (!_guessedLetters.Contains(type[0]))
+                //W innym wypadku sprawdź czy dana litera występuje
+                else if (type.Length == 1 && char.IsLetter(type[0]))
                 {
-                    _guessedLetters.Add(type[0]);
+                    if (CheckLetter(type[0]))
+                    {
+                        _guessWord = AddLetters(type[0]);
+                    }
+                    //W razie pomyłki zwiększ licznik błędów
+                    else
+                    {
+                        _actualStage++;
+                    }
+                    //Dodaj literę do listy
+                    if (!_guessedLetters.Contains(type[0]))
+                    {
+                        _guessedLetters.Add(type[0]);
+                    }
                 }
+                CheckEndGame();
             }
-
             //Generuj wyjście
             output += GenerateOutput();
 
@@ -226,16 +229,25 @@ namespace SKNIBot.Core.Commands.GameCommands
             //W razie wygranej
             if (_guessWord.Equals(_word))
             {
-                _gameStarted = false;
                 output += "Wygrana \nSłowo: " + _word;
             }
             //W razie przegranej
             if (_actualStage == Stages)
             {
-                _gameStarted = false;
                 output += "Przegrana \nSłowo: " + _word;
             }
             return output;
+        }
+
+        /// <summary>
+        /// Sprawdź czy gra skończona
+        /// </summary>
+        private void CheckEndGame()
+        {
+            if (_guessWord.Equals(_word) || _actualStage == Stages)
+            {
+                _gameStarted = false;
+            }
         }
     }
 }
