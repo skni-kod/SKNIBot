@@ -17,36 +17,18 @@ namespace SKNIBot.Core.Commands.GameCommands
         private const int Stages = 9;
 
         private Random _random;
-
         /// <summary>
-        /// Czu gra rozpoczęta
+        /// Wszystkie aktualne gry
         /// </summary>
-        private bool _gameStarted;
+        private List<HangmanGame> HangmanGames;
         /// <summary>
-        /// Aktualny poziom
         /// </summary>
-        private int _actualStage;
-        /// <summary>
-        /// Słowo do odgadnięcia
-        /// </summary>
-        private string _word;
-        /// <summary>
-        /// Aktualnie odgadywane słowo
-        /// </summary>
-        private string _guessWord;
-        /// <summary>
-        /// Podane wcześniej litery
-        /// </summary>
-        private List<char> _guessedLetters;
+        private HangmanGame CurrentGame;
 
         public HangmanCommand()
-        {
-            _gameStarted = false;
-            _actualStage = 0;
-            _word = "";
-            _guessWord = "";
-            _guessedLetters = new List<char>();
+        {  
             _random = new Random();
+            HangmanGames = new List<HangmanGame>();
         }
 
         [Command("wisielec")]
@@ -55,10 +37,10 @@ namespace SKNIBot.Core.Commands.GameCommands
         public async Task Hangman(CommandContext ctx, [Description("Kategoria")] string type = null)
         {
             await ctx.TriggerTypingAsync();
-
+            LoadGame(ctx.Message.ChannelId);
             var output = "";
             //Jeżeli gra nie jest rozpoczęta, rozpocznij
-            if (_gameStarted == false)
+            if (CurrentGame.gameStarted == false)
             {
                 StartGame(type);
             }
@@ -69,32 +51,37 @@ namespace SKNIBot.Core.Commands.GameCommands
                 {
                     output += "Podaj literę \n";
                 }
-                else if (type == _word)
+                else if (type == CurrentGame.word)
                 {
-                    _guessWord = _word;
+                    CurrentGame.guessWord = CurrentGame.word;
                 }
                 //W innym wypadku sprawdź czy dana litera występuje
                 else if (type.Length == 1 && char.IsLetter(type[0]))
                 {
                     if (CheckLetter(type[0]))
                     {
-                        _guessWord = AddLetters(type[0]);
+                        CurrentGame.guessWord = AddLetters(type[0]);
                     }
                     //W razie pomyłki zwiększ licznik błędów
                     else
                     {
-                        _actualStage++;
+                        CurrentGame.actualStage++;
                     }
                     //Dodaj literę do listy
-                    if (!_guessedLetters.Contains(type[0]))
+                    if (!CurrentGame.guessedLetters.Contains(type[0]))
                     {
-                        _guessedLetters.Add(type[0]);
+                        CurrentGame.guessedLetters.Add(type[0]);
                     }
                 }
                 CheckEndGame();
             }
             //Generuj wyjście
             output += GenerateOutput();
+
+            if(CurrentGame.gameStarted == false)
+            {
+                HangmanGames.RemoveAll(p => p.channelId == CurrentGame.channelId);
+            }
 
             //Generuj wyjście
             var embed = new DiscordEmbedBuilder
@@ -107,26 +94,40 @@ namespace SKNIBot.Core.Commands.GameCommands
         }
 
         /// <summary>
+        /// Ładuję obecną lub tworzy nową grę
+        /// </summary>
+        /// <param name="channelId">Identyfikator kanału</param>
+        private void LoadGame(ulong channelId)
+        {
+            CurrentGame = HangmanGames.FirstOrDefault(p => p.channelId == channelId);
+            if (CurrentGame == null)
+            {
+                CurrentGame = new HangmanGame(channelId);
+                HangmanGames.Add(CurrentGame);
+            }
+        }
+
+        /// <summary>
         /// Rozpoczyna grę
         /// </summary>
         /// <param name="category">Kategoria</param>
         private void StartGame(string category = null)
         {
-            _gameStarted = true;
-            _actualStage = 1;
-            _word = GetWord(category);
-            var word = _word.ToCharArray();
-            _guessWord = "";
-            _guessedLetters = new List<char>();
+            CurrentGame.gameStarted = true;
+            CurrentGame.actualStage = 1;
+            CurrentGame.word = GetWord(category);
+            var word = CurrentGame.word.ToCharArray();
+            CurrentGame.guessWord = "";
+            CurrentGame.guessedLetters = new List<char>();
             for (var i = 0; i < word.Length; i++)
             {
                 if (char.IsLetter(word[i]))
                 {
-                    _guessWord += "◯";
+                    CurrentGame.guessWord += "◯";
                 }
                 else
                 {
-                    _guessWord += word[i];
+                    CurrentGame.guessWord += word[i];
                 }
 
             }
@@ -182,7 +183,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <returns></returns>
         private bool CheckLetter(char letter)
         {
-            return _word.ToLower().Contains(letter.ToString());
+            return CurrentGame.word.ToLower().Contains(letter.ToString());
         }
 
         /// <summary>
@@ -192,13 +193,13 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <returns></returns>
         private string AddLetters(char letter)
         {
-            var guessWord = _guessWord.ToCharArray();
-            var word = _word.ToLower();
-            for (var i = 0; i < _word.Length; i++)
+            var guessWord = CurrentGame.guessWord.ToCharArray();
+            var word = CurrentGame.word.ToLower();
+            for (var i = 0; i < CurrentGame.word.Length; i++)
             {
                 if (word[i] == letter)
                 {
-                    guessWord[i] = _word[i];
+                    guessWord[i] = CurrentGame.word[i];
                 }
             }
             var returnValue = new StringBuilder();
@@ -213,28 +214,28 @@ namespace SKNIBot.Core.Commands.GameCommands
         private string GenerateOutput()
         {
             string output = "";
-            output += _guessWord;
+            output += CurrentGame.guessWord;
             output += "\n";
-            for (var j = 0; j < HangmanConst.Stages[_actualStage - 1].Length; j++)
+            for (var j = 0; j < HangmanConst.Stages[CurrentGame.actualStage - 1].Length; j++)
             {
-                output += HangmanConst.Stages[_actualStage - 1][j];
+                output += HangmanConst.Stages[CurrentGame.actualStage - 1][j];
                 output += "\n";
             }
-            for (var j = 0; j < _guessedLetters.Count; j++)
+            for (var j = 0; j < CurrentGame.guessedLetters.Count; j++)
             {
-                output += _guessedLetters[j];
+                output += CurrentGame.guessedLetters[j];
                 output += " ";
             }
             output += "\n";
             //W razie wygranej
-            if (_guessWord.Equals(_word))
+            if (CurrentGame.guessWord.Equals(CurrentGame.word))
             {
-                output += "Wygrana \nSłowo: " + _word;
+                output += "Wygrana \nSłowo: " + CurrentGame.word;
             }
             //W razie przegranej
-            if (_actualStage == Stages)
+            if (CurrentGame.actualStage == Stages)
             {
-                output += "Przegrana \nSłowo: " + _word;
+                output += "Przegrana \nSłowo: " + CurrentGame.word;
             }
             return output;
         }
@@ -244,10 +245,49 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// </summary>
         private void CheckEndGame()
         {
-            if (_guessWord.Equals(_word) || _actualStage == Stages)
+            if (CurrentGame.guessWord.Equals(CurrentGame.word) || CurrentGame.actualStage == Stages)
             {
-                _gameStarted = false;
+                CurrentGame.gameStarted = false;
             }
         }
     }
+
+    public class HangmanGame
+    {
+        /// <summary>
+        /// Id kanału na którym wywołano komendę
+        /// </summary>
+        public ulong channelId;
+        /// <summary>
+        /// Czu gra rozpoczęta
+        /// </summary>
+        public bool gameStarted;
+        /// <summary>
+        /// Aktualny poziom
+        /// </summary>
+        public int actualStage;
+        /// <summary>
+        /// Słowo do odgadnięcia
+        /// </summary>
+        public string word;
+        /// <summary>
+        /// Aktualnie odgadywane słowo
+        /// </summary>
+        public string guessWord;
+        /// <summary>
+        /// Podane wcześniej litery
+        /// </summary>
+        public List<char> guessedLetters;
+
+        public HangmanGame(ulong channelId)
+        {
+            gameStarted = false;
+            actualStage = 0;
+            word = "";
+            guessWord = "";
+            guessedLetters = new List<char>();
+            this.channelId = channelId;
+        }
+    }
+
 }
