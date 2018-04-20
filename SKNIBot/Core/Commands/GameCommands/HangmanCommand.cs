@@ -22,6 +22,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// </summary>
         private List<HangmanGame> HangmanGames;
         /// <summary>
+        /// Obecnie załadowana gra
         /// </summary>
         private HangmanGame CurrentGame;
 
