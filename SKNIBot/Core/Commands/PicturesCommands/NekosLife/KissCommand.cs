@@ -10,12 +10,15 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
     public class KissCommand : NekosLifeImage
     {
         //Zablokowana na życzenie innego developera
-        //[Command("kiss")]
-        //[Description("Wyświetla obrazki kiss.")]
+        [Command("kiss")]
+        [Description("Wyświetla obrazki kiss.")]
         public async Task Kiss(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            await SendImage(ctx, NekosLifePicturesEndpoints.Kiss, member);
+            if (ctx.Channel.IsNSFW)
+                await SendImage(ctx, NekosLifePicturesEndpoints.Kiss, member);
+            else
+                await ctx.RespondAsync("Nie tutaj ;)");
         }
     }
 }
