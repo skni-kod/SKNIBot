@@ -1,4 +1,5 @@
-﻿namespace SKNIBot.Core.Const.PicturesConst.NekosLife
+﻿//https://nekos.life/api/v2/endpoints
+namespace SKNIBot.Core.Const.PicturesConst.NekosLife
 {
     public class NekosLifePicturesEndpoints
     {
