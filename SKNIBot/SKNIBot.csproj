@@ -87,6 +87,8 @@
     <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\CatBoyCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekoGifCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\NekosLife\TickleCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\XkcdCommand.cs" />
     <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\AvatarCommand.cs" />

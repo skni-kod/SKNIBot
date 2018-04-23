@@ -9,7 +9,6 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
     [CommandsGroup("Obrazki")]
     public class KissCommand : NekosLifeImage
     {
-        //Zablokowana na życzenie innego developera
         [Command("kiss")]
         [Description("Wyświetla obrazki kiss.")]
         public async Task Kiss(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)

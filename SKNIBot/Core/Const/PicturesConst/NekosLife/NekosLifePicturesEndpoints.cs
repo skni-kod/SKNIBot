@@ -10,5 +10,7 @@ namespace SKNIBot.Core.Const.PicturesConst.NekosLife
         public static readonly string Pat = "https://nekos.life/api/v2/img/pat";
         public static readonly string Cuddle = "https://nekos.life/api/v2/img/cuddle";
         public static readonly string Lizard = "https://nekos.life/api/v2/img/lizard";
+        public static readonly string NsfwNekoGif = "https://nekos.life/api/v2/img/nsfw_neko_gif";
+        public static readonly string Tickle = "https://nekos.life/api/v2/img/tickle";
     }
 }
