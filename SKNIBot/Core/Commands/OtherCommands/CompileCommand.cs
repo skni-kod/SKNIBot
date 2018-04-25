@@ -13,7 +13,7 @@ using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core.Commands.OtherCommands
 {
-    [CommandsGroup("Other")]
+    [CommandsGroup("Różne")]
     public class CompileCommand
     {
         private const string ApiEndpoint = "https://api.jdoodle.com/v1/execute";
