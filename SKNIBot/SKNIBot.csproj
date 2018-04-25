@@ -127,6 +127,7 @@
     <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
     <Compile Include="Core\Containers\OtherContainers\LinkContainer.cs" />
+    <Compile Include="Core\Containers\TextContainers\GraphCommand.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />
