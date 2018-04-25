@@ -124,6 +124,7 @@
     <Compile Include="Core\Const\PicturesConst\HttpInuConst.cs" />
     <Compile Include="Core\Const\PicturesConst\NekosLife\NekosLifePicturesEndpoints.cs" />
     <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
+    <Compile Include="Core\Containers\CompilationContainers\CompilationResultContainer.cs" />
     <Compile Include="Core\Containers\CompilationContainers\CompileRequestContainer.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
     <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
