@@ -3,5 +3,8 @@
   "prefix": "!",
 
   "clever_key": "secret-key",
-  "waaai_key" : "link-key"
+  "waaai_key": "link-key",
+
+  "jdoodle_client_id": "jdoodle-id",
+  "jdoodle_client_secret": "jdoodle-secret"
 }
