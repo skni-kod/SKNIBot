@@ -18,17 +18,28 @@ namespace SKNIBot.Core.Commands.OtherCommands
     {
         private const string ApiEndpoint = "https://api.jdoodle.com/v1/execute";
 
-        [Command("compile")]
-        [Description("asd")]
+        [Command("kompiluj")]
+        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Składnia: !kompiluj [język], [wejście], [kod]. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs")]
+        [Aliases("compile", "uruchom", "run")]
         public async Task Compile(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+            string language = "", input = "", code = "";
 
             var splittedInput = ctx.RawArgumentString.Split(',').ToList();
-            var language = splittedInput[0].Trim();
-            var input = splittedInput[1].Trim();
-            var code = splittedInput[2].Trim();
-
+            if (splittedInput.Count == 2)
+            {
+                language = splittedInput[0].Trim();
+                input = "";
+                code = splittedInput[1].Trim();
+            }
+            else if (splittedInput.Count == 3)
+            {
+                language = splittedInput[0].Trim();
+                input = splittedInput[1].Trim();
+                code = splittedInput[2].Trim();
+            }
+            
             var compilationResult = GetCompilationResult(language, input, code);
             var compilationEmbedResult = GetEmbedResult(compilationResult);
 
@@ -59,8 +70,10 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
         private DiscordEmbed GetEmbedResult(CompilationResultContainer compilationResult)
         {
+            var output = compilationResult.output == "" ? "Brak" : compilationResult.output;
+
             var embedResult = new DiscordEmbedBuilder();
-            embedResult.AddField("Rezultat", compilationResult.output);
+            embedResult.AddField("Rezultat", output);
 
             return embedResult;
         }
