@@ -8,11 +8,11 @@ namespace SKNIBot.Core.Containers.CompilationContainers
 {
     public class CompileRequestContainer
     {
-        public string ClientID { get; set; }
-        public string ClientSecret { get; set; }
-        public string Script { get; set; }
-        public string StdIn { get; set; }
-        public string Language { get; set; }
-        public string VersionIndex { get; set; }
+        public string clientId { get; set; }
+        public string clientSecret { get; set; }
+        public string script { get; set; }
+        public string stdIn { get; set; }
+        public string language { get; set; }
+        public string versionIndex { get; set; }
     }
 }
