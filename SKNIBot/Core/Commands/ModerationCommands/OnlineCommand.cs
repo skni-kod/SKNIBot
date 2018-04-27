@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
@@ -19,25 +22,48 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private const int UsernameFieldLength = 25;
         private const int LastOnlineFieldLength = 25;
         private const int TotalTimeFieldLength = 20;
+        private const int ItemsPerPage = 20;
+        private const string PaginationIdentifier = "#";
 
         private int TotalFieldsLength => UsernameFieldLength + LastOnlineFieldLength + TotalTimeFieldLength;
 
         private Timer _updateOnlineTimer;
+        private PaginationManager _paginationManager;
 
         public OnlineCommand()
         {
             _updateOnlineTimer = new Timer(UpdateOnlineCallback, null, UpdateOnlineInterval, Timeout.Infinite);
+            _paginationManager = new PaginationManager();
+
+            Bot.DiscordClient.MessageReactionAdded += DiscordClientOnMessageReactionAdded;
         }
 
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx, [Description("username, last, total")] string orderBy = null)
+        public async Task Online(CommandContext ctx, [Description("username, last, total")] string orderBy = "total")
         {
             await ctx.TriggerTypingAsync();
 
+            var onlineList = GetOnlineList(1, orderBy);
+
+            var message = await ctx.RespondAsync(onlineList);
+            await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.LeftEmojiName));
+            await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.RightEmojiName));
+        }
+
+        private string GetOnlineList(int currentPage, string orderBy)
+        {
             var stringBuilder = new StringBuilder();
+            stringBuilder.Append(PaginationIdentifier);
+            stringBuilder.Append(" ");
+            stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount()));
+            stringBuilder.Append(" ");
+            stringBuilder.Append(GetOrderByHeader(orderBy));
+            stringBuilder.Append(".\n");
+
             stringBuilder.Append("```");
+
             stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
             stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
             stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
@@ -50,17 +76,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 var onlineStatsQuery = databaseContext.OnlineStats
                     .OrderByDescending(p => p.TotalTime);
 
-                if (orderBy != null)
+                switch (orderBy)
                 {
-                    switch (orderBy)
-                    {
-                        case "username": onlineStatsQuery = onlineStatsQuery.OrderBy(p => p.Username); break;
-                        case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
-                        case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
-                    }
+                    case "username": onlineStatsQuery = onlineStatsQuery.OrderBy(p => p.Username); break;
+                    case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
+                    case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
                 }
 
-                var onlineStats = onlineStatsQuery.ToList();
+                var onlineStats = onlineStatsQuery.Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
 
                 foreach (var user in onlineStats)
                 {
@@ -75,7 +98,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
 
             stringBuilder.Append("```");
-            await ctx.RespondAsync(stringBuilder.ToString());
+            return stringBuilder.ToString();
         }
 
         private void UpdateOnlineCallback(object state)
@@ -112,6 +135,49 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
 
             _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
+        }
+
+        private int GetPagesCount()
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                return databaseContext.OnlineStats.Count() / ItemsPerPage + 1;
+            }
+        }
+
+        private string GetOrderByHeader(string orderBy)
+        {
+            return $"Wybrane sortowanie: {orderBy}";
+        }
+
+        private string ParseOrderByHeader(string header)
+        {
+            var matches = Regex.Matches(header, "Wybrane sortowanie: (?<orderBy>[a-z]*)");
+            var orderBy = matches[0].Groups["orderBy"].Value;
+
+            return orderBy;
+        }
+
+        private async Task DiscordClientOnMessageReactionAdded(MessageReactionAddEventArgs reactionEvent)
+        {
+            if (reactionEvent.User.IsBot) return;
+
+            // We have to get message instead of reactionEvent.Message - sometimes message here is null, especially
+            // when the bot has been restarted.
+            var message = await reactionEvent.Channel.GetMessageAsync(reactionEvent.Message.Id);
+            if (!message.Content.StartsWith(PaginationIdentifier)) return;
+
+            var header = message.Content.Substring(0, message.Content.IndexOf("\n"));
+
+            var paginationData = _paginationManager.ParsePaginationHeader(header);
+            var orderByData = ParseOrderByHeader(header);
+
+            _paginationManager.UpdatePagination(paginationData, reactionEvent);
+
+            var onlineList = GetOnlineList(paginationData.CurrentPage, orderByData);
+
+            await reactionEvent.Message.DeleteReactionAsync(reactionEvent.Emoji, reactionEvent.User);
+            await reactionEvent.Message.ModifyAsync(onlineList);
         }
     }
 }
