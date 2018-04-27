@@ -47,7 +47,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var onlineStats = databaseContext.OnlineStats.OrderByDescending(p => p.LastOnline).ThenByDescending(p => p.TotalTime).ToList();
+                var onlineStats = databaseContext.OnlineStats
+                    .OrderByDescending(p => p.LastOnline)
+                    .ThenByDescending(p => p.TotalTime)
+                    .ThenByDescending(p => p.Username)
+                    .ToList();
+
                 foreach (var user in onlineStats)
                 {
                     var username = user.Username.PadRight(UsernameFieldLength);
@@ -74,10 +79,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
                     if (onlineStats == null)
                     {
+                        // Remove seconds and milliseconds from date to better ordering
+                        var now = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                        var fixedNow = DateTime.Parse(now);
+
                         onlineStats = new OnlineStats
                         {
                             Username = user.Value.User.Username,
-                            LastOnline = DateTime.Now,
+                            LastOnline = fixedNow,
                             TotalTime = 0
                         };
 
