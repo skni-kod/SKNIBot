@@ -1,8 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using SKNIBot.Core.Database;
+using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
@@ -12,7 +17,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private Timer _updateOnlineTimer;
         private int _updateOnlineInterval;
 
-        private CommandContext _ctx;
+        private const int UsernameFieldLength = 25;
+        private const int LastOnlineFieldLength = 25;
+        private const int TotalTimeFieldLength = 20;
+
+        private int TotalFieldsLength => UsernameFieldLength + LastOnlineFieldLength + TotalTimeFieldLength;
 
         public OnlineCommand()
         {
@@ -25,11 +34,63 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task Online(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
 
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("```");
+            stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
+            stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
+            stringBuilder.Append("Łączny czas [minuty]".PadRight(TotalTimeFieldLength));
+            stringBuilder.Append("\n");
+            stringBuilder.Append(new string('-', TotalFieldsLength));
+            stringBuilder.Append("\n");
+
+            using (var databaseContext = new DatabaseContext())
+            {
+                var onlineStats = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime).ToList();
+                foreach (var user in onlineStats)
+                {
+                    var username = user.Username.PadRight(UsernameFieldLength);
+                    var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
+                    var totalTime = user.TotalTime.ToString().PadRight(TotalTimeFieldLength);
+
+                    stringBuilder.Append($"{username}{lastOnline}{totalTime}\n");
+                }
+            }
+
+            stringBuilder.Append("```");
+            await ctx.RespondAsync(stringBuilder.ToString());
         }
 
         private void UpdateOnlineCallback(object state)
         {
+            using (var databaseContext = new DatabaseContext())
+            {
+                var onlineUsers = Bot.DiscordClient.Presences;
+                foreach (var user in onlineUsers)
+                {
+                    var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
+                    if (onlineStats == null)
+                    {
+                        onlineStats = new OnlineStats
+                        {
+                            Username = user.Value.User.Username,
+                            LastOnline = DateTime.Now,
+                            TotalTime = 1
+                        };
+
+                        databaseContext.OnlineStats.Add(onlineStats);
+                    }
+                    else
+                    {
+                        onlineStats.LastOnline = DateTime.Now;
+                        onlineStats.TotalTime += _updateOnlineInterval / 1000 / 60;
+                    }
+                }
+
+                databaseContext.SaveChanges();
+            }
+
             _updateOnlineTimer.Change(_updateOnlineInterval, Timeout.Infinite);
         }
     }
