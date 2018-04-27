@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Database.Models;
 
@@ -14,19 +15,18 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     [CommandsGroup("Moderacja")]
     public class OnlineCommand
     {
-        private Timer _updateOnlineTimer;
-        private int _updateOnlineInterval;
-
+        private const int UpdateOnlineInterval = 1000 * 60;
         private const int UsernameFieldLength = 25;
         private const int LastOnlineFieldLength = 25;
         private const int TotalTimeFieldLength = 20;
 
         private int TotalFieldsLength => UsernameFieldLength + LastOnlineFieldLength + TotalTimeFieldLength;
 
+        private Timer _updateOnlineTimer;
+
         public OnlineCommand()
         {
-            _updateOnlineInterval = 1000 * 60;    // every 1 minute
-            _updateOnlineTimer = new Timer(UpdateOnlineCallback, null, _updateOnlineInterval, Timeout.Infinite);
+            _updateOnlineTimer = new Timer(UpdateOnlineCallback, null, UpdateOnlineInterval, Timeout.Infinite);
         }
 
         [Command("online")]
@@ -47,7 +47,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             using (var databaseContext = new DatabaseContext())
             {
-                var onlineStats = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime).ToList();
+                var onlineStats = databaseContext.OnlineStats.OrderByDescending(p => p.LastOnline).ThenByDescending(p => p.TotalTime).ToList();
                 foreach (var user in onlineStats)
                 {
                     var username = user.Username.PadRight(UsernameFieldLength);
@@ -66,7 +66,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             using (var databaseContext = new DatabaseContext())
             {
-                var onlineUsers = Bot.DiscordClient.Presences;
+                var onlineUsers = Bot.DiscordClient.Presences.Where(p => p.Value.Status != UserStatus.Offline).ToList();
                 foreach (var user in onlineUsers)
                 {
                     var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
@@ -76,7 +76,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         {
                             Username = user.Value.User.Username,
                             LastOnline = DateTime.Now,
-                            TotalTime = 1
+                            TotalTime = 0
                         };
 
                         databaseContext.OnlineStats.Add(onlineStats);
@@ -84,14 +84,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     else
                     {
                         onlineStats.LastOnline = DateTime.Now;
-                        onlineStats.TotalTime += _updateOnlineInterval / 1000 / 60;
+                        onlineStats.TotalTime += UpdateOnlineInterval / 1000 / 60;
                     }
                 }
 
                 databaseContext.SaveChanges();
             }
 
-            _updateOnlineTimer.Change(_updateOnlineInterval, Timeout.Infinite);
+            _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
         }
     }
 }
