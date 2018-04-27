@@ -16,6 +16,8 @@ namespace SKNIBot.Core.Database
         public virtual IDbSet<HangmanCategory> HangmanCategories { get; set; }
         public virtual IDbSet<HangmanWord> HangmanWords { get; set; }
 
+        public virtual IDbSet<OnlineStats> OnlineStats { get; set; }
+
         public DatabaseContext() : base("SQLiteConnectionString")
         {
 #if DEBUG
