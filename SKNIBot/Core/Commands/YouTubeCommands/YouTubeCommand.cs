@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 if (videoName == "list")
                 {
@@ -51,7 +51,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
         private string GetAvailableParameters()
         {
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 var stringBuilder = new StringBuilder();
                 var categories = databaseContext.Media

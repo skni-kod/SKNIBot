@@ -142,7 +142,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         private string GetWord(string Category = null)
         {
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 IQueryable<string> wordList = null;
 

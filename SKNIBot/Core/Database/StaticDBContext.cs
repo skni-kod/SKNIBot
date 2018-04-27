@@ -4,7 +4,7 @@ using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Database
 {
-    public class DatabaseContext : DbContext
+    public class StaticDBContext : DbContext
     {
         public virtual IDbSet<Command> Commands { get; set; }
         public virtual IDbSet<SimpleResponse> SimpleResponses { get; set; }
@@ -16,9 +16,7 @@ namespace SKNIBot.Core.Database
         public virtual IDbSet<HangmanCategory> HangmanCategories { get; set; }
         public virtual IDbSet<HangmanWord> HangmanWords { get; set; }
 
-        public virtual IDbSet<OnlineStats> OnlineStats { get; set; }
-
-        public DatabaseContext() : base("SQLiteConnectionString")
+        public StaticDBContext() : base("StaticDatabaseConnectionString")
         {
 #if DEBUG
             Database.Log = Console.Write;

@@ -45,7 +45,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             stringBuilder.Append(new string('-', TotalFieldsLength));
             stringBuilder.Append("\n");
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new DynamicDBContext())
             {
                 var onlineStats = databaseContext.OnlineStats
                     .OrderByDescending(p => p.LastOnline)
@@ -71,7 +71,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private void UpdateOnlineCallback(object state)
         {
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new DynamicDBContext())
             {
                 var onlineUsers = Bot.DiscordClient.Presences.Where(p => p.Value.Status != UserStatus.Offline).ToList();
                 foreach (var user in onlineUsers)

@@ -25,7 +25,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 var jokes = databaseContext.SimpleResponses.Where(p => p.Command.Name == "Joke");
                 var randomIndex = _random.Next(jokes.Count());

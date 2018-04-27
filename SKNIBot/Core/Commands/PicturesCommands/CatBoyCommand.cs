@@ -27,7 +27,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var catBoys = databaseContext.SimpleResponses

@@ -144,7 +144,8 @@
     <Compile Include="Core\Containers\PicturesContainers\NekoContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\TalkData.cs" />
     <Compile Include="Core\CustomHelpFormatter.cs" />
-    <Compile Include="Core\Database\DatabaseContext.cs" />
+    <Compile Include="Core\Database\DynamicDBContext.cs" />
+    <Compile Include="Core\Database\StaticDBContext.cs" />
     <Compile Include="Core\Database\Models\Command.cs" />
     <Compile Include="Core\Database\Models\HangmanCategory.cs" />
     <Compile Include="Core\Database\Models\HangmanWord.cs" />
@@ -161,7 +162,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="Core\Commands\ModerationCommands\RemoveMessageCommand.cs" />
-    <None Include="Database.sqlite">
+    <None Include="DynamicDatabase.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="StaticDatabase.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

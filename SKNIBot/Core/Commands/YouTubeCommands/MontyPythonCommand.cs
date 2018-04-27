@@ -23,7 +23,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 var montyPythonVideos = databaseContext.SimpleResponses.Where(p => p.Command.Name == "MontyPython");
                 var randomIndex = _random.Next(montyPythonVideos.Count());

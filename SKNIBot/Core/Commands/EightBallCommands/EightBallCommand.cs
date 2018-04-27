@@ -23,7 +23,7 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 var eightBallResponses = databaseContext.SimpleResponses.Where(p => p.Command.Name == "8Ball");
                 var randomIndex = _rand.Next(eightBallResponses.Count());
@@ -43,7 +43,7 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         public async Task EightBallAdd(CommandContext ctx, string newResponse) {
             await ctx.TriggerTypingAsync();
 
-           using(var db = new DatabaseContext()) {
+           using(var db = new StaticDBContext()) {
                 var command = db.Commands.Where(c => c.Name == "8Ball").FirstOrDefault();
 
                 db.SimpleResponses.Add(new Database.Models.SimpleResponse {
@@ -61,7 +61,7 @@ namespace SKNIBot.Core.Commands.EightBallCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DatabaseContext())
+            using (var databaseContext = new StaticDBContext())
             {
                 var builder = new StringBuilder();
 
