@@ -154,6 +154,8 @@
     <Compile Include="Core\Database\Models\MediaName.cs" />
     <Compile Include="Core\Database\Models\OnlineStats.cs" />
     <Compile Include="Core\Database\Models\SimpleResponse.cs" />
+    <Compile Include="Core\Helpers\Pagination\PaginationData.cs" />
+    <Compile Include="Core\Helpers\Pagination\PaginationManager.cs" />
     <Compile Include="Core\Settings\SettingsContainer.cs" />
     <Compile Include="Core\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
