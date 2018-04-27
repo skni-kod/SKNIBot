@@ -32,7 +32,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx)
+        public async Task Online(CommandContext ctx, [Description("username, last, total")] string orderBy = null)
         {
             await ctx.TriggerTypingAsync();
 
@@ -47,11 +47,20 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             using (var databaseContext = new DynamicDBContext())
             {
-                var onlineStats = databaseContext.OnlineStats
-                    .OrderByDescending(p => p.LastOnline)
-                    .ThenByDescending(p => p.TotalTime)
-                    .ThenByDescending(p => p.Username)
-                    .ToList();
+                var onlineStatsQuery = databaseContext.OnlineStats
+                    .OrderByDescending(p => p.TotalTime);
+
+                if (orderBy != null)
+                {
+                    switch (orderBy)
+                    {
+                        case "username": onlineStatsQuery = onlineStatsQuery.OrderBy(p => p.Username); break;
+                        case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
+                        case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
+                    }
+                }
+
+                var onlineStats = onlineStatsQuery.ToList();
 
                 foreach (var user in onlineStats)
                 {
@@ -59,7 +68,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
 
                     var totalTimeInHours = (float)user.TotalTime / 60;
-                    var totalTime = totalTimeInHours.ToString("#.#").PadRight(TotalTimeFieldLength);
+                    var totalTime = totalTimeInHours.ToString("0.0").PadRight(TotalTimeFieldLength);
 
                     stringBuilder.Append($"{username}{lastOnline}{totalTime}\n");
                 }
