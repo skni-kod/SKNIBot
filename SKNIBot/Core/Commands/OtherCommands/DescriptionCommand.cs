@@ -13,17 +13,14 @@ namespace SKNIBot.Core.Commands.OtherCommands
         private Timer _refreshDescriptionTimer;
         private int _refreshDescriptionInterval;
 
-        private CommandContext _ctx;
         private string _description;
 
         public DescriptionCommand()
         {
             _refreshDescriptionInterval = 1000 * 60;    // every 1 minute
-
-            _ctx = null;
-            _description = string.Empty;
-
             _refreshDescriptionTimer = new Timer(RefreshDescriptionCallback, null, _refreshDescriptionInterval, Timeout.Infinite);
+
+            _description = string.Empty;
         }
 
         [Command("opis")]
@@ -31,7 +28,6 @@ namespace SKNIBot.Core.Commands.OtherCommands
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task Description(CommandContext ctx, [Description("Nowy opis.")] string description = null)
         {
-            _ctx = ctx;
             _description = description;
 
             await ctx.Client.UpdateStatusAsync(new DiscordGame(description));
@@ -39,9 +35,9 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
         private void RefreshDescriptionCallback(object state)
         {
-            if (_ctx != null && _description != string.Empty)
+            if (_description != string.Empty)
             {
-                _ctx.Client.UpdateStatusAsync(new DiscordGame(_description));
+                Bot.DiscordClient.UpdateStatusAsync(new DiscordGame(_description));
             }
 
             _refreshDescriptionTimer.Change(_refreshDescriptionInterval, Timeout.Infinite);

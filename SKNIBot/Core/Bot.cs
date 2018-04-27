@@ -16,8 +16,8 @@ namespace SKNIBot.Core
 {
     public class Bot
     {
-        private DiscordClient Client { get; set; }
-        private CommandsNextModule Commands { get; set; }
+        public static DiscordClient DiscordClient { get; set; }
+        private CommandsNextModule _commands { get; set; }
 
         public void Run()
         {
@@ -38,8 +38,8 @@ namespace SKNIBot.Core
                 UseInternalLogHandler = true
             };
 
-            Client = new DiscordClient(connectionConfig);
-            Client.SetWebSocketClient<WebSocket4NetClient>();
+            DiscordClient = new DiscordClient(connectionConfig);
+            DiscordClient.SetWebSocketClient<WebSocket4NetClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -49,12 +49,12 @@ namespace SKNIBot.Core
                 CaseSensitive = false
             };
 
-            Commands = Client.UseCommandsNext(commandsConfig);
-            Commands.SetHelpFormatter<CustomHelpFormatter>();
-            Commands.CommandExecuted += Commands_CommandExecuted;
-            Commands.CommandErrored += Commands_CommandErrored;
+            _commands = DiscordClient.UseCommandsNext(commandsConfig);
+            _commands.SetHelpFormatter<CustomHelpFormatter>();
+            _commands.CommandExecuted += Commands_CommandExecuted;
+            _commands.CommandErrored += Commands_CommandErrored;
 
-            await Client.ConnectAsync();
+            await DiscordClient.ConnectAsync();
         }
 
         private void SetNetworkParameters()
@@ -68,7 +68,7 @@ namespace SKNIBot.Core
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyTypes = assembly.GetTypes();
 
-            var registerCommandsMethod = Commands.GetType().GetMethods()
+            var registerCommandsMethod = _commands.GetType().GetMethods()
                 .FirstOrDefault(p => p.Name == "RegisterCommands" && p.IsGenericMethod);
 
             foreach (var type in assemblyTypes)
@@ -77,7 +77,7 @@ namespace SKNIBot.Core
                 if (attributes.Any(p => p.GetType() == typeof(CommandsGroupAttribute)))
                 {
                     var genericRegisterCommandMethod = registerCommandsMethod.MakeGenericMethod(type);
-                    genericRegisterCommandMethod.Invoke(Commands, null);
+                    genericRegisterCommandMethod.Invoke(_commands, null);
                 }
             }
         }
