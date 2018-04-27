@@ -40,7 +40,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             stringBuilder.Append("```");
             stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
             stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
-            stringBuilder.Append("Łączny czas [minuty]".PadRight(TotalTimeFieldLength));
+            stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
             stringBuilder.Append("\n");
             stringBuilder.Append(new string('-', TotalFieldsLength));
             stringBuilder.Append("\n");
@@ -52,7 +52,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 {
                     var username = user.Username.PadRight(UsernameFieldLength);
                     var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
-                    var totalTime = user.TotalTime.ToString().PadRight(TotalTimeFieldLength);
+
+                    var totalTimeInHours = (float)user.TotalTime / 60;
+                    var totalTime = totalTimeInHours.ToString("#.#").PadRight(TotalTimeFieldLength);
 
                     stringBuilder.Append($"{username}{lastOnline}{totalTime}\n");
                 }
