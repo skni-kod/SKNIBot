@@ -9,6 +9,8 @@ namespace SKNIBot.Core.Helpers
         public const string LeftEmojiName = ":arrow_left:";
         public const string RightEmojiName = ":arrow_right:";
 
+        private const string PaginationPrompt = "Strona";
+
         public string GeneratePaginationHeader(int currentPage, int pagesCount)
         {
             var paginationData = new PaginationData
@@ -22,12 +24,12 @@ namespace SKNIBot.Core.Helpers
 
         public string GeneratePaginationHeader(PaginationData paginationData)
         {
-            return $"Strona {paginationData.CurrentPage} z {paginationData.PagesCount}.";
+            return $"{PaginationPrompt} {paginationData.CurrentPage} z {paginationData.PagesCount}.";
         }
 
         public PaginationData ParsePaginationHeader(string header)
         {
-            var matches = Regex.Matches(header, "Strona\\s(?<currentPage>\\d*)\\sz\\s(?<pagesCount>\\d*)");
+            var matches = Regex.Matches(header, $"{PaginationPrompt}\\s(?<currentPage>\\d*)\\sz\\s(?<pagesCount>\\d*)");
             var currentPage = int.Parse(matches[0].Groups["currentPage"].Value);
             var pagesCount = int.Parse(matches[0].Groups["pagesCount"].Value);
 

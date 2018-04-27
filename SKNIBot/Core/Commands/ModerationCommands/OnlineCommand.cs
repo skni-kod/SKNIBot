@@ -24,6 +24,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private const int TotalTimeFieldLength = 20;
         private const int ItemsPerPage = 20;
         private const string PaginationIdentifier = "#";
+        private const string OrderByPrompt = "Wybrane sortowanie";
 
         private int TotalFieldsLength => UsernameFieldLength + LastOnlineFieldLength + TotalTimeFieldLength;
 
@@ -41,7 +42,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx, [Description("username, last, total")] string orderBy = "total")
+        public async Task Online(CommandContext ctx, [Description("Dostępne: username, last, total.")] string orderBy = "total")
         {
             await ctx.TriggerTypingAsync();
 
@@ -147,12 +148,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private string GetOrderByHeader(string orderBy)
         {
-            return $"Wybrane sortowanie: {orderBy}";
+            return $"{OrderByPrompt}: {orderBy}";
         }
 
         private string ParseOrderByHeader(string header)
         {
-            var matches = Regex.Matches(header, "Wybrane sortowanie: (?<orderBy>[a-z]*)");
+            var matches = Regex.Matches(header, $"{OrderByPrompt}: (?<orderBy>[a-z]*)");
             var orderBy = matches[0].Groups["orderBy"].Value;
 
             return orderBy;
