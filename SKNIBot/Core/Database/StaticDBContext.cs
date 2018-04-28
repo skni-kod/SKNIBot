@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Database
         public StaticDBContext() : base("StaticDatabaseConnectionString")
         {
 #if DEBUG
-            Database.Log = Console.Write;
+            Database.Log = System.Console.Write;
 #endif
         }
     }

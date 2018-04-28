@@ -10,7 +10,7 @@ namespace SKNIBot.Core.Database
         public DynamicDBContext() : base("DynamicDatabaseConnectionString")
         {
 #if DEBUG
-            Database.Log = Console.Write;
+            Database.Log = System.Console.Write;
 #endif
         }
     }

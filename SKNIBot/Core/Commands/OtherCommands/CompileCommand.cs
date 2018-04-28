@@ -33,7 +33,8 @@ namespace SKNIBot.Core.Commands.OtherCommands
                     code = splittedInput[1].Trim();
 
                     break;
-                    }
+                }
+
                 case 3:
                 {
                     language = splittedInput[0].Trim();
