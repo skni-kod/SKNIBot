@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using DSharpPlus.EventArgs;
-using SKNIBot.Core.Helpers.Pagination;
 
-namespace SKNIBot.Core.Helpers
+namespace SKNIBot.Core.Helpers.Pagination
 {
     public class PaginationManager
     {
