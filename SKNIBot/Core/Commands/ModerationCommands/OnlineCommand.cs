@@ -19,9 +19,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     public class OnlineCommand
     {
         private const int UpdateOnlineInterval = 1000 * 60;
-        private const int UsernameFieldLength = 25;
-        private const int LastOnlineFieldLength = 25;
-        private const int TotalTimeFieldLength = 20;
+        private const int UsernameFieldLength = 35;
+        private const int LastOnlineFieldLength = 20;
+        private const int TotalTimeFieldLength = 15;
+        private const int UsernameFieldMargin = 5;
         private const int ItemsPerPage = 20;
         private const string PaginationIdentifier = "#";
         private const string OrderByPrompt = "Wybrane sortowanie";
@@ -46,14 +47,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var onlineList = GetOnlineList(1, orderBy);
+            var onlineList = GetOnlineList(1, orderBy, ctx.Guild);
 
             var message = await ctx.RespondAsync(onlineList);
             await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.LeftEmojiName));
             await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.RightEmojiName));
         }
 
-        private string GetOnlineList(int currentPage, string orderBy)
+        private string GetOnlineList(int currentPage, string orderBy, DiscordGuild guild)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(PaginationIdentifier);
@@ -88,7 +89,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var user in onlineStats)
                 {
-                    var username = user.Username.PadRight(UsernameFieldLength);
+                    var displayName = GetDisplayName(user.Username, guild);
+                    var username = displayName.PadRight(UsernameFieldLength);
                     var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
 
                     var totalTimeInHours = (float)user.TotalTime / 60;
@@ -159,6 +161,17 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return orderBy;
         }
 
+        private string GetDisplayName(string username, DiscordGuild guild)
+        {
+            var displayName = guild.Members.First(p => p.Username == username).DisplayName;
+            if (displayName.Length > UsernameFieldLength)
+            {
+                return displayName.Substring(0, UsernameFieldLength - UsernameFieldMargin) + "...";
+            }
+
+            return displayName;
+        }
+
         private async Task DiscordClientOnMessageReactionAdded(MessageReactionAddEventArgs reactionEvent)
         {
             if (reactionEvent.User.IsBot) return;
@@ -175,7 +188,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             _paginationManager.UpdatePagination(paginationData, reactionEvent);
 
-            var onlineList = GetOnlineList(paginationData.CurrentPage, orderByData);
+            var onlineList = GetOnlineList(paginationData.CurrentPage, orderByData, reactionEvent.Channel.Guild);
 
             await reactionEvent.Message.DeleteReactionAsync(reactionEvent.Emoji, reactionEvent.User);
             await reactionEvent.Message.ModifyAsync(onlineList);
