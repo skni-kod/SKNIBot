@@ -2,7 +2,7 @@
 
 Discord bot developed by the SKNI (Studenckie Koło Naukowe Informatyków "KOD") members. It contains a lot of various commands
 which includes: random cats, dogs, animu, xkcd comics, SpaceX launches, 8Ball, wiki articles, CleverBot integration, hangman, Monty Python,
-lizards and more.
+lizards, compiler, statistics, moderation commands and more.
 
 # Used libraries
   * [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)
