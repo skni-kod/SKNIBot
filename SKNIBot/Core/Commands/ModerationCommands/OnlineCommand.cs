@@ -11,6 +11,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Helpers.Pagination;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {

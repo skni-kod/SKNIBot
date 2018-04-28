@@ -27,7 +27,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         private HangmanGame CurrentGame;
 
         public HangmanCommand()
-        {  
+        {
             _random = new Random();
             HangmanGames = new List<HangmanGame>();
         }
@@ -214,7 +214,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         /// <param name="output"></param>
         private string GenerateOutput()
         {
-            string output = "";
+            var output = "";
             output += CurrentGame.guessWord;
             output += "\n";
             for (var j = 0; j < HangmanConst.Stages[CurrentGame.actualStage - 1].Length; j++)

@@ -7,7 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    class RemoveLastMessagesGroupCommand
+    public class RemoveLastMessagesGroupCommand
     {
         [Command("usuńGrupowo")]
         [Aliases("usunGrupowo", "deleteGroup")]
@@ -17,10 +17,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             var messages = await ctx.Channel.GetMessagesAsync(1);
             await ctx.Channel.DeleteMessagesAsync(messages);
-            for (int i = 0; i < deleteCount; i++)
+            for (var i = 0; i < deleteCount; i++)
             {
                 messages = await ctx.Channel.GetMessagesAsync(Math.Min(messagesCount, 100));
                 if (messages.Count == 0) break;
+
                 await ctx.Channel.DeleteMessagesAsync(messages);
             }
         }

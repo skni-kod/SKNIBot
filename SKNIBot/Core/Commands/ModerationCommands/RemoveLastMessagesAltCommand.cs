@@ -7,7 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    class RemoveLastMessagesAltCommand
+    public class RemoveLastMessagesAltCommand
     {
         [Command("usuńAlt")]
         [Aliases("usunAlt", "deleteAlt")]
@@ -20,6 +20,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 var messages = await ctx.Channel.GetMessagesAsync(1);
                 if (messages.Count == 0) break;
+
                 await ctx.Channel.DeleteMessageAsync(messages.First());
                 messagesCount--;
             }

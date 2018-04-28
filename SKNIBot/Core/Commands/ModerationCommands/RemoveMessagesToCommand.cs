@@ -7,7 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    class RemoveMessagesToCommand
+    public class RemoveMessagesToCommand
     {
         [Command("usuńDoID")]
         [Aliases("usunDoID", "deleteToID")]
@@ -23,7 +23,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 if (messages.Count == 0) break;
             }
             while (messages.First().Id != messageID);
-            
+
         }
     }
 }

@@ -44,7 +44,7 @@ namespace SKNIBot.Core.Commands.EightBallCommands
             await ctx.TriggerTypingAsync();
 
            using(var db = new StaticDBContext()) {
-                var command = db.Commands.Where(c => c.Name == "8Ball").FirstOrDefault();
+                var command = db.Commands.FirstOrDefault(c => c.Name == "8Ball");
 
                 db.SimpleResponses.Add(new Database.Models.SimpleResponse {
                     Content = newResponse,

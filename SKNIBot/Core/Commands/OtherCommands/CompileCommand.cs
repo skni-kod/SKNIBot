@@ -24,19 +24,26 @@ namespace SKNIBot.Core.Commands.OtherCommands
             string language = "", input = "", code = "";
 
             var splittedInput = ctx.RawArgumentString.Split(',').ToList();
-            if (splittedInput.Count == 2)
+            switch (splittedInput.Count)
             {
-                language = splittedInput[0].Trim();
-                input = "";
-                code = splittedInput[1].Trim();
+                case 2:
+                {
+                    language = splittedInput[0].Trim();
+                    input = "";
+                    code = splittedInput[1].Trim();
+
+                    break;
+                    }
+                case 3:
+                {
+                    language = splittedInput[0].Trim();
+                    input = splittedInput[1].Trim();
+                    code = splittedInput[2].Trim();
+
+                    break;
+                }
             }
-            else if (splittedInput.Count == 3)
-            {
-                language = splittedInput[0].Trim();
-                input = splittedInput[1].Trim();
-                code = splittedInput[2].Trim();
-            }
-            
+
             var compilationResult = GetCompilationResult(language, input, code);
             var compilationEmbedResult = GetEmbedResult(compilationResult);
 

@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    class RemoveMessageCommand
+    public class RemoveMessageCommand
     {
         [Command("usuńID")]
         [Aliases("usunID", "deleteID")]
