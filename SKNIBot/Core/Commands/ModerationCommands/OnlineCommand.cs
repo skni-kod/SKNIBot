@@ -104,6 +104,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private void UpdateOnlineCallback(object state)
         {
+            _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
+
             using (var databaseContext = new DynamicDBContext())
             {
                 var onlineUsers = Bot.DiscordClient.Presences.Where(p => p.Value.Status != UserStatus.Offline).ToList();
@@ -134,8 +136,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 databaseContext.SaveChanges();
             }
-
-            _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
         }
 
         private int GetPagesCount()
