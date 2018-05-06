@@ -86,7 +86,6 @@ namespace SKNIBot.Core.Commands.TechCommands
 
             var flightToDisplay = flights[0];
             var response = GetResponse(flightToDisplay);
-
             await ctx.RespondAsync(response);
         }
 
@@ -111,9 +110,14 @@ namespace SKNIBot.Core.Commands.TechCommands
         private string GetResponse(FlightData data)
         {
             var responseBuilder = new StringBuilder();
-            var launchDate = TimeZoneInfo.ConvertTimeFromUtc(data.Launch_Date_UTC, TimeZoneInfo.Local);
+            DateTime? launchDate = null;
 
-            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({launchDate:yyyy-MM-dd HH:mm:ss})**\r\n");
+            if (data.Launch_Date_UTC.HasValue)
+            {
+                launchDate = TimeZoneInfo.ConvertTimeFromUtc(data.Launch_Date_UTC.Value, TimeZoneInfo.Local);
+            }
+
+            responseBuilder.Append($"**{data.Rocket.Rocket_Name} {data.Rocket.Rocket_Type} ({(launchDate.HasValue ? $"{launchDate.Value:yyyy-MM-dd HH:mm:ss}" : "date undefined")})**\r\n");
             responseBuilder.Append("\r\n");
 
             responseBuilder.Append("**Payloads:**\r\n");
