@@ -88,6 +88,8 @@
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\CatBoyCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\DogBoyCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\DogGirlCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekoGifCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\TickleCommand.cs" />
