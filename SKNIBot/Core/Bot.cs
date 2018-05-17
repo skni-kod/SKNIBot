@@ -11,12 +11,14 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Net.WebSocket;
 using SKNIBot.Core.Settings;
+using DSharpPlus.VoiceNext;
 
 namespace SKNIBot.Core
 {
     public class Bot
     {
         public static DiscordClient DiscordClient { get; set; }
+        static VoiceNextClient voice { get; set; }
         private CommandsNextModule _commands { get; set; }
 
         public void Run()
@@ -24,6 +26,7 @@ namespace SKNIBot.Core
             Connect();
             SetNetworkParameters();
             RegisterCommands();
+            voice = DiscordClient.UseVoiceNext();
         }
 
         private async void Connect()
@@ -80,6 +83,7 @@ namespace SKNIBot.Core
                     genericRegisterCommandMethod.Invoke(_commands, null);
                 }
             }
+            
         }
 
         private Task Commands_CommandExecuted(CommandExecutionEventArgs e)
