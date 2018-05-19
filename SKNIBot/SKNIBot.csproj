@@ -105,6 +105,7 @@
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekosLifeImage.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\PatCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\CatFactCommand.cs" />
+    <Compile Include="Core\Commands\TextCommands\GitHubCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\JokeCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\LinkCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\NekosLife\WhyCommand.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
     <Compile Include="Core\Containers\OtherContainers\LinkContainer.cs" />
     <Compile Include="Core\Commands\TextCommands\GraphCommand.cs" />
+    <Compile Include="Core\Containers\TextContainers\GitHubContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
     <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />
