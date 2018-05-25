@@ -94,7 +94,6 @@
     <Compile Include="Core\Commands\PicturesCommands\DogBoyCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\DogGirlCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekoGifCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\TickleCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\XkcdCommand.cs" />
     <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
