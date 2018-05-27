@@ -110,7 +110,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             using (var databaseContext = new DynamicDBContext())
             {
-                var onlineUsers = Bot.DiscordClient.Presences.Where(p => p.Value.Status != UserStatus.Offline).ToList();
+                var onlineUsers = Bot.DiscordClient.Presences.Where(p => !p.Value.User.IsBot && p.Value.Status != UserStatus.Offline).ToList();
                 foreach (var user in onlineUsers)
                 {
                     var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
