@@ -7,10 +7,15 @@ namespace SKNIBot.Core.Settings
     {
         public static SettingsContainer Container { get; private set; }
 
-        private static string _settingsFile = "settings.json";
+        private static string _settingsFile = "";
 
-        static SettingsLoader()
+       static SettingsLoader()
         {
+#if DEBUG
+            _settingsFile = "debug.json";
+#else
+            _settingsFile = "release.json";
+#endif
             Load();
         }
 
