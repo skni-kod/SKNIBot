@@ -67,6 +67,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                 _talk2Cs[0] = "";
                 _talk2Cs[1] = "";
                 _talk2IsRunning = false;
+                _talk2NextMessage = "";
 
                 await ctx.RespondAsync("Kontekst zresetowany.");
             }
