@@ -65,6 +65,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.108.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -88,6 +89,7 @@
     <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
     <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\CatBoyCommand.cs" />
+    <Compile Include="Core\Commands\PicturesCommands\CreateMemeCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\DogBoyCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\DogGirlCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
@@ -176,6 +178,7 @@
     <None Include="release.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="settings.json" />
     <None Include="StaticDatabase.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
