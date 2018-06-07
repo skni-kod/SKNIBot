@@ -18,6 +18,13 @@ namespace SKNIBot.Core.Commands.PicturesCommands
     class CreateMemeCommand
     {
 
+        Font _font;
+
+        public CreateMemeCommand()
+        {
+            _font = new Font("Liberation Mono", 40);
+        }
+
         [Command("meme")]
         public async Task CreateMeme(CommandContext ctx, string picName, string upText, string bottomText = null)
         {
@@ -41,11 +48,15 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 Image img = Bitmap.FromStream(stream);
 
-                var batch1 = new RectangleF(0, 150, 850, 850);
+                var upPosition = new RectangleF(0, 0, img.Width - 10, img.Height);
 
                 Graphics g = GetGraphicsFromImage(img);
 
-                g.DrawString("Kiedy po dwóch piwach\nStwierdzasz, że to dobry moment,\n żeby popisać komendy do bota", new Font("Liberation Mono", 40), Brushes.Black, batch1);
+                StringFormat format = new StringFormat(StringFormat.GenericDefault);
+                format.Alignment = StringAlignment.Center;
+
+                g.DrawString(upText, _font, Brushes.Black, upPosition, format);
+
 
                 g.Flush();
 
