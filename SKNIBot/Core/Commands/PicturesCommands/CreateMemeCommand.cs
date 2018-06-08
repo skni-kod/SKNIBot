@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -18,11 +19,17 @@ namespace SKNIBot.Core.Commands.PicturesCommands
     class CreateMemeCommand
     {
 
-        Font _font;
+        FontFamily _fontFamily;
+        Pen _outlinePen;
+        int _currentFontSize = 40;
 
         public CreateMemeCommand()
         {
-            _font = new Font("Liberation Mono", 40);
+            _fontFamily = new FontFamily("Liberation Mono");
+            _outlinePen = new Pen(Color.Black)
+            {
+                Width = 4
+            };
         }
 
         [Command("meme")]
@@ -48,16 +55,20 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 Image img = Bitmap.FromStream(stream);
 
-                var upPosition = new RectangleF(0, 0, img.Width - 10, img.Height);
+                var upPosition = new RectangleF(0, 0, img.Width - 10, img.Height / 2);
 
                 Graphics g = GetGraphicsFromImage(img);
 
                 StringFormat format = new StringFormat(StringFormat.GenericDefault);
                 format.Alignment = StringAlignment.Center;
 
-                g.DrawString(upText, _font, Brushes.Black, upPosition, format);
+                //g.DrawString(upText, _font, Brushes.Black, upPosition, format);
 
+                GraphicsPath path = new GraphicsPath();
+                path.AddString(upText, _fontFamily, (int)FontStyle.Bold, g.DpiY * _currentFontSize / 72, upPosition, format);
 
+                g.DrawPath(_outlinePen, path);
+                g.FillPath(Brushes.White, path);
                 g.Flush();
 
                 MemoryStream mem = new MemoryStream();
