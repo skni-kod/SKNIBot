@@ -63,7 +63,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var stream = new MemoryStream(picture);
 
                 //Create image and rect for it
-                Image img = Bitmap.FromStream(stream);
+                Bitmap img = new Bitmap(stream); //Bitmap.FromStream(stream);
+                //Bitmap bitmap = new Bitmap(img);
 
                 var upPosition = new RectangleF(0, 0, img.Width - _horizontalSpacing, img.Height * _screenHeightUpPercent);
 
