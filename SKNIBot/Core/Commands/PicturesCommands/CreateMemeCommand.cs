@@ -63,12 +63,13 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var stream = new MemoryStream(picture);
 
                 //Create image and rect for it
-                Bitmap img = new Bitmap(stream); //Bitmap.FromStream(stream);
-                //Bitmap bitmap = new Bitmap(img);
+                Image img = Bitmap.FromStream(stream);
+                Bitmap tempImage = new Bitmap(img.Width, img.Height);
 
                 var upPosition = new RectangleF(0, 0, img.Width - _horizontalSpacing, img.Height * _screenHeightUpPercent);
 
-                Graphics g = GetGraphicsFromImage(img);
+                Graphics g = GetGraphicsFromImage(tempImage);
+                g.DrawImage(img, 0, 0);
 
                 StringFormat format = new StringFormat(StringFormat.GenericDefault);
                 format.Alignment = StringAlignment.Center;
@@ -83,7 +84,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 path.AddString(upText.ToUpper(), _fontFamily, (int)FontStyle.Bold, fontSize, upPosition, format);
 
 #if DEBUG
-                await ctx.RespondAsync($"Width: {img.Width} Height: {img.Height} Size: {fontSize}");
+                await ctx.RespondAsync($"Width: {tempImage.Width} Height: {tempImage.Height} Size: {fontSize}");
 #endif
                 //Draw String
                 g.DrawPath(_outlinePen, path);
@@ -92,7 +93,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 //Save image and upload it
                 MemoryStream mem = new MemoryStream();
-                img.Save(mem, ImageFormat.Jpeg);
+                tempImage.Save(mem, ImageFormat.Jpeg);
                 mem.Position = 0;
 
                 await ctx.RespondWithFileAsync(mem, "MEMEM.jpg");
