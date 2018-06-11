@@ -101,7 +101,6 @@
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\CuddleCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\HugCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\KissCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\LewdCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\LizardCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekosLifeImage.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\PatCommand.cs" />
