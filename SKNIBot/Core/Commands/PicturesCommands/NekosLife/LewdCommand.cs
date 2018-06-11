@@ -6,7 +6,7 @@ using SKNIBot.Core.Const.PicturesConst.NekosLife;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {
-    [CommandsGroup("Obrazki")]
+    /*[CommandsGroup("Obrazki")]
     public class LewdCommand : NekosLifeImage
     {
         [Command("lewd")]
@@ -19,5 +19,5 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
             else
                 await ctx.RespondAsync("Chciałbyś ;)");
         }
-    }
+    }*/
 }
