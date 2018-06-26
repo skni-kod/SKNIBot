@@ -104,6 +104,7 @@
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\LizardCommand.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekosLifeImage.cs" />
     <Compile Include="Core\Commands\PicturesCommands\NekosLife\PatCommand.cs" />
+    <Compile Include="Core\Commands\TextCommands\AskCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\CatFactCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\GitHubCommand.cs" />
     <Compile Include="Core\Commands\TextCommands\JokeCommand.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Core\Containers\CompilationContainers\CompileRequestContainer.cs" />
     <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
     <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
+    <Compile Include="Core\Containers\TextContainers\AskContainer.cs" />
     <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
     <Compile Include="Core\Containers\OtherContainers\LinkContainer.cs" />
     <Compile Include="Core\Commands\TextCommands\GraphCommand.cs" />
