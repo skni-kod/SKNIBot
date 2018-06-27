@@ -10,8 +10,12 @@ using System.Xml;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Proxima.Core;
+using Proxima.Core.Boards;
 using Proxima.Core.Boards.Friendly;
 using Proxima.Core.Commons.Pieces;
+using Proxima.Core.Commons.Positions;
+using Proxima.Core.MoveGenerators;
+using Proxima.Core.MoveGenerators.Moves;
 using Proxima.Core.Session;
 using Color = Proxima.Core.Commons.Colors.Color;
 
@@ -21,6 +25,7 @@ namespace SKNIBot.Core.Commands.GameCommands
     public class ChessCommand
     {
         private Dictionary<string, Image> _images;
+        private List<Position> _selectedPositions;
         private GameSession _gameSession;
 
         private const string ChessImagesPath = "Images/Chess/";
@@ -30,17 +35,68 @@ namespace SKNIBot.Core.Commands.GameCommands
             ProximaCore.Init();
 
             _images = new Dictionary<string, Image>();
-            _gameSession = new GameSession();
+            _selectedPositions = new List<Position>();
 
+            CreateSession();
             LoadChessImages();
         }
 
         [Command("szachy")]
         [Description("Dev.")]
         [Aliases("chess", "c")]
-        public async Task Chess(CommandContext ctx)
+        public async Task Chess(CommandContext ctx, string action = null)
         {
-            await ctx.RespondWithFileAsync(GetBoardImage(), "test.png");
+            if (action == "new")
+            {
+                CreateSession();
+            }
+            else
+            {
+                _gameSession.UpdateRemainingTime(Color.White, 200);
+                _gameSession.UpdateRemainingTime(Color.Black, 200);
+
+                var from = action.Substring(0, 2);
+                var to = action.Substring(2, 2);
+
+                var fromPosition = PositionConverter.ToPosition(from);
+                var toPosition = PositionConverter.ToPosition(to);
+
+                var moveValidationBitboard = new Bitboard(_gameSession.Bitboard);
+                moveValidationBitboard.Calculate(GeneratorMode.CalculateAttacks | GeneratorMode.CalculateMoves, false);
+
+                var move = moveValidationBitboard.Moves.FirstOrDefault(p => p.From == fromPosition && p.To == toPosition);
+                if (move == null)
+                {
+                    await ctx.RespondAsync("Invalid move");
+                    return;
+                }
+
+                var validationBitboardAfterMove = moveValidationBitboard.Move(move);
+                validationBitboardAfterMove.Calculate(false);
+
+                if (validationBitboardAfterMove.IsCheck(Color.White))
+                {
+                    await ctx.RespondAsync("Invalid move");
+                    return;
+                }
+
+                _gameSession.Move(Color.White, fromPosition, toPosition);
+
+                _selectedPositions.Clear();
+                _selectedPositions.Add(fromPosition);
+                _selectedPositions.Add(toPosition);
+
+                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png");
+
+                var aiMove = _gameSession.MoveAI(Color.Black);
+
+                _selectedPositions.Clear();
+                _selectedPositions.Add(aiMove.PVNodes[0].From);
+                _selectedPositions.Add(aiMove.PVNodes[0].To);
+
+                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png");
+            }
+
         }
 
         private void LoadChessImages()
@@ -51,6 +107,17 @@ namespace SKNIBot.Core.Commands.GameCommands
                 var pureName = imagePath.Split('/').Last().Split('.').First();
                 _images.Add(pureName, Image.FromFile(imagePath));
             }
+        }
+
+        private void CreateSession()
+        {
+            _gameSession = new GameSession(0);
+            _gameSession.OnThinkingOutput += GameSession_OnThinkingOutput;
+        }
+
+        private void GameSession_OnThinkingOutput(object sender, Proxima.Core.AI.ThinkingOutputEventArgs e)
+        {
+            Console.WriteLine($"{e.AIResult.Depth}: TN:{e.AIResult.Stats.TotalNodes} NPS:{e.AIResult.NodesPerSecond}");
         }
 
         private Stream GetBoardImage()
@@ -83,6 +150,11 @@ namespace SKNIBot.Core.Commands.GameCommands
             {
                 var image = _images[GetImageNameByPiece(piece.Type, piece.Color)];
                 graphic.DrawImage(image, new Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64));
+            }
+
+            foreach (var selected in _selectedPositions)
+            {
+                graphic.DrawImage(_images["InternalSelection"], new Point(15 + (selected.X - 1) * 64, (8 - selected.Y) * 64));
             }
 
             var stream = new MemoryStream();
