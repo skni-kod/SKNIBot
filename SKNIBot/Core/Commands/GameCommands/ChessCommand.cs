@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Proxima.Core;
 using Proxima.Core.Boards;
 using Proxima.Core.Boards.Friendly;
@@ -26,6 +27,7 @@ namespace SKNIBot.Core.Commands.GameCommands
     {
         private Dictionary<string, Image> _images;
         private List<Position> _selectedPositions;
+        private List<ulong> _messageIds;
         private GameSession _gameSession;
 
         private const string ChessImagesPath = "Images/Chess/";
@@ -36,6 +38,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
             _images = new Dictionary<string, Image>();
             _selectedPositions = new List<Position>();
+            _messageIds = new List<ulong>();
 
             CreateSession();
             LoadChessImages();
@@ -49,11 +52,12 @@ namespace SKNIBot.Core.Commands.GameCommands
             if (action == "new")
             {
                 CreateSession();
+                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Nowa gra utworzona:**");
             }
             else
             {
-                _gameSession.UpdateRemainingTime(Color.White, 200);
-                _gameSession.UpdateRemainingTime(Color.Black, 200);
+                _gameSession.UpdateRemainingTime(Color.White, 60);
+                _gameSession.UpdateRemainingTime(Color.Black, 60);
 
                 var from = action.Substring(0, 2);
                 var to = action.Substring(2, 2);
@@ -80,21 +84,35 @@ namespace SKNIBot.Core.Commands.GameCommands
                     return;
                 }
 
+
+                foreach (var msgIdToDelete in _messageIds)
+                {
+                    var messageToDelete = await ctx.Channel.GetMessageAsync(msgIdToDelete);
+                    await ctx.Channel.DeleteMessageAsync(messageToDelete);
+                }
+
+                _messageIds.Clear();
+
                 _gameSession.Move(Color.White, fromPosition, toPosition);
 
                 _selectedPositions.Clear();
                 _selectedPositions.Add(fromPosition);
                 _selectedPositions.Add(toPosition);
 
-                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png");
+                var playerBoardMsg = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Ruch gracza:**");
+                _messageIds.Add(playerBoardMsg.Id);
 
+                var thinkingMessage = await ctx.RespondAsync("Myślę...");
                 var aiMove = _gameSession.MoveAI(Color.Black);
 
                 _selectedPositions.Clear();
                 _selectedPositions.Add(aiMove.PVNodes[0].From);
                 _selectedPositions.Add(aiMove.PVNodes[0].To);
 
-                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png");
+                await thinkingMessage.DeleteAsync();
+
+                var aiBoardMsg = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Ruch AI:**");
+                _messageIds.Add(aiBoardMsg.Id);
             }
 
         }
@@ -111,13 +129,19 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         private void CreateSession()
         {
-            _gameSession = new GameSession(0);
+            _gameSession = new GameSession(1);
             _gameSession.OnThinkingOutput += GameSession_OnThinkingOutput;
+            _gameSession.OnGameEnded += GameSession_OnOnGameEnded;
         }
 
         private void GameSession_OnThinkingOutput(object sender, Proxima.Core.AI.ThinkingOutputEventArgs e)
         {
             Console.WriteLine($"{e.AIResult.Depth}: TN:{e.AIResult.Stats.TotalNodes} NPS:{e.AIResult.NodesPerSecond}");
+        }
+
+        private void GameSession_OnOnGameEnded(object sender, GameEndedEventArgs gameEndedEventArgs)
+        {
+            throw new NotImplementedException();
         }
 
         private Stream GetBoardImage()
