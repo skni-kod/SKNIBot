@@ -15,9 +15,15 @@ namespace SKNIBot.Core.Commands.GameCommands
     [CommandsGroup("Gry")]
     public class ChessCommand
     {
+        private Dictionary<string, Image> _images;
+
+        private const string ChessImagesPath = "Images/Chess/";
+
         public ChessCommand()
         {
+            _images = new Dictionary<string, Image>();
 
+            LoadChessImages();
         }
 
         [Command("szachy")]
@@ -50,6 +56,16 @@ namespace SKNIBot.Core.Commands.GameCommands
             stream.Position = 0;
 
             await ctx.RespondWithFileAsync(stream, "test.png");
+        }
+
+        private void LoadChessImages()
+        {
+            var imagesList = Directory.GetFiles(ChessImagesPath);
+            foreach (var imagePath in imagesList)
+            {
+                var pureName = imagePath.Split('/').Last().Split('.').First();
+                _images.Add(pureName, Image.FromFile(imagePath));
+            }
         }
     }
 }
