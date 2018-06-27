@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using Proxima.Core;
+using Proxima.Core.Boards.Friendly;
+using Proxima.Core.Commons.Pieces;
+using Proxima.Core.Session;
+using Color = Proxima.Core.Commons.Colors.Color;
 
 namespace SKNIBot.Core.Commands.GameCommands
 {
@@ -16,12 +21,16 @@ namespace SKNIBot.Core.Commands.GameCommands
     public class ChessCommand
     {
         private Dictionary<string, Image> _images;
+        private GameSession _gameSession;
 
         private const string ChessImagesPath = "Images/Chess/";
 
         public ChessCommand()
         {
+            ProximaCore.Init();
+
             _images = new Dictionary<string, Image>();
+            _gameSession = new GameSession();
 
             LoadChessImages();
         }
@@ -31,31 +40,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         [Aliases("chess", "c")]
         public async Task Chess(CommandContext ctx)
         {
-            var f1 = Image.FromFile("Images/Chess/field1.png");
-            var f2 = Image.FromFile("Images/Chess/field2.png");
-
-            var board = new Bitmap(512, 512);
-            var graphic = Graphics.FromImage(board);
-
-            var odd = false;
-            for (var x = 0; x < 8; x++)
-            {
-                for (var y = 0; y < 8; y++)
-                {
-                    var field = odd ? f1 : f2;
-                    graphic.DrawImage(field, new Point(x * 64, y * 64));
-
-                    odd = !odd;
-                }
-
-                odd = !odd;
-            }
-
-            var stream = new MemoryStream();
-            board.Save(stream, ImageFormat.Png);
-            stream.Position = 0;
-
-            await ctx.RespondWithFileAsync(stream, "test.png");
+            await ctx.RespondWithFileAsync(GetBoardImage(), "test.png");
         }
 
         private void LoadChessImages()
@@ -66,6 +51,50 @@ namespace SKNIBot.Core.Commands.GameCommands
                 var pureName = imagePath.Split('/').Last().Split('.').First();
                 _images.Add(pureName, Image.FromFile(imagePath));
             }
+        }
+
+        private Stream GetBoardImage()
+        {
+            var board = new Bitmap(527, 535);
+            var graphic = Graphics.FromImage(board);
+
+            var odd = false;
+            for (var x = 0; x < 8; x++)
+            {
+                for (var y = 0; y < 8; y++)
+                {
+                    var field = odd ? _images["Field1"] : _images["Field2"];
+                    graphic.DrawImage(field, new Point(15 + x * 64, y * 64));
+
+                    odd = !odd;
+                }
+
+                odd = !odd;
+            }
+
+            for (var x = 1; x <= 8; x++)
+            {
+                graphic.DrawString(((char)(x + 'a' - 1)).ToString(), new Font(new FontFamily("Liberation Mono"), 12, FontStyle.Bold), new SolidBrush(System.Drawing.Color.White), x * 64 - 25, 513);
+                graphic.DrawString((8 - x + 1).ToString(), new Font(new FontFamily("Liberation Mono"), 12, FontStyle.Bold), new SolidBrush(System.Drawing.Color.White), 0, (x - 1) * 64 + 20);
+            }
+
+            var friendlyBoard = new FriendlyBoard(_gameSession.Bitboard);
+            foreach (var piece in friendlyBoard.Pieces)
+            {
+                var image = _images[GetImageNameByPiece(piece.Type, piece.Color)];
+                graphic.DrawImage(image, new Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64));
+            }
+
+            var stream = new MemoryStream();
+            board.Save(stream, ImageFormat.Png);
+            stream.Position = 0;
+
+            return stream;
+        }
+
+        private string GetImageNameByPiece(PieceType type, Color color)
+        {
+            return color.ToString() + type.ToString();
         }
     }
 }
