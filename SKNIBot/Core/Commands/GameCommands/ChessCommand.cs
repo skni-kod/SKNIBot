@@ -45,13 +45,13 @@ namespace SKNIBot.Core.Commands.GameCommands
         }
 
         [Command("szachy")]
-        [Description("Dev.")]
-        [Aliases("chess", "c")]
-        public async Task Chess(CommandContext ctx, string action = null)
+        [Description("Gra w szachy.")]
+        [Aliases("s", "chess", "c")]
+        public async Task Chess(CommandContext ctx, [Description("`new` aby rozpocząć grę lub ruch (np. `e2e4`)")]string action = null)
         {
             if (action == null)
             {
-                await ctx.RespondAsync("Użycie: !szachy new aby rozpocząć nową grę lub !szachy e2e4 aby wykonać ruch.");
+                await ctx.RespondAsync("Użycie: `!szachy new` aby rozpocząć nową grę lub `!szachy e2e4` aby wykonać ruch.");
             }
             else if (action == "new")
             {
@@ -62,14 +62,23 @@ namespace SKNIBot.Core.Commands.GameCommands
             }
             else
             {
-                _gameSession.UpdateRemainingTime(Color.White, 300);
-                _gameSession.UpdateRemainingTime(Color.Black, 300);
+                _gameSession.UpdateRemainingTime(Color.White, 200);
+                _gameSession.UpdateRemainingTime(Color.Black, 200);
 
-                var from = action.Substring(0, 2);
-                var to = action.Substring(2, 2);
+                Position fromPosition, toPosition;
+                try
+                {
+                    var from = action.Substring(0, 2);
+                    var to = action.Substring(2, 2);
 
-                var fromPosition = PositionConverter.ToPosition(from);
-                var toPosition = PositionConverter.ToPosition(to);
+                    fromPosition = PositionConverter.ToPosition(from);
+                    toPosition = PositionConverter.ToPosition(to);
+                }
+                catch (Exception e)
+                {
+                    await ctx.RespondAsync("Nieprawidłowy ruch");
+                    return;
+                }
 
                 var moveValidationBitboard = new Bitboard(_gameSession.Bitboard);
                 moveValidationBitboard.Calculate(GeneratorMode.CalculateAttacks | GeneratorMode.CalculateMoves, false);
@@ -77,7 +86,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 var move = moveValidationBitboard.Moves.FirstOrDefault(p => p.From == fromPosition && p.To == toPosition);
                 if (move == null)
                 {
-                    await ctx.RespondAsync("Invalid move");
+                    await ctx.RespondAsync("Nieprawidłowy ruch");
                     return;
                 }
 
