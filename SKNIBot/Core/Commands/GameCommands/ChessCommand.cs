@@ -49,15 +49,21 @@ namespace SKNIBot.Core.Commands.GameCommands
         [Aliases("chess", "c")]
         public async Task Chess(CommandContext ctx, string action = null)
         {
-            if (action == "new")
+            if (action == null)
+            {
+                await ctx.RespondAsync("Użycie: !szachy new aby rozpocząć nową grę lub !szachy e2e4 aby wykonać ruch.");
+            }
+            else if (action == "new")
             {
                 CreateSession();
-                await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Nowa gra utworzona:**");
+
+                var boardMessage = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Nowa gra utworzona:**");
+                _messageIds.Add(boardMessage.Id);
             }
             else
             {
-                _gameSession.UpdateRemainingTime(Color.White, 60);
-                _gameSession.UpdateRemainingTime(Color.Black, 60);
+                _gameSession.UpdateRemainingTime(Color.White, 300);
+                _gameSession.UpdateRemainingTime(Color.Black, 300);
 
                 var from = action.Substring(0, 2);
                 var to = action.Substring(2, 2);
@@ -131,17 +137,11 @@ namespace SKNIBot.Core.Commands.GameCommands
         {
             _gameSession = new GameSession(1);
             _gameSession.OnThinkingOutput += GameSession_OnThinkingOutput;
-            _gameSession.OnGameEnded += GameSession_OnOnGameEnded;
         }
 
         private void GameSession_OnThinkingOutput(object sender, Proxima.Core.AI.ThinkingOutputEventArgs e)
         {
             Console.WriteLine($"{e.AIResult.Depth}: TN:{e.AIResult.Stats.TotalNodes} NPS:{e.AIResult.NodesPerSecond}");
-        }
-
-        private void GameSession_OnOnGameEnded(object sender, GameEndedEventArgs gameEndedEventArgs)
-        {
-            throw new NotImplementedException();
         }
 
         private Stream GetBoardImage()
