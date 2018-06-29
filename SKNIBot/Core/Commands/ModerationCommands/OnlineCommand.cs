@@ -75,12 +75,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             using (var databaseContext = new DynamicDBContext())
             {
-                var onlineStatsQuery = databaseContext.OnlineStats
-                    .OrderByDescending(p => p.TotalTime);
+                var onlineStatsQuery = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime);
 
                 switch (orderBy)
                 {
-                    case "username": onlineStatsQuery = onlineStatsQuery.OrderBy(p => p.Username); break;
+                    case "username": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.Username); break;
                     case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
                     case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
                 }
@@ -89,7 +88,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var user in onlineStats)
                 {
-                    var displayName = GetDisplayName(user.Username, guild);
+                    var displayName = GetDisplayName(user.UserID, guild);
                     var username = displayName.PadRight(UsernameFieldLength);
                     var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
 
@@ -113,7 +112,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 var onlineUsers = Bot.DiscordClient.Presences.Where(p => !p.Value.User.IsBot && p.Value.Status != UserStatus.Offline).ToList();
                 foreach (var user in onlineUsers)
                 {
-                    var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
+                    var userId = user.Value.User.Id.ToString();
+                    var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.UserID == userId);
+
                     if (onlineStats == null)
                     {
                         // Remove seconds and milliseconds from date to better ordering
@@ -122,7 +123,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                         onlineStats = new OnlineStats
                         {
-                            Username = user.Value.User.Username,
+                            UserID = user.Value.User.Id.ToString(),
+                            Username = GetDisplayName(user.Value.User.Id.ToString(), Bot.DiscordClient.Guilds.First().Value),
                             LastOnline = fixedNow,
                             TotalTime = 0
                         };
@@ -131,6 +133,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     }
                     else
                     {
+                        onlineStats.Username = GetDisplayName(onlineStats.UserID, Bot.DiscordClient.Guilds.First().Value);
                         onlineStats.LastOnline = DateTime.Now;
                         onlineStats.TotalTime += UpdateOnlineInterval / 1000 / 60;
                     }
@@ -161,9 +164,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return orderBy;
         }
 
-        private string GetDisplayName(string username, DiscordGuild guild)
+        private string GetDisplayName(string usernameID, DiscordGuild guild)
         {
-            var displayName = guild.Members.First(p => p.Username == username).DisplayName;
+            var displayName = guild.Members.First(p => p.Id == ulong.Parse(usernameID)).DisplayName;
             if (displayName.Length > UsernameFieldLength)
             {
                 return displayName.Substring(0, UsernameFieldLength - UsernameFieldMargin) + "...";
