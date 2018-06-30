@@ -46,7 +46,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         [Command("szachy")]
         [Description("Gra w szachy.")]
-        [Aliases("s", "chess", "c")]
+        [Aliases("s", "c", "chess")]
         public async Task Chess(CommandContext ctx, [Description("`new` aby rozpocząć grę lub ruch (np. `e2e4`)")]string action = null)
         {
             if (action == null)
@@ -55,6 +55,9 @@ namespace SKNIBot.Core.Commands.GameCommands
             }
             else if (action == "new")
             {
+                _selectedPositions.Clear();
+                _messageIds.Clear();
+
                 CreateSession();
 
                 var boardMessage = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Nowa gra utworzona:**");
@@ -144,6 +147,11 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         private void CreateSession()
         {
+            if (_gameSession != null)
+            {
+                _gameSession.OnThinkingOutput -= GameSession_OnThinkingOutput;
+            }
+
             _gameSession = new GameSession(1);
             _gameSession.OnThinkingOutput += GameSession_OnThinkingOutput;
         }
