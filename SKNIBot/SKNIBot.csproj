@@ -1,257 +1,85 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SKNIBot</RootNamespace>
-    <AssemblyName>SKNIBot</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="DSharpPlus, Version=3.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.3.2.3\lib\net45\DSharpPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="DSharpPlus.CommandsNext, Version=3.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.CommandsNext.3.2.3\lib\net45\DSharpPlus.CommandsNext.dll</HintPath>
-    </Reference>
-    <Reference Include="DSharpPlus.WebSocket.WebSocket4Net, Version=3.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.WebSocket.WebSocket4Net.3.2.3\lib\net45\DSharpPlus.WebSocket.WebSocket4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Proxima.Core">
-      <HintPath>ExternalDependencies\Proxima.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.108.0\lib\net451\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.108.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.108.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\net45\WebSocket4Net.dll</HintPath>
-    </Reference>
+    <PackageReference Include="DSharpPlus" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="3.2.3" />
+    <PackageReference Include="DSharpPlus.WebSocket.WebSocket4NetCore" Version="3.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Core\Bot.cs" />
-    <Compile Include="Core\CommandsGroupAttribute.cs" />
-    <Compile Include="Core\Commands\GameCommands\ChessCommand.cs" />
-    <Compile Include="Core\Commands\GameCommands\HangmanCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\OnlineCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\StatsCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesAltCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\RemoveLastMessagesGroupCommand.cs" />
-    <Compile Include="Core\Commands\ModerationCommands\RemoveMessagesToCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\CompileCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\DescriptionCommand.cs" />
-    <Compile Include="Core\Commands\EightBallCommands\EightBallCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\PingCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\CatBoyCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\CreateMemeCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\DogBoyCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\DogGirlCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekoCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\TickleCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\XkcdCommand.cs" />
-    <Compile Include="Core\Commands\QuotesCommands\MonthyPythonQuatesCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\AvatarCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\CatGirlCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\CuddleCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\HugCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\KissCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\LizardCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\NekosLifeImage.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekosLife\PatCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\AskCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\CatFactCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\GitHubCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\JokeCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\LinkCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\NekosLife\WhyCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\PicturesCommand.cs" />
-    <Compile Include="Core\Commands\OtherCommands\RandomCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\HiCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\HttpInuCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\HttpNekoCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\InuCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\JSCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\LennyCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\SayCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\TalkCommand.cs" />
-    <Compile Include="Core\Commands\TextCommands\WikipediaCommand.cs" />
-    <Compile Include="Core\Commands\UniCommands\WhenArmageddonCommand.cs" />
-    <Compile Include="Core\Commands\YouTubeCommands\MontyPythonCommand.cs" />
-    <Compile Include="Core\Commands\PicturesCommands\NekoAltCommand.cs" />
-    <Compile Include="Core\Commands\YouTubeCommands\YouTubeCommand.cs" />
-    <Compile Include="Core\Const\GamesConst\HangmanConst.cs" />
-    <Compile Include="Core\Const\PicturesConst\HttpInuConst.cs" />
-    <Compile Include="Core\Const\PicturesConst\NekosLife\NekosLifePicturesEndpoints.cs" />
-    <Compile Include="Core\Const\TextConst\NekosLife\NekosLifeTextsEndpoints.cs" />
-    <Compile Include="Core\Containers\CompilationContainers\CompilationResultContainer.cs" />
-    <Compile Include="Core\Containers\CompilationContainers\CompileRequestContainer.cs" />
-    <Compile Include="Core\Containers\PicturesContainers\NekosLife\NekosFileImage.cs" />
-    <Compile Include="Core\Containers\PicturesContainers\XkcdContainer.cs" />
-    <Compile Include="Core\Containers\TextContainers\AskContainer.cs" />
-    <Compile Include="Core\Containers\TextContainers\CatFactContainer.cs" />
-    <Compile Include="Core\Containers\OtherContainers\LinkContainer.cs" />
-    <Compile Include="Core\Commands\TextCommands\GraphCommand.cs" />
-    <Compile Include="Core\Containers\TextContainers\GitHubContainer.cs" />
-    <Compile Include="Core\Containers\TextContainers\NekosLife\NekosWhy.cs" />
-    <Compile Include="Core\Containers\TechContainers\SpaceX\FlightData.cs" />
-    <Compile Include="Core\Containers\TechContainers\SpaceX\LinksContainer.cs" />
-    <Compile Include="Core\Containers\TechContainers\SpaceX\PayloadsData.cs" />
-    <Compile Include="Core\Containers\TechContainers\SpaceX\RocketData.cs" />
-    <Compile Include="Core\Containers\TechContainers\SpaceX\SecondStageData.cs" />
-    <Compile Include="Core\Commands\TechCommands\SpaceXCommand.cs" />
-    <Compile Include="Core\Const\PicturesConst\HttpNekoConst.cs" />
-    <Compile Include="Core\Containers\PicturesContainers\DogContainer.cs" />
-    <Compile Include="Core\Containers\PicturesContainers\NekoContainer.cs" />
-    <Compile Include="Core\Containers\TextContainers\TalkData.cs" />
-    <Compile Include="Core\CustomHelpFormatter.cs" />
-    <Compile Include="Core\Database\DynamicDBContext.cs" />
-    <Compile Include="Core\Database\StaticDBContext.cs" />
-    <Compile Include="Core\Database\Models\Command.cs" />
-    <Compile Include="Core\Database\Models\HangmanCategory.cs" />
-    <Compile Include="Core\Database\Models\HangmanWord.cs" />
-    <Compile Include="Core\Database\Models\Media.cs" />
-    <Compile Include="Core\Database\Models\MediaCategory.cs" />
-    <Compile Include="Core\Database\Models\MediaName.cs" />
-    <Compile Include="Core\Database\Models\OnlineStats.cs" />
-    <Compile Include="Core\Database\Models\SimpleResponse.cs" />
-    <Compile Include="Core\Helpers\Pagination\PaginationData.cs" />
-    <Compile Include="Core\Helpers\Pagination\PaginationManager.cs" />
-    <Compile Include="Core\Settings\SettingsContainer.cs" />
-    <Compile Include="Core\Settings\SettingsLoader.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Update="Book\openings.book">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="debug.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="DynamicDatabase.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackBishop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackKing.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackKnight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackPawn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackQueen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\BlackRook.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\Field1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\Field2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\InternalSelection.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhiteBishop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhiteKing.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhiteKnight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhitePawn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhiteQueen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Chess\WhiteRook.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Keys\BishopKeys.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Keys\RookKeys.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="release.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="StaticDatabase.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="Core\Commands\ModerationCommands\RemoveMessageCommand.cs" />
-    <None Include="Book\openings.book">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="debug.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="DynamicDatabase.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="release.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="StaticDatabase.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-    <None Include="settings.json.example" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\Chess\BlackBishop.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\BlackKing.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\BlackKnight.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\BlackPawn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\BlackQueen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\BlackRook.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\Field1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\Field2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\InternalSelection.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhiteBishop.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhiteKing.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhiteKnight.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhitePawn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhiteQueen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Chess\WhiteRook.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Keys\BishopKeys.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Keys\RookKeys.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.108.0\build\net451\System.Data.SQLite.Core.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props'))" />
-  </Target>
+
 </Project>

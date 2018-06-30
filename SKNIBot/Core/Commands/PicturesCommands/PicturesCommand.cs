@@ -1,10 +1,10 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var pictureLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => DbFunctions.Like(p.Name, pictureName)))
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == pictureName))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 

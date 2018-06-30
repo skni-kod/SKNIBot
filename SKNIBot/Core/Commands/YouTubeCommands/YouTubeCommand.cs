@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -29,7 +28,7 @@ namespace SKNIBot.Core.Commands.YouTubeCommands
 
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var videoLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "YouTube" && vid.Names.Any(p => DbFunctions.Like(p.Name, videoName)))
+                    .Where(vid => vid.Command.Name == "YouTube" && vid.Names.Any(p => p.Name == videoName))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 

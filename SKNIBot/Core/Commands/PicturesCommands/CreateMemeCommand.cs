@@ -1,4 +1,4 @@
-﻿using DSharpPlus.CommandsNext;
+﻿/*using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
 using System;
@@ -131,3 +131,4 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         }
     }
 }
+*/

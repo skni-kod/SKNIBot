@@ -39,7 +39,7 @@ namespace SKNIBot.Core
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-            DiscordClient.SetWebSocketClient<WebSocket4NetClient>();
+            DiscordClient.SetWebSocketClient<WebSocket4NetCoreClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -59,8 +59,7 @@ namespace SKNIBot.Core
 
         private void SetNetworkParameters()
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 |
-                                                   SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         private void RegisterCommands()

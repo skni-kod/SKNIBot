@@ -1,25 +1,30 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Database
 {
     public class StaticDBContext : DbContext
     {
-        public virtual IDbSet<Command> Commands { get; set; }
-        public virtual IDbSet<SimpleResponse> SimpleResponses { get; set; }
+        public virtual DbSet<Command> Commands { get; set; }
+        public virtual DbSet<SimpleResponse> SimpleResponses { get; set; }
 
-        public virtual IDbSet<Media> Media { get; set; }
-        public virtual IDbSet<MediaName> MediaNames { get; set; }
-        public virtual IDbSet<MediaCategory> MediaCategories { get; set; }
+        public virtual DbSet<Media> Media { get; set; }
+        public virtual DbSet<MediaName> MediaNames { get; set; }
+        public virtual DbSet<MediaCategory> MediaCategories { get; set; }
 
-        public virtual IDbSet<HangmanCategory> HangmanCategories { get; set; }
-        public virtual IDbSet<HangmanWord> HangmanWords { get; set; }
+        public virtual DbSet<HangmanCategory> HangmanCategories { get; set; }
+        public virtual DbSet<HangmanWord> HangmanWords { get; set; }
 
-        public StaticDBContext() : base("StaticDatabaseConnectionString")
-        {
+        public StaticDBContext() : base(GetOptions("Data Source=StaticDatabase.sqlite"))
+        {/*
 #if DEBUG
             Database.Log = System.Console.Write;
-#endif
+#endif*/
+        }
+
+        private static DbContextOptions GetOptions(string connectionString)
+        {
+            return SqliteDbContextOptionsBuilderExtensions.UseSqlite(new DbContextOptionsBuilder(), connectionString).Options;
         }
     }
 }
