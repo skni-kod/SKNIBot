@@ -1,23 +1,26 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using Proxima.Core;
 using Proxima.Core.Boards;
 using Proxima.Core.Boards.Friendly;
 using Proxima.Core.Commons.Pieces;
 using Proxima.Core.Commons.Positions;
 using Proxima.Core.MoveGenerators;
-using Proxima.Core.MoveGenerators.Moves;
 using Proxima.Core.Session;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Drawing;
+using SixLabors.ImageSharp.Processing.Text;
 using Color = Proxima.Core.Commons.Colors.Color;
 
 namespace SKNIBot.Core.Commands.GameCommands
@@ -25,7 +28,7 @@ namespace SKNIBot.Core.Commands.GameCommands
     [CommandsGroup("Gry")]
     public class ChessCommand
     {
-        private Dictionary<string, Image> _images;
+        private Dictionary<string, Image<Rgba32>> _images;
         private List<Position> _selectedPositions;
         private List<ulong> _messageIds;
         private GameSession _gameSession;
@@ -36,7 +39,7 @@ namespace SKNIBot.Core.Commands.GameCommands
         {
             ProximaCore.Init();
 
-            _images = new Dictionary<string, Image>();
+            _images = new Dictionary<string, Image<Rgba32>>();
             _selectedPositions = new List<Position>();
             _messageIds = new List<ulong>();
 
@@ -141,7 +144,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             foreach (var imagePath in imagesList)
             {
                 var pureName = imagePath.Split('/').Last().Split('.').First();
-                _images.Add(pureName, Image.FromFile(imagePath));
+                _images.Add(pureName, Image.Load(imagePath));
             }
         }
 
@@ -163,8 +166,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         private Stream GetBoardImage()
         {
-            var board = new Bitmap(527, 535);
-            var graphic = Graphics.FromImage(board);
+            var board = new Image<Rgba32>(527, 535);
 
             var odd = false;
             for (var x = 0; x < 8; x++)
@@ -172,7 +174,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 for (var y = 0; y < 8; y++)
                 {
                     var field = odd ? _images["Field1"] : _images["Field2"];
-                    graphic.DrawImage(field, new Point(15 + x * 64, y * 64));
+                    board.Mutate(p => p.DrawImage(field, PixelBlenderMode.Overlay, 1, new SixLabors.Primitives.Point(15 + x * 64, y * 64)));
 
                     odd = !odd;
                 }
@@ -182,24 +184,24 @@ namespace SKNIBot.Core.Commands.GameCommands
 
             for (var x = 1; x <= 8; x++)
             {
-                graphic.DrawString(((char)(x + 'a' - 1)).ToString(), new Font(new FontFamily("Liberation Mono"), 12, FontStyle.Bold), new SolidBrush(System.Drawing.Color.White), x * 64 - 25, 513);
-                graphic.DrawString((8 - x + 1).ToString(), new Font(new FontFamily("Liberation Mono"), 12, FontStyle.Bold), new SolidBrush(System.Drawing.Color.White), 0, (x - 1) * 64 + 20);
+                board.Mutate(p => p.DrawText(((char)(x + 'a' - 1)).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new SixLabors.Primitives.PointF(x * 64 - 25, 513)));
+                board.Mutate(p => p.DrawText((8 - x + 1).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new SixLabors.Primitives.PointF(0, (x - 1) * 64 + 20)));
             }
 
             var friendlyBoard = new FriendlyBoard(_gameSession.Bitboard);
             foreach (var piece in friendlyBoard.Pieces)
             {
                 var image = _images[GetImageNameByPiece(piece.Type, piece.Color)];
-                graphic.DrawImage(image, new Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64));
+                board.Mutate(p => p.DrawImage(image, 1, new SixLabors.Primitives.Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64)));
             }
 
             foreach (var selected in _selectedPositions)
             {
-                graphic.DrawImage(_images["InternalSelection"], new Point(15 + (selected.X - 1) * 64, (8 - selected.Y) * 64));
+                board.Mutate(p => p.DrawImage(_images["InternalSelection"], 1, new SixLabors.Primitives.Point(15 + (selected.X - 1) * 64, (8 - selected.Y) * 64)));
             }
 
             var stream = new MemoryStream();
-            board.Save(stream, ImageFormat.Png);
+            board.Save(stream, new PngEncoder());
             stream.Position = 0;
 
             return stream;
@@ -211,4 +213,3 @@ namespace SKNIBot.Core.Commands.GameCommands
         }
     }
 }
-*/
