@@ -43,7 +43,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx, [Description("Dostępne: username, last, total.")] string orderBy = "total")
+        public async Task Online(CommandContext ctx, [Description("Dostępne: last, total.")] string orderBy = "total")
         {
             await ctx.TriggerTypingAsync();
 
@@ -59,7 +59,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(PaginationIdentifier);
             stringBuilder.Append(" ");
-            stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount()));
+            stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount(guild)));
             stringBuilder.Append(" ");
             stringBuilder.Append(GetOrderByHeader(orderBy));
             stringBuilder.Append(".\n");
@@ -79,12 +79,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 switch (orderBy)
                 {
-                    case "username": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.Username); break;
                     case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
                     case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
                 }
 
-                var onlineStats = onlineStatsQuery.Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
+                var usersInGuild = guild.Members.Select(p => p.Id.ToString());
+                var onlineStats = onlineStatsQuery.Where(p => usersInGuild.Contains(p.UserID)).Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
 
                 foreach (var user in onlineStats)
                 {
@@ -124,7 +124,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         onlineStats = new OnlineStats
                         {
                             UserID = user.Value.User.Id.ToString(),
-                            Username = GetDisplayName(user.Value.User.Id.ToString(), Bot.DiscordClient.Guilds.First().Value),
                             LastOnline = fixedNow,
                             TotalTime = 0
                         };
@@ -133,7 +132,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     }
                     else
                     {
-                        onlineStats.Username = GetDisplayName(onlineStats.UserID, Bot.DiscordClient.Guilds.First().Value);
                         onlineStats.LastOnline = DateTime.Now;
                         onlineStats.TotalTime += UpdateOnlineInterval / 1000 / 60;
                     }
@@ -143,11 +141,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
         }
 
-        private int GetPagesCount()
+        private int GetPagesCount(DiscordGuild guild)
         {
             using (var databaseContext = new DynamicDBContext())
             {
-                return databaseContext.OnlineStats.Count() / ItemsPerPage + 1;
+                var usersInGuild = guild.Members.Select(p => p.Id.ToString());
+                return databaseContext.OnlineStats.Count(p => usersInGuild.Contains(p.UserID)) / ItemsPerPage + 1;
             }
         }
 
