@@ -16,6 +16,7 @@ namespace SKNIBot.Core.Database
         public virtual DbSet<HangmanWord> HangmanWords { get; set; }
 
         public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
+        public virtual DbSet<JavaThing> JavaThings { get; set; }
 
         public StaticDBContext() : base(GetOptions("Data Source=StaticDatabase.sqlite"))
         {/*
