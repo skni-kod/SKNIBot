@@ -36,11 +36,12 @@ namespace SKNIBot.Core
 
                 AutoReconnect = true,
                 LogLevel = LogLevel.Debug,
-                UseInternalLogHandler = true
+                UseInternalLogHandler = true,
+
+                WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-            //DiscordClient.SetWebSocketClient<WebSocket4NetCoreClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -51,7 +52,7 @@ namespace SKNIBot.Core
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
-            //_commands.SetHelpFormatter<CustomHelpFormatter>();
+            _commands.SetHelpFormatter<CustomHelpFormatter>();
             _commands.CommandExecuted += Commands_CommandExecuted;
             _commands.CommandErrored += Commands_CommandErrored;
 

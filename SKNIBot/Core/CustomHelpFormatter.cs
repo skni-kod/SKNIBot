@@ -10,7 +10,7 @@ using DSharpPlus.Entities;
 
 namespace SKNIBot.Core
 {
-    /*public class CustomHelpFormatter : BaseHelpFormatter
+    public class CustomHelpFormatter : BaseHelpFormatter
     {
         private string _commandName;
         private string _commandDescription;
@@ -23,11 +23,38 @@ namespace SKNIBot.Core
 
         public CustomHelpFormatter(CommandContext ctx) : base(ctx)
         {
+            _aliases = new List<string>();
+            _parameters = new List<string>();
+            _subCommands = new Dictionary<string, List<string>>();
         }
 
         public override BaseHelpFormatter WithCommand(Command command)
         {
-            throw new System.NotImplementedException();
+            _commandName = command.Name;
+            _commandDescription = command.Description;
+
+            if (command.Overloads.Count > 0)
+            {
+                foreach (var argument in command.Overloads[0].Arguments)
+                {
+                    var argumentBuilder = new StringBuilder();
+                    argumentBuilder.Append($"`{argument.Name}`: {argument.Description}");
+
+                    if (argument.DefaultValue != null)
+                    {
+                        argumentBuilder.Append($" Default value: {argument.DefaultValue}");
+                    }
+
+                    _parameters.Add(argumentBuilder.ToString());
+                }
+            }
+
+            foreach (var alias in command.Aliases)
+            {
+                _aliases.Add($"`{alias}`");
+            }
+
+            return this;
         }
 
         public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
@@ -100,5 +127,5 @@ namespace SKNIBot.Core
 
             return new CommandHelpMessage(string.Empty, embed);
         }
-    }*/
+    }
 }
