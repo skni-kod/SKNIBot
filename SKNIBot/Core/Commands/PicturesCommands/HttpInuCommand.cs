@@ -8,7 +8,7 @@ using SKNIBot.Core.Const.PicturesConst;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class HttpInuCommand
+    public class HttpInuCommand : BaseCommandModule
     {
         [Command("httppies")]
         [Description("Składnia to `!httppies {kod}`. Napisz `!httppies kody` aby otrzymać listę dostępnych kodów.")]
@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var httpInuPicture = client.DownloadData("https://httpstatusdogs.com/img/" + ctx.Message.Content.Split(' ')[1] + ".jpg");
                 var stream = new MemoryStream(httpInuPicture);
 
-                await ctx.RespondWithFileAsync(stream, "httpinu.jpg");
+                await ctx.RespondWithFileAsync("httpinu.jpg", stream);
             }
             //Jeżeli użytkownik prosi o kody ppsów podajemy je
             else if (numer == "kody")

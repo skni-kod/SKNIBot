@@ -9,7 +9,7 @@ using SKNIBot.Core.Containers.PicturesContainers;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class InuCommand
+    public class InuCommand : BaseCommandModule
     {
         [Command("pies")]
         [Description("Wyświetla słodkie pieski.")]
@@ -31,7 +31,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             var dogPicture = client.DownloadData(dogContainer.Url);
             var stream = new MemoryStream(dogPicture);
 
-            await ctx.RespondWithFileAsync(stream, "inu.jpg");
+            await ctx.RespondWithFileAsync("inu.jpg", stream);
         }
     }
 }

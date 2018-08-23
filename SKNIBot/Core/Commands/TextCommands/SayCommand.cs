@@ -5,7 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class SayCommand
+    public class SayCommand : BaseCommandModule
     {
         [Command("mów")]
         [Description("Każ mi coś powiedzieć!")]

@@ -10,7 +10,7 @@ using SKNIBot.Core.Settings;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class TalkCommand
+    public class TalkCommand : BaseCommandModule
     {
         private const string CleverURL = "http://www.cleverbot.com/getreply?key={0}&input={1}&cs={2}";
 

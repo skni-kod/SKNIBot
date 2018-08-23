@@ -8,7 +8,7 @@ using SKNIBot.Core.Containers.PicturesContainers.NekosLife;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {
-    public class NekosLifeImage
+    public class NekosLifeImage : BaseCommandModule
     {
         public async Task SendImage(CommandContext ctx, string endpoint, [Description("Wzmianka")] DiscordMember member = null)
         {

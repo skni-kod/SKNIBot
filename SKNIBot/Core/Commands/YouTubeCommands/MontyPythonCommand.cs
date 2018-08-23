@@ -8,7 +8,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
     [CommandsGroup("YouTube")]
-    public class MontyPythonCommand
+    public class MontyPythonCommand : BaseCommandModule
     {
         private Random _random;
 

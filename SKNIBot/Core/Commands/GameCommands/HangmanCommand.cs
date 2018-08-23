@@ -12,7 +12,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.GameCommands
 {
     [CommandsGroup("Gry")]
-    public class HangmanCommand
+    public class HangmanCommand : BaseCommandModule
     {
         private const int Stages = 9;
 

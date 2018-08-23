@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class AvatarCommand
+    public class AvatarCommand : BaseCommandModule
     {
         [Command("awatar")]
         [Description("Pokazuje awatar użytkownika.")]
@@ -21,7 +21,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
             var catPicture = client.DownloadData(url);
             var stream = new MemoryStream(catPicture);
 
-            await ctx.RespondWithFileAsync(stream, "awatar.jpg");
+            await ctx.RespondWithFileAsync("awatar.jpg", stream);
         }
 
     }

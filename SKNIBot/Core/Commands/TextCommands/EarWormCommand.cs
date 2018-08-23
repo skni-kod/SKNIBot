@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Różne")]
-    class EarWormCommand
+    class EarWormCommand : BaseCommandModule
     {
         [Command("earworm")]
         [Description("Sprawdź robaka dnia/tygodnia/miesiąca/roku")]

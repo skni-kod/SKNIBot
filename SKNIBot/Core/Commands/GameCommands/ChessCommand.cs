@@ -26,7 +26,7 @@ using Color = Proxima.Core.Commons.Colors.Color;
 namespace SKNIBot.Core.Commands.GameCommands
 {
     [CommandsGroup("Gry")]
-    public class ChessCommand
+    public class ChessCommand : BaseCommandModule
     {
         private Dictionary<string, Image<Rgba32>> _images;
         private List<Position> _selectedPositions;
@@ -63,7 +63,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 CreateSession();
 
-                var boardMessage = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Nowa gra utworzona:**");
+                var boardMessage = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Nowa gra utworzona:**");
                 _messageIds.Add(boardMessage.Id);
             }
             else
@@ -120,7 +120,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _selectedPositions.Add(fromPosition);
                 _selectedPositions.Add(toPosition);
 
-                var playerBoardMsg = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Ruch gracza:**");
+                var playerBoardMsg = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Ruch gracza:**");
                 _messageIds.Add(playerBoardMsg.Id);
 
                 var thinkingMessage = await ctx.RespondAsync("Myślę...");
@@ -132,7 +132,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 await thinkingMessage.DeleteAsync();
 
-                var aiBoardMsg = await ctx.RespondWithFileAsync(GetBoardImage(), "board.png", "**Ruch AI:**");
+                var aiBoardMsg = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Ruch AI:**");
                 _messageIds.Add(aiBoardMsg.Id);
             }
 

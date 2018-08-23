@@ -8,7 +8,7 @@ using SKNIBot.Core.Const.PicturesConst;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class HttpNekoCommand
+    public class HttpNekoCommand : BaseCommandModule
     {
         [Command("httpkot")]
         [Description("Składnia to `!httpkot {kod}`. Napisz `!httpkot kody` aby otrzymać listę dostępnych kodów.")]
@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var httpCatPicture = client.DownloadData("https://http.cat/" + ctx.Message.Content.Split(' ')[1]);
                 var stream = new MemoryStream(httpCatPicture);
 
-                await ctx.RespondWithFileAsync(stream, "httpneko.jpg");
+                await ctx.RespondWithFileAsync("httpneko.jpg", stream);
             }
             //Jeżeli użytkownik prosi o kody kotów podajemy je
             else if(numer == "kody")

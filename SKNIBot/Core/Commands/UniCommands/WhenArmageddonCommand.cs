@@ -7,7 +7,7 @@ using DSharpPlus.Entities;
 namespace SKNIBot.Core.Commands.UniCommands
 {
     [CommandsGroup("Uczelnia")]
-    public class WhenArmageddonCommand
+    public class WhenArmageddonCommand : BaseCommandModule
     {
         /// <summary>
         /// Zwraca kiedy są najbliższe wykłady z systemów wbudowanych

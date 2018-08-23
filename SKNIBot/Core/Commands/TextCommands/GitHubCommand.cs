@@ -12,7 +12,7 @@ using SKNIBot.Core.Containers.TextContainers;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class GitHubCommand
+    public class GitHubCommand : BaseCommandModule
     {
         private Random _random;
         private const int MaxRepositoryID = 10000000;

@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class NekoCommand
+    public class NekoCommand : BaseCommandModule
     {
         private const string _randomSiteURL = "http://thecatapi.com/api/images/get?format=src";
 
@@ -18,11 +18,11 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             await ctx.TriggerTypingAsync();
 
             var request = (HttpWebRequest)WebRequest.Create(_randomSiteURL);
-            request.AllowAutoRedirect = false;
+            request.AllowAutoRedirect = true;
 
             using (var response = request.GetResponse())
             {
-                await ctx.RespondAsync(response.Headers["Location"]);
+                await ctx.RespondAsync(response.ResponseUri.ToString());
             }
         }
     }

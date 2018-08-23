@@ -10,7 +10,7 @@ using SKNIBot.Core.Containers.PicturesContainers;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class XkcdCommand
+    public class XkcdCommand : BaseCommandModule
     {
         private Random _random;
 

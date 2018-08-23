@@ -10,7 +10,7 @@ using DSharpPlus.Entities;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class MessageStatsCommand
+    public class MessageStatsCommand : BaseCommandModule
     {
         private const int UsernameFieldLength = 20;
         private const int MessagesCountFieldLength = 20;
@@ -38,7 +38,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             while (true)
             {
-                var last100Messages = await ctx.Channel.GetMessagesAsync(100, lastMessageID);
+                var last100Messages = await ctx.Channel.GetMessagesBeforeAsync(lastMessageID, 100);
                 messagesList.AddRange(last100Messages);
 
                 if (last100Messages.Count < 100)

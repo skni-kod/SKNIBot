@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class HiCommand
+    public class HiCommand : BaseCommandModule
     {
         private List<ulong> _developers = new List<ulong> {
             386559253088829440,//Azux Dario#2860

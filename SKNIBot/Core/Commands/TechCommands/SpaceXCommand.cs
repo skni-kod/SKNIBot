@@ -11,7 +11,7 @@ using SKNIBot.Core.Containers.TechContainers.SpaceX;
 namespace SKNIBot.Core.Commands.TechCommands
 {
     [CommandsGroup("Tech")]
-    public class SpaceXCommand
+    public class SpaceXCommand : BaseCommandModule
     {
         private Random _random;
 

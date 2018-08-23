@@ -10,6 +10,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Net.WebSocket;
+using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core
@@ -17,7 +18,7 @@ namespace SKNIBot.Core
     public class Bot
     {
         public static DiscordClient DiscordClient { get; set; }
-        private CommandsNextModule _commands { get; set; }
+        private CommandsNextExtension _commands { get; set; }
 
         public void Run()
         {
@@ -39,18 +40,18 @@ namespace SKNIBot.Core
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-            DiscordClient.SetWebSocketClient<WebSocket4NetCoreClient>();
+            //DiscordClient.SetWebSocketClient<WebSocket4NetCoreClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
-                StringPrefix = SettingsLoader.Container.Prefix,
+                StringPrefixes = new [] {SettingsLoader.Container.Prefix},
                 EnableDms = true,
                 EnableMentionPrefix = true,
                 CaseSensitive = false
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
-            _commands.SetHelpFormatter<CustomHelpFormatter>();
+            //_commands.SetHelpFormatter<CustomHelpFormatter>();
             _commands.CommandExecuted += Commands_CommandExecuted;
             _commands.CommandErrored += Commands_CommandErrored;
 

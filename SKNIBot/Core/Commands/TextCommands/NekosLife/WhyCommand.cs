@@ -9,7 +9,7 @@ using SKNIBot.Core.Containers.TextContainers.NekosLife;
 namespace SKNIBot.Core.Commands.TextCommands.NekosLife
 {
     [CommandsGroup("Tekst")]
-    public class WhyCommand
+    public class WhyCommand : BaseCommandModule
     {
         [Command("why")]
         [Description("Dlaczego.")]

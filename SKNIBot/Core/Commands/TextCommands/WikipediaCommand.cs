@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class WikipediaCommand
+    public class WikipediaCommand : BaseCommandModule
     {
         private const string _randomSiteURL = "https://pl.wikipedia.org/wiki/Specjalna:Losowa_strona";
 

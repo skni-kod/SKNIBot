@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    class CatBoyCommand
+    class CatBoyCommand : BaseCommandModule
     {
         private Random random;
 

@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands.TextCommands
     //https://cdn.discordapp.com/attachments/420661733544427520/482237629224714260/MEMEM.jpg
 
     [CommandsGroup("Tekst")]
-    public class JavaWhyCommand
+    public class JavaWhyCommand : BaseCommandModule
     {
         Random _random;
 

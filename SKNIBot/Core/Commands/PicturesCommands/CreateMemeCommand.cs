@@ -21,7 +21,7 @@ using SixLabors.ImageSharp.Processing.Drawing.Pens;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    class CreateMemeCommand
+    class CreateMemeCommand : BaseCommandModule
     {
 
         //FontFamily _fontFamily;
@@ -110,7 +110,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
                 mem.Position = 0;
 
-                await ctx.RespondWithFileAsync(mem, "MEMEM.jpg");
+                await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
             }
         }
 

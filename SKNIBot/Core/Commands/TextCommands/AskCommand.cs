@@ -10,7 +10,7 @@ using SKNIBot.Core.Containers.TextContainers;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Różne")]
-    class AskCommand
+    class AskCommand : BaseCommandModule
     {
         [Command("ask")]
         [Description("Zapytaj o coś bota.")]
@@ -35,7 +35,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                 var answerPicture = client.DownloadData(answer.image);
                 var stream = new MemoryStream(answerPicture);
 
-                await ctx.RespondWithFileAsync(stream, "answer.gif");
+                await ctx.RespondWithFileAsync("answer.gif", stream);
             }
         }
     }

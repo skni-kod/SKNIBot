@@ -9,7 +9,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class JokeCommand
+    public class JokeCommand : BaseCommandModule
     {
         private Random _random;
 

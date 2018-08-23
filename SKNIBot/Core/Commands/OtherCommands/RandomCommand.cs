@@ -6,7 +6,8 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class RandomCommand {
+    public class RandomCommand : BaseCommandModule
+    {
         private Random _random;
 
         public RandomCommand() {

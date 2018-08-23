@@ -9,7 +9,7 @@ using SKNIBot.Core.Containers.PicturesContainers;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class NekoAltCommand
+    public class NekoAltCommand : BaseCommandModule
     {
         [Command("kotalt")]
         [Description("Wyświetla słodkie kotki.")]
@@ -24,7 +24,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             var catPicture = client.DownloadData(nekoContainer.File);
             var stream = new MemoryStream(catPicture);
 
-            await ctx.RespondWithFileAsync(stream, "neko.jpg");
+            await ctx.RespondWithFileAsync("neko.jpg", stream);
         }
     }
 }

@@ -9,7 +9,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.YouTubeCommands
 {
     [CommandsGroup("YouTube")]
-    public class YouTubeCommand
+    public class YouTubeCommand : BaseCommandModule
     {
         [Command("youtube")]
         [Description("Display video!")]

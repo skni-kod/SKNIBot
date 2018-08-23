@@ -10,7 +10,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class PicturesCommand
+    public class PicturesCommand : BaseCommandModule
     {
         [Command("picture")]
         [Description("Wyświetl obrazek!")]

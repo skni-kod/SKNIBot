@@ -16,7 +16,7 @@ using SKNIBot.Core.Helpers.Pagination;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class OnlineCommand
+    public class OnlineCommand : BaseCommandModule
     {
         private const int UpdateOnlineInterval = 1000 * 60;
         private const int UsernameFieldLength = 35;

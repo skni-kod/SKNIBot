@@ -8,7 +8,7 @@ using DSharpPlus.Entities;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class DescriptionCommand
+    public class DescriptionCommand : BaseCommandModule
     {
         private Timer _refreshDescriptionTimer;
         private int _refreshDescriptionInterval;
@@ -30,14 +30,14 @@ namespace SKNIBot.Core.Commands.OtherCommands
         {
             _description = description;
 
-            await ctx.Client.UpdateStatusAsync(new DiscordGame(description));
+            await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
         }
 
         private void RefreshDescriptionCallback(object state)
         {
             if (_description != string.Empty)
             {
-                Bot.DiscordClient.UpdateStatusAsync(new DiscordGame(_description));
+                Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(_description));
             }
 
             _refreshDescriptionTimer.Change(_refreshDescriptionInterval, Timeout.Infinite);
