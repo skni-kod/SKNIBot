@@ -6,6 +6,7 @@ namespace SKNIBot.Core.Database
     public class DynamicDBContext : DbContext
     {
         public virtual DbSet<OnlineStats> OnlineStats { get; set; }
+        public virtual DbSet<JavaThing> JavaThings { get; set; }
 
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {/*

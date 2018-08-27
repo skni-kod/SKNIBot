@@ -28,7 +28,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using(var db = new StaticDBContext())
+            using(var db = new DynamicDBContext())
             {
                 var things = db.JavaThings.ToList();
 
