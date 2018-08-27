@@ -17,13 +17,13 @@ using DSharpPlus;
 using SixLabors.Shapes;
 using SixLabors.ImageSharp.Processing.Drawing;
 using SixLabors.ImageSharp.Processing.Drawing.Pens;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
     class CreateMemeCommand : BaseCommandModule
     {
-
         //FontFamily _fontFamily;
         //Pen _outlinePen;
         Font _font;
@@ -46,6 +46,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             _font = SystemFonts.CreateFont("Liberation Mono", 20);
         }
 
+        
+        //TODO: Refactor All
         [Command("meme")]
         [Aliases("mem")]
         [Description("Stwórz mem z podanym obrazkiem")]
@@ -56,9 +58,9 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 await ctx.TriggerTypingAsync();
 
                 var pictureLink = databaseContext.Media
-                   .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == picName))
-                   .Select(p => p.Link)
-                   .FirstOrDefault();
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == picName))
+                    .Select(p => p.Link)
+                    .FirstOrDefault();
 
                 if (pictureLink == null)
                 {
@@ -66,17 +68,10 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     return;
                 }
 
-                //Download picture
-                WebClient web = new WebClient();
-                var picture = web.DownloadData(pictureLink);
-                var stream = new MemoryStream(picture);
-
                 MemoryStream mem = new MemoryStream();
 
-                using (Image<Rgba32> img = Image.Load(stream))
+                using (Image<Rgba32> img = ImageHelper.DownloadImage(pictureLink))
                 {
-
-
                     TextGraphicsOptions options = new TextGraphicsOptions(true)
                     {
                         VerticalAlignment = VerticalAlignment.Top,
@@ -85,24 +80,28 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     };
 
                     var pen = Pens.Solid(Rgba32.Black, _outlineSize);
-                    int fontSize = GetAdjustedFont(upText, (int)options.WrapTextWidth, (int)(img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
+                    int fontSize = GetAdjustedFont(upText, (int) options.WrapTextWidth,
+                        (int) (img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
                     Font font = new Font(_font, fontSize);
 
                     img.Mutate(c => c
-                        .DrawText(options, upText.ToUpper(), font, pen, new PointF(_horizontalSpacing, _verticalSpacing))
-                        .DrawText(options, upText.ToUpper(), font, Rgba32.White, new PointF(_horizontalSpacing, _verticalSpacing)));
+                        .DrawText(options, upText.ToUpper(), font, pen,
+                            new PointF(_horizontalSpacing, _verticalSpacing))
+                        .DrawText(options, upText.ToUpper(), font, Rgba32.White,
+                            new PointF(_horizontalSpacing, _verticalSpacing)));
 
-                    if(downText != null)
+                    if (downText != null)
                     {
-
-                        int fontSizeDown = GetAdjustedFont(downText, (int)options.WrapTextWidth, (int)(img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
+                        int fontSizeDown = GetAdjustedFont(downText, (int) options.WrapTextWidth,
+                            (int) (img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
                         Font fontDown = new Font(_font, fontSize);
 
                         float y = (1 - _screenHeightUpPercent) * img.Height;
 
                         img.Mutate(c => c
                             .DrawText(options, downText.ToUpper(), font, pen, new PointF(_horizontalSpacing, y))
-                            .DrawText(options, downText.ToUpper(), font, Rgba32.White, new PointF(_horizontalSpacing, y)));
+                            .DrawText(options, downText.ToUpper(), font, Rgba32.White,
+                                new PointF(_horizontalSpacing, y)));
                     }
 
                     img.SaveAsJpeg(mem);
@@ -114,7 +113,62 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             }
         }
 
-        public int GetAdjustedFont(string graphicString, int containerWidth, int containerHeight, int maxFontSize, int minFontSize)
+        [Command("memeWithUrl")]
+        [Aliases("memZLinku")]
+        [Description("Stwórz mem z podanym obrazkiem")]
+        public async Task CreateMemeWithURL(CommandContext ctx, string picUrl, string upText, string downText = null)
+        {
+            using (var databaseContext = new StaticDBContext())
+            {
+                await ctx.TriggerTypingAsync();
+
+                MemoryStream mem = new MemoryStream();
+
+                using (Image<Rgba32> img = ImageHelper.DownloadImage(picUrl))
+                {
+                    TextGraphicsOptions options = new TextGraphicsOptions(true)
+                    {
+                        VerticalAlignment = VerticalAlignment.Top,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        WrapTextWidth = img.Width - _horizontalSpacing * 2
+                    };
+
+                    var pen = Pens.Solid(Rgba32.Black, _outlineSize);
+                    int fontSize = GetAdjustedFont(upText, (int) options.WrapTextWidth,
+                        (int) (img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
+                    Font font = new Font(_font, fontSize);
+
+                    img.Mutate(c => c
+                        .DrawText(options, upText.ToUpper(), font, pen,
+                            new PointF(_horizontalSpacing, _verticalSpacing))
+                        .DrawText(options, upText.ToUpper(), font, Rgba32.White,
+                            new PointF(_horizontalSpacing, _verticalSpacing)));
+
+                    if (downText != null)
+                    {
+                        int fontSizeDown = GetAdjustedFont(downText, (int) options.WrapTextWidth,
+                            (int) (img.Height * _screenHeightUpPercent), _maxFontSize, _minFontSize);
+                        Font fontDown = new Font(_font, fontSize);
+
+                        float y = (1 - _screenHeightUpPercent) * img.Height;
+
+                        img.Mutate(c => c
+                            .DrawText(options, downText.ToUpper(), font, pen, new PointF(_horizontalSpacing, y))
+                            .DrawText(options, downText.ToUpper(), font, Rgba32.White,
+                                new PointF(_horizontalSpacing, y)));
+                    }
+
+                    img.SaveAsJpeg(mem);
+                }
+
+                mem.Position = 0;
+
+                await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
+            }
+        }
+
+        public int GetAdjustedFont(string graphicString, int containerWidth, int containerHeight, int maxFontSize,
+            int minFontSize)
         {
             Font testFont = null;
             for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
