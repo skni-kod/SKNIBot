@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.OtherCommands
 {
@@ -17,11 +18,8 @@ namespace SKNIBot.Core.Commands.OtherCommands
             await ctx.TriggerTypingAsync();
 
             var url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
-            var client = new WebClient();
-            var catPicture = client.DownloadData(url);
-            var stream = new MemoryStream(catPicture);
 
-            await ctx.RespondWithFileAsync("awatar.jpg", stream);
+            await PostPictureHelper.PostPicture(ctx, url);
         }
 
     }
