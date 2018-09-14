@@ -5,9 +5,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands.OtherCommands
+namespace SKNIBot.Core.Commands.ManagementCommands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Zarządzanie")]
     public class DescriptionCommand : BaseCommandModule
     {
         private Timer _refreshDescriptionTimer;
