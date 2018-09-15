@@ -16,10 +16,15 @@ namespace SKNIBot.Core.Commands.OtherCommands
         public async Task Avatar(CommandContext ctx, [Description("Użytkownik, którego awatar chcesz.")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-
-            var url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
-
-            await PostEmbedHelper.PostEmbed(ctx, "Awatar", member.Mention, url);
+            
+            if (member == null)
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Awatar", ctx.User.Mention, ctx.User.AvatarUrl);
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Awatar", member.Mention, member.AvatarUrl);
+            }
         }
 
     }

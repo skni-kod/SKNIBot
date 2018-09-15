@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,12 +38,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var wordIndex = random.Next(0, catBoys.Count);
                 var response  = catBoys[wordIndex];
 
-                if (member != null)
-                {
-                    response += $" {member.Mention}";
-                }
-
-                await ctx.RespondAsync(response);
+                await PostEmbedHelper.PostEmbed(ctx, "catboy", member?.Mention, response);
             }
         }
 
