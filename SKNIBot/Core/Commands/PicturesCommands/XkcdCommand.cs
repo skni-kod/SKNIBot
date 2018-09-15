@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.PicturesContainers;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
@@ -35,7 +36,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             var url = client.DownloadString(link);
             var xkcdContainer = JsonConvert.DeserializeObject<XkcdContainer>(url);
 
-            await ctx.RespondAsync(GetResponse(xkcdContainer));
+            await PostEmbedHelper.PostEmbed(ctx, xkcdContainer.Title, null, xkcdContainer.Img);
         }
 
         private string GetResponse(XkcdContainer xkcdContainer)
