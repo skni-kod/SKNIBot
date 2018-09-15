@@ -3,8 +3,10 @@ using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.PicturesContainers;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
@@ -14,24 +16,17 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         [Command("pies")]
         [Description("Wyświetla słodkie pieski.")]
         [Aliases("inu", "dog")]
-        public async Task Inu(CommandContext ctx)
+        public async Task Inu(CommandContext ctx, DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
 
             var client = new WebClient();
             DogContainer dogContainer;
 
-            do
-            {
-                var dog = client.DownloadString("https://random.dog/woof.json");
-                dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
-            }
-            while (dogContainer.Url.Split('.')[dogContainer.Url.Split('.').Length - 1] != "jpg");
+            var dog = client.DownloadString("https://random.dog/woof.json");
+            dogContainer = JsonConvert.DeserializeObject<DogContainer>(dog);
 
-            var dogPicture = client.DownloadData(dogContainer.Url);
-            var stream = new MemoryStream(dogPicture);
-
-            await ctx.RespondWithFileAsync("inu.jpg", stream);
+            await PostEmbedHelper.PostEmbed(ctx, "Pies", member?.Mention, dogContainer.Url);
         }
     }
 }

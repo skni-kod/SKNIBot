@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
@@ -13,7 +15,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         [Command("kot")]
         [Description("Wyświetla słodkie kotki w postaci gifów.")]
         [Aliases("neko", "cat")]
-        public async Task Neko(CommandContext ctx)
+        public async Task Neko(CommandContext ctx, DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
 
@@ -22,7 +24,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
             using (var response = request.GetResponse())
             {
-                await ctx.RespondAsync(response.ResponseUri.ToString());
+                await PostEmbedHelper.PostEmbed(ctx, "Kot", member?.Mention, response.ResponseUri.ToString());
             }
         }
     }

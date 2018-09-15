@@ -38,7 +38,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var wordIndex = random.Next(0, catBoys.Count);
                 var response  = catBoys[wordIndex];
 
-                await PostEmbedHelper.PostEmbed(ctx, "catboy", member?.Mention, response);
+                await PostEmbedHelper.PostEmbed(ctx, "Cat boy", member?.Mention, response);
             }
         }
 

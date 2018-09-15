@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             random = new Random();
         }
 
-        //[Command("catboy")]
+        //[Command("dogboy")]
         //[Description("Wyświetla słodkie dogboy.")]
         public async Task Dog(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
@@ -37,12 +38,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var wordIndex = random.Next(0, dogBoys.Count);
                 var response = dogBoys[wordIndex];
 
-                if (member != null)
-                {
-                    response += $" {member.Mention}";
-                }
-
-                await ctx.RespondAsync(response);
+                await PostEmbedHelper.PostEmbed(ctx, "Dog boy", member?.Mention, response);
             }
         }
     }

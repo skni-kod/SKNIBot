@@ -15,7 +15,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
         {
             await ctx.TriggerTypingAsync();
             if (ctx.Channel.IsNSFW)
-                await SendImage(ctx, NekosLifePicturesEndpoints.Kiss, member);
+                await SendImage(ctx, NekosLifePicturesEndpoints.Kiss, "Kiss",  member);
             else
                 await ctx.RespondAsync("Nie tutaj ;)");
         }

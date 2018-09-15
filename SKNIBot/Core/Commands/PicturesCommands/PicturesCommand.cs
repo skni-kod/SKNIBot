@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
@@ -40,12 +41,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 }
 
                 var response = pictureLink;
-                if (member != null)
-                {
-                    response += $" {member.Mention}";
-                }
 
-                await ctx.RespondAsync(response);
+                await PostEmbedHelper.PostEmbed(ctx, "Obrazek", member?.Mention, response);
             }
         }
 
