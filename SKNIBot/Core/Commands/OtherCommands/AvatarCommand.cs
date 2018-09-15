@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
             var url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
 
-            await PostEmbedHelper.PostPicture(ctx, "Awatar", member.Mention, url);
+            await PostEmbedHelper.PostEmbed(ctx, "Awatar", member.Mention, url);
         }
 
     }
