@@ -28,9 +28,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     return;
                 }
 
-                // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var pictureLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == pictureName))
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name.ToLower() == pictureName.ToLower()))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 
