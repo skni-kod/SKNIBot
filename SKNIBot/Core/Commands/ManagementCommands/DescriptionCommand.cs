@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -30,14 +31,34 @@ namespace SKNIBot.Core.Commands.ManagementCommands
         {
             _description = description;
 
-            await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
+            try
+            {
+                await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
+            }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Can't set status.");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
         }
 
         private void RefreshDescriptionCallback(object state)
         {
             if (_description != string.Empty)
             {
-                Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(_description));
+                try
+                {
+                    Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(_description));
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Can't update status.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
 
             _refreshDescriptionTimer.Change(_refreshDescriptionInterval, Timeout.Infinite);
