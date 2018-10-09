@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("tell")]
         public async Task Talk(CommandContext ctx, [Description("Co chcesz mi powiedzieć? Wpisz 'clear' aby zresetować kontekst rozmowy.")] string message)
         {
-            await ctx.RespondAsync("https://www.youtube.com/watch?v=3yh2InVsFag");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=V0PisGe66mY");
         }
 
         [Command("talk2")]
@@ -25,7 +25,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("tell2")]
         public async Task Talk2(CommandContext ctx, [Description("Wiadomość początkowa/`clear` - reset kontekstu/`stop` - zatrzymaj rozmowę")] string initialMessage = null)
         {
-            await ctx.RespondAsync("https://www.youtube.com/watch?v=3yh2InVsFag");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=V0PisGe66mY");
         }
     }
 }
