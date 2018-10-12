@@ -54,6 +54,38 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.RightEmojiName));
         }
 
+        private void AddLostSoulsToDatabase()
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                var allGuilds = Bot.DiscordClient.Guilds;
+
+                var allSouls = allGuilds.SelectMany(
+                    p => p.Value.Members
+                        .Where(m => !m.IsBot)
+                        .Select(m => m.Id.ToString()))
+                    .Distinct()
+                    .ToList();
+
+                var allSoulsInDatabase = databaseContext.OnlineStats.Select(p => p.UserID).ToList();
+                var usersIdWhichAreNotInDatabase = allSouls.Except(allSoulsInDatabase).ToList();
+
+                foreach (var soulId in usersIdWhichAreNotInDatabase)
+                {
+                    databaseContext.OnlineStats.Add(new OnlineStats
+                    {
+                        UserID = soulId,
+                        LastOnline = DateTime.MinValue,
+                        TotalTime = 0
+                    });
+
+                    Console.WriteLine("New lost soul has been added: " + soulId);
+                }
+
+                databaseContext.SaveChanges();
+            }
+        }
+
         private string GetOnlineList(int currentPage, string orderBy, DiscordGuild guild)
         {
             var stringBuilder = new StringBuilder();
@@ -90,7 +122,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 {
                     var displayName = GetDisplayName(user.UserID, guild);
                     var username = displayName.PadRight(UsernameFieldLength);
-                    var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
+
+                    var lastOnline = (user.LastOnline != DateTime.MinValue
+                        ? user.LastOnline.ToString("yyyy-MM-dd HH:mm")
+                        : "brak danych")
+                        .PadRight(LastOnlineFieldLength);
 
                     var totalTimeInHours = (float)user.TotalTime / 60;
                     var totalTime = totalTimeInHours.ToString("0.0").PadRight(TotalTimeFieldLength);
@@ -107,6 +143,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
 
+            AddLostSoulsToDatabase();
+
             using (var databaseContext = new DynamicDBContext())
             {
                 var onlineUsers = Bot.DiscordClient.Presences.Where(p => !p.Value.User.IsBot && p.Value.Status != UserStatus.Offline).ToList();
@@ -117,7 +155,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                     if (onlineStats == null)
                     {
-                        // Remove seconds and milliseconds from date to better ordering
+                        // Remove seconds and milliseconds from date for better ordering
                         var now = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
                         var fixedNow = DateTime.Parse(now);
 
