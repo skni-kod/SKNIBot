@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Commands.TextCommands.CleverModels;
 using SKNIBot.Core.Containers.TextContainers;
@@ -26,23 +27,8 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("tell")]
         public async Task Talk(CommandContext ctx, [Description("Co chcesz mi powiedzieć? Wpisz 'clear' aby zresetować kontekst rozmowy.")] string message)
         {
-            await ctx.TriggerTypingAsync();
-
-            if (message == "clear")
-            {
-                Nick = await CreateBotInstance();
-                await ctx.RespondAsync("Kontekst zresetowany.");
-            }
-            else
-            {
-                if (Nick == "")
-                {
-                    Nick = await CreateBotInstance();
-                }
-
-                var response = await SendTextAndGetReply(Nick, message);
-                await ctx.RespondAsync(response);
-            }
+            await ctx.RespondAsync($"Nie działa {DiscordEmoji.FromName(Bot.DiscordClient, ":FeelsBadMan:")} Alternatywa dla CleverBota poszukiwana.");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=TdrL3QxjyVw");
         }
 
         [Command("talk2")]
@@ -50,7 +36,8 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("tell2")]
         public async Task Talk2(CommandContext ctx, [Description("Wiadomość początkowa/`clear` - reset kontekstu/`stop` - zatrzymaj rozmowę")] string initialMessage = null)
         {
-            await ctx.RespondAsync("https://www.youtube.com/watch?v=V0PisGe66mY");
+            await ctx.RespondAsync($"Nie działa {DiscordEmoji.FromName(Bot.DiscordClient, ":FeelsBadMan:")} Alternatywa dla CleverBota poszukiwana.");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=TdrL3QxjyVw");
         }
 
         private async Task<string> CreateBotInstance()
