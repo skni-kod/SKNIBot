@@ -10,6 +10,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Net.WebSocket;
+using DSharpPlus.EventArgs;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
 
@@ -79,6 +80,29 @@ namespace SKNIBot.Core
                 {
                     var genericRegisterCommandMethod = registerCommandsMethod.MakeGenericMethod(type);
                     genericRegisterCommandMethod.Invoke(_commands, null);
+                }
+
+                foreach(var method in type.GetMethods())
+                {
+                    
+                    var attribute = method.GetCustomAttribute<MessageRespondAttribute>();
+                    if (attribute != null)
+                    {
+                        Console.WriteLine("Dappa");
+                        if (!method.IsStatic)
+                        {
+                            throw new ArgumentException("Methods with MessageRespondAttribute must be static!");
+                        }
+
+                        DiscordClient.MessageCreated += async e =>
+                        {
+                            if (e.Author.IsBot)
+                                return;
+
+                            var del = (AsyncEventHandler<MessageCreateEventArgs>)Delegate.CreateDelegate(typeof(AsyncEventHandler<MessageCreateEventArgs>), method);
+                            await del.Invoke(e);
+                        };
+                    }
                 }
             }
         }
