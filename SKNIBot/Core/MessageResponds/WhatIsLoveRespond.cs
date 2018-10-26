@@ -15,6 +15,16 @@ namespace SKNIBot.Core.MessageResponds
                 await args.Channel.TriggerTypingAsync();
                 await args.Channel.SendMessageAsync("Baby don't hurt me,\nDon't hurt me, no more\nhttps://www.youtube.com/watch?v=HEXWRTEbj1I");
             }
+            else if (args.Message.Content.ToLower().Contains("zukyun"))
+            {
+                await args.Channel.TriggerTypingAsync();
+                await args.Channel.SendMessageAsync("dokyun!");
+            }
+            else if(args.Message.Content.ToLower().Contains("parabole tańczą"))
+            {
+                await args.Channel.TriggerTypingAsync();
+                await args.Channel.SendMessageAsync("tańczą tańczą tańczą!");
+            }
         }
     }
 }
