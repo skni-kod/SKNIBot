@@ -13,6 +13,7 @@ using DSharpPlus.Net.WebSocket;
 using DSharpPlus.EventArgs;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
+using SKNIBot.Core.Services;
 
 namespace SKNIBot.Core
 {
@@ -57,7 +58,59 @@ namespace SKNIBot.Core
             _commands.CommandExecuted += Commands_CommandExecuted;
             _commands.CommandErrored += Commands_CommandErrored;
 
+            DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
+            DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
+            DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
+
             await DiscordClient.ConnectAsync();
+        }
+
+        private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in new message.");
+                }
+            }
+        }
+
+        private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in edited message.");
+                }
+            }
+        }
+
+        private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in reactions.");
+                }
+            }
         }
 
         private void SetNetworkParameters()
