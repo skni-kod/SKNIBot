@@ -41,10 +41,10 @@ namespace SKNIBot.Core.Commands.TextCommands
                     message = getToday();
                     break;
                 case "week":
-                    message = getMonth();
+                    message = getWeek();
                     break;
                 case "month":
-                    message = getWeek();
+                    message = getMonth();
                     break;
                 case "year":
                     message = getYear();
@@ -109,7 +109,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                 {
                     return "Earworm miesiąca: " + newSong(db, TypeOfPeriod.MONTH);
                 }
-                return String.Format("Earworm roku: {0} - {1}", track.Title, track.Author);
+                return String.Format("Earworm miesiąca: {0} - {1}", track.Title, track.Author);
             }
         }
 
