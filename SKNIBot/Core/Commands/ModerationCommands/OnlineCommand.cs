@@ -88,23 +88,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private string GetOnlineList(int currentPage, string orderBy, DiscordGuild guild)
         {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(PaginationIdentifier);
-            stringBuilder.Append(" ");
-            stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount(guild)));
-            stringBuilder.Append(" ");
-            stringBuilder.Append(GetOrderByHeader(orderBy));
-            stringBuilder.Append(".\n");
-
-            stringBuilder.Append("```");
-
-            stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
-            stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
-            stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
-            stringBuilder.Append("\n");
-            stringBuilder.Append(new string('-', TotalFieldsLength));
-            stringBuilder.Append("\n");
-
             using (var databaseContext = new DynamicDBContext())
             {
                 var onlineStatsQuery = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime);
@@ -113,10 +96,33 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 {
                     case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
                     case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
+                    case "members": onlineStatsQuery = onlineStatsQuery
+                        .Where(p => guild.Members.Any(gm =>
+                            gm.Id == ulong.Parse(p.UserID) &&
+                            gm.Roles.Any(r => r.Name == "Członek")))
+                        .OrderByDescending(p => p.TotalTime);
+                        break;
                 }
 
                 var usersInGuild = guild.Members.Select(p => p.Id.ToString());
                 var onlineStats = onlineStatsQuery.Where(p => usersInGuild.Contains(p.UserID)).Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
+
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append(PaginationIdentifier);
+                stringBuilder.Append(" ");
+                stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount(onlineStatsQuery.Count())));
+                stringBuilder.Append(" ");
+                stringBuilder.Append(GetOrderByHeader(orderBy));
+                stringBuilder.Append(".\n");
+
+                stringBuilder.Append("```");
+
+                stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
+                stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
+                stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
+                stringBuilder.Append("\n");
+                stringBuilder.Append(new string('-', TotalFieldsLength));
+                stringBuilder.Append("\n");
 
                 foreach (var user in onlineStats)
                 {
@@ -133,10 +139,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                     stringBuilder.Append($"{username}{lastOnline}{totalTime}\n");
                 }
-            }
 
-            stringBuilder.Append("```");
-            return stringBuilder.ToString();
+                stringBuilder.Append("```");
+                return stringBuilder.ToString();
+            }
         }
 
         private void UpdateOnlineCallback(object state)
@@ -179,13 +185,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
         }
 
-        private int GetPagesCount(DiscordGuild guild)
+        private int GetPagesCount(int membersCount)
         {
-            using (var databaseContext = new DynamicDBContext())
-            {
-                var usersInGuild = guild.Members.Select(p => p.Id.ToString());
-                return databaseContext.OnlineStats.Count(p => usersInGuild.Contains(p.UserID)) / ItemsPerPage + 1;
-            }
+            return membersCount / ItemsPerPage + 1;
         }
 
         private string GetOrderByHeader(string orderBy)
