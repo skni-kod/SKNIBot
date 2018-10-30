@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             //Usunięcie też naszego polecenia
             var messages = await ctx.Channel.GetMessagesAsync(1);
-            await ctx.Channel.DeleteMessageAsync(messages.First(), "Usunięcie wiadomości przez: " + ctx.Member.Nickname);
+            await ctx.Channel.DeleteMessageAsync(messages.First(), "Usuniecie wiadomosci");
             while (messagesCount > 0)
             {
                 messages = await ctx.Channel.GetMessagesAsync(1);
