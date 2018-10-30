@@ -15,7 +15,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task RemoveLastMessagesTo(CommandContext ctx, [Description("Liczba ostatnich wiadomości do usunięcia.")] ulong messageID)
         {
+            //Usunięcie też naszego polecenia
             var messages = await ctx.Channel.GetMessagesAsync(1);
+            await ctx.Channel.DeleteMessageAsync(messages.First(), "Usunięcie wiadomości przez: " + ctx.Member.Nickname);
+            messages = await ctx.Channel.GetMessagesAsync(1);
             do
             {
                 await ctx.Channel.DeleteMessageAsync(messages.First());
