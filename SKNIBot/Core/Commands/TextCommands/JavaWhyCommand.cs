@@ -59,7 +59,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Command("JavaWhyAdd")]
         [Description("Dodaj dziwactwo")]
         [RequireUserPermissions(Permissions.Administrator)]
-        public async Task JavaWhyAdd(CommandContext ctx, string title, string content)
+        public async Task JavaWhyAdd(CommandContext ctx, [Description("Tytuł dziwactwa, wyświetlany u góry")] string title, [Description("Zawartość")] string content)
         {
             await ctx.TriggerTypingAsync();
             using (var db = new DynamicDBContext())
