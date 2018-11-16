@@ -15,7 +15,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
         [Command("DodajRolę")]
         [Aliases("DodajRole", "PrzypiszRole", "PrzypiszRolę")]
         [Description("Dodaj rolę związaną z technologią którą znasz.")]
-        public async Task AddRole(CommandContext ctx, string name)
+        public async Task AddRole(CommandContext ctx, [Description("Nazwa roli")] string name)
         {
             await ctx.TriggerTypingAsync();
 
@@ -49,7 +49,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
         [Command("UsuńRolę")]
         [Aliases("UsuńRole", "UsunRole")]
         [Description("Usuń przypisaną rolę.")]
-        public async Task RemoveRole(CommandContext ctx, string name)
+        public async Task RemoveRole(CommandContext ctx, [Description("Nazwa roli")] string name)
         {
             await ctx.TriggerTypingAsync();
 
