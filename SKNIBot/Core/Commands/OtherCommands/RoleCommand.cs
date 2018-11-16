@@ -12,9 +12,13 @@ namespace SKNIBot.Core.Commands.OtherCommands
     [CommandsGroup("Role")]
     public class RoleCommand : BaseCommandModule
     {
-        [Command("DodajRole")]
+        [Command("DodajRolę")]
+        [Aliases("DodajRole", "PrzypiszRole", "PrzypiszRolę")]
+        [Description("Dodaj rolę związaną z technologią którą znasz.")]
         public async Task AddRole(CommandContext ctx, string name)
         {
+            await ctx.TriggerTypingAsync();
+
             using (var databaseContext = new StaticDBContext())
             {
                 var role = ctx.Guild.Roles.FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
@@ -42,9 +46,13 @@ namespace SKNIBot.Core.Commands.OtherCommands
             }
         }
 
-        [Command("UsuńRole")]
+        [Command("UsuńRolę")]
+        [Aliases("UsuńRole", "UsunRole")]
+        [Description("Usuń przypisaną rolę.")]
         public async Task RemoveRole(CommandContext ctx, string name)
         {
+            await ctx.TriggerTypingAsync();
+
             using (var databaseContext = new StaticDBContext())
             {
                 var role = ctx.Guild.Roles.FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
@@ -73,8 +81,12 @@ namespace SKNIBot.Core.Commands.OtherCommands
         }
 
         [Command("WylistujRole")]
+        [Aliases("Role")]
+        [Description("Wylistuj wszystkie role które możesz przypisać sobie za pomocą komend `!DodajRole`.")]
         public async Task ListAllRoles(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
+
             using (var databaseContext = new StaticDBContext())
             {
                 var roles = ctx.Guild.Roles.Where(p => databaseContext.Roles.Select(r => r.RoleId).Contains(p.Id.ToString())).ToList();
