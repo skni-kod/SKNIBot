@@ -12,7 +12,7 @@ namespace SKNIBot.Core.MessageResponds
 
         static EmotionalTitanicFluteRespond()
         {
-            _emotionalTitanicFluteHasBeenSentToday = false;
+            _emotionalTitanicFluteHasBeenSentToday = true;
             _dayWhenEmotionalTitanicFluteHasBeenSent = DateTime.Now.Day;
         }
 
