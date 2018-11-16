@@ -77,8 +77,8 @@ namespace SKNIBot.Core.Commands.OtherCommands
         {
             using (var databaseContext = new StaticDBContext())
             {
-                //var roles = databaseContext.Roles.Select(p => p.Name).ToList();
-                //await ctx.RespondAsync(string.Join(", ", roles));
+                var roles = ctx.Guild.Roles.Where(p => databaseContext.Roles.Select(r => r.RoleId).Contains(p.Id.ToString())).ToList();
+                await ctx.RespondAsync(string.Join(", ", roles.Select(p => p.Name)));
             }
         }
     }
