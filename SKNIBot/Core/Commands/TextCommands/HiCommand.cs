@@ -9,10 +9,11 @@ namespace SKNIBot.Core.Commands.TextCommands
     public class HiCommand : BaseCommandModule
     {
         private List<ulong> _developers = new List<ulong> {
-            386559253088829440,//Azux Dario#2860
-            352775074513682434,//TemporaryNick#7229
-            305642795706744833,//Coedo#2037
-            231846704947658752//Szatku#4105
+            386559253088829440, // Azux Dario#2860
+            352775074513682434, // TemporaryNick#7229
+            305642795706744833, // Coedo#2037
+            231846704947658752, // Szatku#4105
+            263061784762515457, // Amy#4589
         };
 
         [Command("cześć")]
