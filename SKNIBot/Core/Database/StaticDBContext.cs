@@ -20,6 +20,8 @@ namespace SKNIBot.Core.Database
 
         public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
 
+        public virtual DbSet<Role> Roles { get; set; }
+
         public StaticDBContext() : base(GetOptions("Data Source=StaticDatabase.sqlite"))
         {
 
