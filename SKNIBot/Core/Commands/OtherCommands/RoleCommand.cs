@@ -89,7 +89,7 @@ namespace SKNIBot.Core.Commands.OtherCommands
 
             using (var databaseContext = new StaticDBContext())
             {
-                var roles = ctx.Guild.Roles.Where(p => databaseContext.Roles.Select(r => r.RoleId).Contains(p.Id.ToString())).ToList();
+                var roles = ctx.Guild.Roles.Where(p => databaseContext.Roles.Select(r => r.RoleId).Contains(p.Id.ToString())).OrderBy(p => p.Name).ToList();
                 await ctx.RespondAsync(string.Join(", ", roles.Select(p => p.Name)));
             }
         }
