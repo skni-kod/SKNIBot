@@ -152,7 +152,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             response.Append(new string('-', TotalFieldsLength));
             response.Append("\n");
 
-            foreach (var user in userMessagesStats.Where(p => p.Value >= 10))
+            foreach (var user in userMessagesStats.Take(25))
             {
                 try
                 {
