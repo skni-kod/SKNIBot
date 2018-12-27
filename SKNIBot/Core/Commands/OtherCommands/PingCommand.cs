@@ -5,7 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class PingCommand
+    public class PingCommand : BaseCommandModule
     {
         [Command("ping")]
         [Description("Wyświetl najnowszy ping.")]

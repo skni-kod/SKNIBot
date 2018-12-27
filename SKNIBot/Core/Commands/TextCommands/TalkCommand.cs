@@ -1,24 +1,25 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
+using SKNIBot.Core.Commands.TextCommands.CleverModels;
 using SKNIBot.Core.Containers.TextContainers;
 using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class TalkCommand
+    public class TalkCommand : BaseCommandModule
     {
-        private const string CleverURL = "http://www.cleverbot.com/getreply?key={0}&input={1}&cs={2}";
-
-        private string _cs;
+        private string Nick;
 
         public TalkCommand()
         {
-            _cs = string.Empty;
+            Nick = "";
         }
 
         [Command("talk")]
@@ -26,38 +27,59 @@ namespace SKNIBot.Core.Commands.TextCommands
         [Aliases("tell")]
         public async Task Talk(CommandContext ctx, [Description("Co chcesz mi powiedzieć? Wpisz 'clear' aby zresetować kontekst rozmowy.")] string message)
         {
-            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync($"Nie działa {DiscordEmoji.FromName(Bot.DiscordClient, ":FeelsBadMan:")} Alternatywa dla CleverBota poszukiwana.");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=TdrL3QxjyVw");
+        }
 
-            switch (message)
+        [Command("talk2")]
+        [Description("Rozpocznij rozmowę dwóch bocików!")]
+        [Aliases("tell2")]
+        public async Task Talk2(CommandContext ctx, [Description("Wiadomość początkowa/`clear` - reset kontekstu/`stop` - zatrzymaj rozmowę")] string initialMessage = null)
+        {
+            await ctx.RespondAsync($"Nie działa {DiscordEmoji.FromName(Bot.DiscordClient, ":FeelsBadMan:")} Alternatywa dla CleverBota poszukiwana.");
+            await ctx.RespondAsync("https://www.youtube.com/watch?v=TdrL3QxjyVw");
+        }
+
+        private async Task<string> CreateBotInstance()
+        {
+            using (var httpClient = new HttpClient())
             {
-                case "clear":
+                var createBotModel = new CreateBotModel
                 {
-                    _cs = string.Empty;
-                    await ctx.RespondAsync("Kontekst zresetowany.");
+                    User = SettingsLoader.Container.Clever_User,
+                    Key = SettingsLoader.Container.Clever_Key
+                };
+                var createBotJson = JsonConvert.SerializeObject(createBotModel);
+                var createBotContent = new StringContent(createBotJson, Encoding.UTF8, "application/json");
 
-                    break;
-                }
+                var response = await httpClient.PostAsync("https://cleverbot.io/1.0/create", createBotContent);
+                var responseJson = await response.Content.ReadAsStringAsync();
 
-                default:
-                {
-                    await ctx.RespondAsync(GetResponseFromCleverBot(message));
-                    break;
-                }
+                var responseModel = JsonConvert.DeserializeObject<CreateBotResponseModel>(responseJson);
+                return responseModel.Status == "success" ? responseModel.Nick : null;
             }
         }
 
-        private string GetResponseFromCleverBot(string message)
+        private async Task<string> SendTextAndGetReply(string nick, string text)
         {
-            var webClient = new WebClient();
-            webClient.Encoding = Encoding.UTF8;
+            using (var httpClient = new HttpClient())
+            {
+                var queryBotModel = new QueryBotModel()
+                {
+                    User = SettingsLoader.Container.Clever_User,
+                    Key = SettingsLoader.Container.Clever_Key,
+                    Nick = nick,
+                    Text = text
+                };
+                var queryBotJson = JsonConvert.SerializeObject(queryBotModel);
+                var queryBotContent = new StringContent(queryBotJson, Encoding.UTF8, "application/json");
 
-            var request = string.Format(CleverURL, SettingsLoader.Container.Clever_Key, message, _cs);
-            var response = webClient.DownloadString(request);
+                var response = await httpClient.PostAsync("https://cleverbot.io/1.0/ask", queryBotContent);
+                var responseJson = await response.Content.ReadAsStringAsync();
 
-            var talkData = JsonConvert.DeserializeObject<TalkData>(response);
-            _cs = talkData.CS;
-
-            return talkData.Output;
+                var responseModel = JsonConvert.DeserializeObject<QueryBotResponseModel>(responseJson);
+                return responseModel.Status == "success" ? responseModel.Response : null;
+            }
         }
     }
 }

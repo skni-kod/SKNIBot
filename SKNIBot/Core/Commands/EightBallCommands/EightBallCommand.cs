@@ -10,7 +10,7 @@ using SKNIBot.Core.Database;
 namespace SKNIBot.Core.Commands.EightBallCommands
 {
     [CommandsGroup("8Ball")]
-    public class EightBallCommand {
+    public class EightBallCommand : BaseCommandModule {
         Random _rand;
 
         public EightBallCommand() {

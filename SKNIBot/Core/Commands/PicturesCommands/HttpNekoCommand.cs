@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Const.PicturesConst;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class HttpNekoCommand
+    public class HttpNekoCommand : BaseCommandModule
     {
         [Command("httpkot")]
         [Description("Składnia to `!httpkot {kod}`. Napisz `!httpkot kody` aby otrzymać listę dostępnych kodów.")]
@@ -26,10 +27,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             else if(HttpNekoConst.Codes.Contains(numer))
             {
                 var client = new WebClient();
-                var httpCatPicture = client.DownloadData("https://http.cat/" + ctx.Message.Content.Split(' ')[1]);
-                var stream = new MemoryStream(httpCatPicture);
 
-                await ctx.RespondWithFileAsync(stream, "httpneko.jpg");
+                await PostEmbedHelper.PostEmbed(ctx, "Http kot", numer, "https://http.cat/" + ctx.Message.Content.Split(' ')[1]);
             }
             //Jeżeli użytkownik prosi o kody kotów podajemy je
             else if(numer == "kody")

@@ -4,24 +4,27 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class AvatarCommand
+    public class AvatarCommand : BaseCommandModule
     {
         [Command("awatar")]
         [Description("Pokazuje awatar użytkownika.")]
         public async Task Avatar(CommandContext ctx, [Description("Użytkownik, którego awatar chcesz.")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-
-            var url = member == null ? ctx.User.AvatarUrl : member.AvatarUrl;
-            var client = new WebClient();
-            var catPicture = client.DownloadData(url);
-            var stream = new MemoryStream(catPicture);
-
-            await ctx.RespondWithFileAsync(stream, "awatar.jpg");
+            
+            if (member == null)
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Awatar", ctx.User.Mention, ctx.User.AvatarUrl);
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Awatar", member.Mention, member.AvatarUrl);
+            }
         }
 
     }

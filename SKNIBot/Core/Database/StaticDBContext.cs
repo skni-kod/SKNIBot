@@ -1,25 +1,43 @@
-﻿using System.Data.Entity;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SKNIBot.Core.Database.Logger;
 using SKNIBot.Core.Database.Models;
 
 namespace SKNIBot.Core.Database
 {
     public class StaticDBContext : DbContext
     {
-        public virtual IDbSet<Command> Commands { get; set; }
-        public virtual IDbSet<SimpleResponse> SimpleResponses { get; set; }
+        public virtual DbSet<Command> Commands { get; set; }
+        public virtual DbSet<SimpleResponse> SimpleResponses { get; set; }
 
-        public virtual IDbSet<Media> Media { get; set; }
-        public virtual IDbSet<MediaName> MediaNames { get; set; }
-        public virtual IDbSet<MediaCategory> MediaCategories { get; set; }
+        public virtual DbSet<Media> Media { get; set; }
+        public virtual DbSet<MediaName> MediaNames { get; set; }
+        public virtual DbSet<MediaCategory> MediaCategories { get; set; }
 
-        public virtual IDbSet<HangmanCategory> HangmanCategories { get; set; }
-        public virtual IDbSet<HangmanWord> HangmanWords { get; set; }
+        public virtual DbSet<HangmanCategory> HangmanCategories { get; set; }
+        public virtual DbSet<HangmanWord> HangmanWords { get; set; }
 
-        public StaticDBContext() : base("StaticDatabaseConnectionString")
+        public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
+
+        public virtual DbSet<Role> Roles { get; set; }
+
+        public StaticDBContext() : base(GetOptions("Data Source=StaticDatabase.sqlite"))
+        {
+
+        }
+
+        private static DbContextOptions GetOptions(string connectionString)
+        {
+            return SqliteDbContextOptionsBuilderExtensions.UseSqlite(new DbContextOptionsBuilder(), connectionString).Options;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #if DEBUG
-            Database.Log = System.Console.Write;
+            optionsBuilder.UseLoggerFactory(new DbLoggerFactory());
 #endif
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

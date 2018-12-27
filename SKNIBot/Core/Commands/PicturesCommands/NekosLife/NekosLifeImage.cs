@@ -5,31 +5,21 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.PicturesContainers.NekosLife;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
 {
-    public class NekosLifeImage
+    public class NekosLifeImage : BaseCommandModule
     {
-        public async Task SendImage(CommandContext ctx, string endpoint, [Description("Wzmianka")] DiscordMember member = null)
+        public async Task SendImage(CommandContext ctx, string endpoint, string title, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
 
             var client = new WebClient();
             var url = client.DownloadString(endpoint);
             var pictureContainer = JsonConvert.DeserializeObject<NekosFileImage>(url);
-            /*var picture = client.DownloadData(pictureContainer.Url);
-            var stream = new MemoryStream(picture);*/
 
-            if (member != null)
-            {
-                //await ctx.RespondWithFileAsync(stream, "picture" + GetExtension(url), member.Mention);
-                await ctx.RespondAsync(pictureContainer.Url + " " + member.Mention);
-            }
-            else
-            {
-                //await ctx.RespondWithFileAsync(stream, "picture" + GetExtension(url));
-                await ctx.RespondAsync(pictureContainer.Url);
-            }
+            await PostEmbedHelper.PostEmbed(ctx, title, member?.Mention, pictureContainer.Url);
         }
 
         public string GetExtension(string url)

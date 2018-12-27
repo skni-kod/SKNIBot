@@ -1,14 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKNIBot", "SKNIBot\SKNIBot.csproj", "{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92F4FC74-D3C0-436E-9B69-FDD5CA68A79B}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKNIBot", "SKNIBot\SKNIBot.csproj", "{6351B5F8-7EDC-44FB-AE08-1B0A8267E341}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDBABAF7-6D8D-4DF0-AA62-C952109092C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6351B5F8-7EDC-44FB-AE08-1B0A8267E341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6351B5F8-7EDC-44FB-AE08-1B0A8267E341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6351B5F8-7EDC-44FB-AE08-1B0A8267E341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6351B5F8-7EDC-44FB-AE08-1B0A8267E341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {062279AF-3A43-47B6-9960-8623825C2F87}
+		SolutionGuid = {C9F8DC8B-4D5F-413E-925B-8B32FEBFA7FF}
 	EndGlobalSection
 EndGlobal

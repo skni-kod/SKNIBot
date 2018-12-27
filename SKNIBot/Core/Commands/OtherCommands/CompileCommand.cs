@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -11,7 +12,7 @@ using SKNIBot.Core.Settings;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class CompileCommand
+    public class CompileCommand : BaseCommandModule
     {
         private const string ApiEndpoint = "https://api.jdoodle.com/v1/execute";
 
@@ -21,34 +22,36 @@ namespace SKNIBot.Core.Commands.OtherCommands
         public async Task Compile(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            string language = "", input = "", code = "";
 
-            var splittedInput = ctx.RawArgumentString.Split(',').ToList();
-            switch (splittedInput.Count)
+            var splitInput = ctx.RawArgumentString.Split('\n').ToList();
+            var header = splitInput[0].Split(',').ToList();
+
+            var language = header[0].Trim();
+            var input = header[1].Trim();
+
+            var startIndex = splitInput[1].StartsWith("```", StringComparison.InvariantCulture) ? 2 : 1;
+            var endIndex = splitInput[1].StartsWith("```", StringComparison.InvariantCulture) ? splitInput.Count - 1 : splitInput.Count;
+
+            var code = "";
+            for (var i = startIndex; i < endIndex; i++)
             {
-                case 2:
-                {
-                    language = splittedInput[0].Trim();
-                    input = "";
-                    code = splittedInput[1].Trim();
-
-                    break;
-                }
-
-                case 3:
-                {
-                    language = splittedInput[0].Trim();
-                    input = splittedInput[1].Trim();
-                    code = splittedInput[2].Trim();
-
-                    break;
-                }
+                code += splitInput[i] + "\n";
             }
 
-            var compilationResult = GetCompilationResult(language, input, code);
-            var compilationEmbedResult = GetEmbedResult(compilationResult);
+            code = code.Trim();
 
-            await ctx.RespondAsync("", false, compilationEmbedResult);
+            try
+            {
+                var compilationResult = GetCompilationResult(language, input, code);
+                var compilationEmbedResult = GetEmbedResult(compilationResult);
+
+                await ctx.RespondAsync("", false, compilationEmbedResult);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private CompilationResultContainer GetCompilationResult(string language, string input, string code)

@@ -286,6 +286,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/SKNIBot/debug.json
+/SKNIBot/release.json
 /SKNIBot/settings.json
 /SKNIBot/debug.json
 /SKNIBot/release.json

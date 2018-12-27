@@ -10,7 +10,7 @@ using DSharpPlus.Entities;
 
 namespace SKNIBot.Core
 {
-    public class CustomHelpFormatter : IHelpFormatter
+    public class CustomHelpFormatter : BaseHelpFormatter
     {
         private string _commandName;
         private string _commandDescription;
@@ -20,46 +20,36 @@ namespace SKNIBot.Core
 
         private const string Color = "#5588EE";
 
-        public CustomHelpFormatter()
+
+        public CustomHelpFormatter(CommandContext ctx) : base(ctx)
         {
             _aliases = new List<string>();
             _parameters = new List<string>();
             _subCommands = new Dictionary<string, List<string>>();
         }
 
-        public IHelpFormatter WithCommandName(string name)
+        public override BaseHelpFormatter WithCommand(Command command)
         {
-            _commandName = name;
-            return this;
-        }
+            _commandName = command.Name;
+            _commandDescription = command.Description;
 
-        public IHelpFormatter WithDescription(string description)
-        {
-            _commandDescription = description;
-            return this;
-        }
-
-        public IHelpFormatter WithArguments(IEnumerable<CommandArgument> arguments)
-        {
-            foreach (var argument in arguments)
+            if (command.Overloads.Count > 0)
             {
-                var argumentBuilder = new StringBuilder();
-                argumentBuilder.Append($"`{argument.Name}`: {argument.Description}");
-
-                if (argument.DefaultValue != null)
+                foreach (var argument in command.Overloads[0].Arguments)
                 {
-                    argumentBuilder.Append($" Default value: {argument.DefaultValue}");
-                }
+                    var argumentBuilder = new StringBuilder();
+                    argumentBuilder.Append($"`{argument.Name}`: {argument.Description}");
 
-                _parameters.Add(argumentBuilder.ToString());
+                    if (argument.DefaultValue != null)
+                    {
+                        argumentBuilder.Append($" Default value: {argument.DefaultValue}");
+                    }
+
+                    _parameters.Add(argumentBuilder.ToString());
+                }
             }
 
-            return this;
-        }
-
-        public IHelpFormatter WithAliases(IEnumerable<string> aliases)
-        {
-            foreach (var alias in aliases)
+            foreach (var alias in command.Aliases)
             {
                 _aliases.Add($"`{alias}`");
             }
@@ -67,7 +57,7 @@ namespace SKNIBot.Core
             return this;
         }
 
-        public IHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
+        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyTypes = assembly.GetTypes();
@@ -105,12 +95,7 @@ namespace SKNIBot.Core
             return this;
         }
 
-        public IHelpFormatter WithGroupExecutable()
-        {
-            return this;
-        }
-
-        public CommandHelpMessage Build()
+        public override CommandHelpMessage Build()
         {
             var embed = new DiscordEmbedBuilder
             {
@@ -137,8 +122,8 @@ namespace SKNIBot.Core
         {
             embed.AddField(_commandName, _commandDescription);
 
-            if(_aliases.Count > 0) embed.AddField("Aliasy", string.Join(", ", _aliases));
-            if(_parameters.Count > 0) embed.AddField("Parametry", string.Join("\r\n", _parameters));
+            if (_aliases.Count > 0) embed.AddField("Aliasy", string.Join(", ", _aliases));
+            if (_parameters.Count > 0) embed.AddField("Parametry", string.Join("\r\n", _parameters));
 
             return new CommandHelpMessage(string.Empty, embed);
         }

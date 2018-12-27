@@ -14,7 +14,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands.NekosLife
         public async Task Cuddle(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
-            await SendImage(ctx, NekosLifePicturesEndpoints.Cuddle, member);
+            await SendImage(ctx, NekosLifePicturesEndpoints.Cuddle, "Cuddle", member);
         }
     }
 }

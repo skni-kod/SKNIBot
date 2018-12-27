@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class RemoveMessageCommand
+    public class RemoveMessageCommand : BaseCommandModule
     {
         [Command("usuńID")]
         [Aliases("usunID", "deleteID")]
@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var message = await ctx.Channel.GetMessageAsync(messageID);
             await ctx.Channel.DeleteMessageAsync(message);
             message = await ctx.Channel.GetMessageAsync(ctx.Message.Id);
-            await ctx.Channel.DeleteMessageAsync(message);
+            await ctx.Channel.DeleteMessageAsync(message, "Usuniecie wiadomosci");
         }
     }
 }

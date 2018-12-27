@@ -9,7 +9,7 @@ using SKNIBot.Core.Settings;
 namespace SKNIBot.Core.Commands.OtherCommands
 {
     [CommandsGroup("Różne")]
-    public class LinkCommand
+    public class LinkCommand : BaseCommandModule
     {
         [Command("link")]
         [Description("Skracacz linków. Dodawaj http, bo się wykolei.")]
