@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace SKNIBot.Core.Commands.MusicCommands
 {
     [CommandsGroup("Music")]
-    class LeaveCommand
+    class LeaveCommand : BaseCommandModule
     {
         [Command("wyjdź")]
         [Description("Bot dołącza do kanału głosowego, w którym obecnie jesteś.")]
         [Aliases("wyjdz", "leave")]
         public async Task Leave(CommandContext ctx)
         {
-            var vnext = ctx.Client.GetVoiceNextClient();
+            var vnext = ctx.Client.GetVoiceNext();
 
             var currentVoiceChannel = vnext.GetConnection(ctx.Guild);
             if (currentVoiceChannel == null)

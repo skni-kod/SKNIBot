@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SKNIBot.Core.Commands.MusicCommands
 {
     [CommandsGroup("Music")]
-    class JoinCommand
+    class JoinCommand : BaseCommandModule
     {
         [Command("dołącz")]
         [Description("Bot dołącza do kanału głosowego, w którym obecnie jesteś.")]
@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Commands.MusicCommands
         public async Task Join(CommandContext ctx)
         {
             await ctx.RespondAsync("Kappa1.");
-            var vnext = ctx.Client.GetVoiceNextClient();
+            var vnext = ctx.Client.GetVoiceNext();
             await ctx.RespondAsync("Kappa2.");
             var currentVoiceChannel = vnext.GetConnection(ctx.Guild);
             if (currentVoiceChannel != null)

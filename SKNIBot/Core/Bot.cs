@@ -21,9 +21,8 @@ namespace SKNIBot.Core
     public class Bot
     {
         public static DiscordClient DiscordClient { get; set; }
-        static VoiceNextClient voice { get; set; }
+        static VoiceNextExtension voice { get; set; }
         private CommandsNextExtension _commands { get; set; }
-
         public void Run()
         {
             Connect();
