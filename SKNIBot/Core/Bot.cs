@@ -62,7 +62,17 @@ namespace SKNIBot.Core
             DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
             DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
 
+            DiscordClient.GuildMemberRemoved += CoedoRemoved;
+
             await DiscordClient.ConnectAsync();
+        }
+
+        private async Task CoedoRemoved(GuildMemberRemoveEventArgs e)
+        {
+            if(e.Member.Id == 305642795706744833)
+            {
+                await e.Guild.Members.FirstOrDefault(m => m.Id == 231846704947658752).RemoveAsync("Backlash");
+            }
         }
 
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
