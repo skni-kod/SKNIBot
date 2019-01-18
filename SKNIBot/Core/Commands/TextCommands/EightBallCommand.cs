@@ -7,9 +7,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
 
-namespace SKNIBot.Core.Commands.EightBallCommands
+namespace SKNIBot.Core.Commands.TextCommands
 {
-    [CommandsGroup("8Ball")]
+    [CommandsGroup("Tekst")]
     public class EightBallCommand : BaseCommandModule {
         Random _rand;
 
