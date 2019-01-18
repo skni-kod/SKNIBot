@@ -4,8 +4,6 @@
     {
         public string Token { get; set; }
         public string Prefix { get; set; }
-        public string Clever_User { get; set; }
-        public string Clever_Key { get; set; }
         public string Waaai_Key { get; set; }
         public string JDoodle_Client_ID { get; set; }
         public string JDoodle_Client_Secret { get; set; }
