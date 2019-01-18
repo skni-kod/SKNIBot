@@ -2,9 +2,9 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-namespace SKNIBot.Core.Commands.ModerationCommands
+namespace SKNIBot.Core.Commands.ManagementCommands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Zarządzanie")]
     public class PingCommand : BaseCommandModule
     {
         [Command("ping")]
