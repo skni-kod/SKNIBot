@@ -7,6 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
+using SKNIBot.Core.Settings;
 
 namespace SKNIBot.Core
 {
@@ -107,7 +108,7 @@ namespace SKNIBot.Core
 
         private CommandHelpMessage BuildGeneralHelp(DiscordEmbedBuilder embed)
         {
-            embed.AddField("HELP", "Wpisz !help <command_name> aby uzyskać więcej informacji.");
+            embed.AddField("HELP", "Wpisz " + SettingsLoader.Container.Prefix + "help <command_name> aby uzyskać więcej informacji.");
 
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
