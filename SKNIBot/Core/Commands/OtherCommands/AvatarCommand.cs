@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Helpers;
 
-namespace SKNIBot.Core.Commands.OtherCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Różne")]
     public class AvatarCommand : BaseCommandModule

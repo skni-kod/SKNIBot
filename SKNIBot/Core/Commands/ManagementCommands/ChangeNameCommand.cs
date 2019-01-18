@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands.ManagementCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Zarządzanie")]
     class ChangeNameCommand : BaseCommandModule

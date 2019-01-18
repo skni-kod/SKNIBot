@@ -7,9 +7,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
 
-namespace SKNIBot.Core.Commands.OtherCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
-    [CommandsGroup("Role")]
+    [CommandsGroup("Moderacja")]
     public class RoleCommand : BaseCommandModule
     {
         [Command("DodajRolę")]

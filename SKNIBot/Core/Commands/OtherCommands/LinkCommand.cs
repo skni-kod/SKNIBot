@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using SKNIBot.Core.Containers.OtherContainers;
 using SKNIBot.Core.Settings;
 
-namespace SKNIBot.Core.Commands.OtherCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Różne")]
     public class LinkCommand : BaseCommandModule

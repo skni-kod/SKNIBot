@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands.ManagementCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [CommandsGroup("Moderacja")]
     class ChangeRoleColorCommand : BaseCommandModule
     {
 

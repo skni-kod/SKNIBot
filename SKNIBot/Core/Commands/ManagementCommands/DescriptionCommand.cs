@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 
-namespace SKNIBot.Core.Commands.ManagementCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Zarządzanie")]
     public class DescriptionCommand : BaseCommandModule

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
-    [CommandsGroup("Emoji")]
+    [CommandsGroup("Moderacja")]
     class EmojiCounterCommand : BaseCommandModule
     {
         [Command("policzEmoji")]
