@@ -13,6 +13,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
     [CommandsGroup("Obrazki")]
     public class NekosLifeImage : BaseCommandModule
     {
+        private const string footerText = "Powered by nekos.life";
+
         [Command("catgirl")]
         [Description("Wyświetla słodkie catgirl.")]
         public async Task CatGirl(CommandContext ctx, [Description("Wzmianka")] DiscordMember member = null)
@@ -69,7 +71,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             var url = client.DownloadString(endpoint);
             var pictureContainer = JsonConvert.DeserializeObject<NekosFileImage>(url);
 
-            await PostEmbedHelper.PostEmbed(ctx, title, member?.Mention, pictureContainer.Url);
+            await PostEmbedHelper.PostEmbed(ctx, title, member?.Mention, pictureContainer.Url, footerText);
         }
 
         public string GetExtension(string url)
