@@ -110,10 +110,38 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
-
+            
             var messages = await GetAllMessagesFromChannel(ctx.Channel);
             var groupedMessages = GroupMessagesByMonths(messages);
             var response = await GetMsgStatsResponse(groupedMessages, ctx.Channel.Name, ctx.Guild);
+
+            await ctx.RespondAsync(response);
+        }
+
+        [Command("msgstatsall")]
+        [Description("Wyświetla statystyki wiadomości we wszystkich kanałach dla poszczególnych miesięcy.")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task MsgStatsAll(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+
+            var allMessages = new List<DiscordMessage>();
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Type == ChannelType.Text))
+            {
+                try
+                {
+                    var messages = await GetAllMessagesFromChannel(channel);
+                    allMessages.AddRange(messages);
+                }
+                catch (UnauthorizedException ex)
+                {
+
+                }
+            }
+            
+            var groupedMessages = GroupMessagesByMonths(allMessages);
+            var response = await GetMsgStatsResponse(groupedMessages, "all", ctx.Guild);
 
             await ctx.RespondAsync(response);
         }
@@ -204,7 +232,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             response.Append($"Statystyki dla kanału **#{channelName}:**\n");
             response.Append("```");
-            response.Append("Miesiąc i rok".PadRight(UsernameFieldLength));
+            response.Append("Data".PadRight(UsernameFieldLength));
             response.Append("Liczba wiadomości".PadRight(MessagesCountFieldLength));
             response.Append("\n");
             response.Append(new string('-', TotalFieldsLength));
