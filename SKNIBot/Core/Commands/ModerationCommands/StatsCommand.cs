@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -123,24 +124,20 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return messagesList;
         }
 
-        private List<KeyValuePair<ulong, int>> CountUserMessages(List<DiscordMessage> messages)
+        private IEnumerable<KeyValuePair<ulong, int>> CountUserMessages(List<DiscordMessage> messages)
         {
-            var stats = new Dictionary<ulong, int>();
-
-            foreach (var message in messages)
-            {
-                if (!stats.ContainsKey(message.Author.Id))
+            return messages
+                .GroupBy(p => p.Author.Id, (authorId, authorMessages) => new
                 {
-                    stats[message.Author.Id] = 0;
-                }
-
-                stats[message.Author.Id]++;
-            }
-
-            return stats.OrderByDescending(p => p.Value).ToList();
+                    AuthorId = authorId,
+                    MessagesCount = authorMessages.Count()
+                })
+                .Select(p => new KeyValuePair<ulong, int>(p.AuthorId, p.MessagesCount))
+                .OrderByDescending(p => p.Value)
+                .ToList();
         }
 
-        private async Task<string> GetResponse(List<KeyValuePair<ulong, int>> userMessagesStats, string channelName, DiscordGuild guild)
+        private async Task<string> GetResponse(IEnumerable<KeyValuePair<ulong, int>> userMessagesStats, string channelName, DiscordGuild guild)
         {
             var response = new StringBuilder();
 
