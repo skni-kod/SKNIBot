@@ -36,17 +36,23 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 // Get server roles.
                 var serverRoles = ctx.Guild.Roles;
 
+                List<DiscordRole> discordRoles = new List<DiscordRole>();
                 foreach (AssignRole assignRole in dbServer.AssignRoles)
                 {
-                    var role = serverRoles.Where(p => p.Id.ToString() == assignRole.RoleID).FirstOrDefault();
+                    discordRoles.Add(serverRoles.Where(p => p.Id.ToString() == assignRole.RoleID).FirstOrDefault());
 
-                    if (role != null)
+                }
+
+                List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
+                foreach (DiscordRole sortedRole in sortedRoles)
+                {
+                    if (sortedRole != null)
                     {
-                        if (assignRole != dbServer.AssignRoles[0])
+                        if (sortedRole != sortedRoles[0])
                         {
                             message += ", ";
                         }
-                        message += role.Name;
+                        message += sortedRole.Name;
                     }
                     if (message.Length > 1800)
                     {
