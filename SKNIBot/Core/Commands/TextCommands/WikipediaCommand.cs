@@ -6,7 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class WikipediaCommand
+    public class WikipediaCommand : BaseCommandModule
     {
         private const string _randomSiteURL = "https://pl.wikipedia.org/wiki/Specjalna:Losowa_strona";
 
@@ -18,11 +18,10 @@ namespace SKNIBot.Core.Commands.TextCommands
             await ctx.TriggerTypingAsync();
 
             var request = (HttpWebRequest)WebRequest.Create(_randomSiteURL);
-            request.AllowAutoRedirect = false;
 
-            using (var response = request.GetResponse())
+            using (var response = await request.GetResponseAsync())
             {
-                await ctx.RespondAsync(response.Headers["Location"]);
+                await ctx.RespondAsync(response.ResponseUri.ToString());
             }
         }
     }

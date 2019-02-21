@@ -1,135 +1,160 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
+using SixLabors.ImageSharp.Processing.Text;
+using SixLabors.ImageSharp.Processing.Drawing.Pens;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    class CreateMemeCommand
+    class CreateMemeCommand : BaseCommandModule
     {
+        private readonly Font _dummyFont;
 
-        FontFamily _fontFamily;
-        Pen _outlinePen;
+        private const int MinFontSize = 15;
+        private const int MaxFontSize = 70;
 
-        int _minFontSize = 15;
-        int _maxFontSize = 70;
+        private const int HorizontalSpacing = 8;
+        private const int VerticalSpacing = 10;
+        private const float ScreenHeightUpPercent = 0.4f;
+        private const int OutlineSize = 5;
 
-        int _horizontalSpacing = 8;
-        float _screenHeightUpPercent = 0.4f;
+        private readonly Pen<Rgba32> _outlinePen;
+
+        private TextGraphicsOptions _textOptions;
 
         public CreateMemeCommand()
         {
-            _fontFamily = new FontFamily("Liberation Mono");
-            _outlinePen = new Pen(Color.Black)
+            _dummyFont = SystemFonts.CreateFont("Liberation Mono", 20);
+            _textOptions = new TextGraphicsOptions()
             {
-                Width = 4
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Center,
             };
+
+            _outlinePen = Pens.Solid(Rgba32.Black, OutlineSize);
         }
 
         [Command("meme")]
         [Aliases("mem")]
         [Description("Stwórz mem z podanym obrazkiem")]
-        public async Task CreateMeme(CommandContext ctx, string picName, string upText)
+        public async Task CreateMeme(CommandContext ctx, string picName, string upText, string downText = null)
         {
+            string pictureLink;
             using (var databaseContext = new StaticDBContext())
             {
                 await ctx.TriggerTypingAsync();
 
-                var pictureLink = databaseContext.Media
-                   .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => DbFunctions.Like(p.Name, picName)))
-                   .Select(p => p.Link)
-                   .FirstOrDefault();
+                pictureLink = databaseContext.Media
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == picName))
+                    .Select(p => p.Link)
+                    .FirstOrDefault();
 
                 if (pictureLink == null)
                 {
                     await ctx.RespondAsync("Nieznany parametr, wpisz !pic list aby uzyskać listę dostępnych.");
                     return;
                 }
+            }
 
-                //Download picture
-                WebClient web = new WebClient();
-                var picture = web.DownloadData(pictureLink);
-                var stream = new MemoryStream(picture);
+            MemoryStream mem = new MemoryStream();
 
-                //Create image and rect for it
-                Image img = Bitmap.FromStream(stream);
-                Bitmap tempImage = new Bitmap(img.Width, img.Height);
+            using (Image<Rgba32> img = ImageHelper.DownloadImage(pictureLink))
+            {
+                DrawTextOnImage(img, upText, downText);
+                img.SaveAsJpeg(mem);
+            }
 
-                var upPosition = new RectangleF(0, 0, img.Width - _horizontalSpacing, img.Height * _screenHeightUpPercent);
+            mem.Position = 0;
 
-                Graphics g = GetGraphicsFromImage(tempImage);
-                g.DrawImage(img, 0, 0);
+            await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
+        }
 
-                StringFormat format = new StringFormat(StringFormat.GenericDefault);
-                format.Alignment = StringAlignment.Center;
+        [Command("memeUrl")]
+        [Aliases("memLink")]
+        [Description("Stwórz mem z podanym obrazkiem")]
+        public async Task CreateMemeWithUrl(CommandContext ctx, string picUrl, string upText, string downText = null)
+        {
+            await ctx.TriggerTypingAsync();
 
-                //g.DrawString(upText, _font, Brushes.Black, upPosition, format);
+            MemoryStream mem = new MemoryStream();
 
-                await ctx.TriggerTypingAsync();
+            using (Image<Rgba32> img = ImageHelper.DownloadImage(picUrl))
+            {
+                DrawTextOnImage(img, upText, downText);
 
-                //Create GraphicsPath, adjust font size and add string to path
-                GraphicsPath path = new GraphicsPath();
-                float fontSize = GetAdjustedFont(g, upText, _fontFamily.GetName(0), FontStyle.Bold, (int)upPosition.Width, (int)upPosition.Height, _maxFontSize, _minFontSize);
-                path.AddString(upText.ToUpper(), _fontFamily, (int)FontStyle.Bold, fontSize, upPosition, format);
+                img.SaveAsJpeg(mem);
+            }
 
-#if DEBUG
-                await ctx.RespondAsync($"Width: {tempImage.Width} Height: {tempImage.Height} Size: {fontSize}");
-#endif
-                //Draw String
-                g.DrawPath(_outlinePen, path);
-                g.FillPath(Brushes.White, path);
-                g.Flush();
+            mem.Position = 0;
 
-                //Save image and upload it
-                MemoryStream mem = new MemoryStream();
-                tempImage.Save(mem, ImageFormat.Jpeg);
-                mem.Position = 0;
+            await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
+        }
 
-                await ctx.RespondWithFileAsync(mem, "MEMEM.jpg");
+        void DrawTextOnImage(Image<Rgba32> img, string upText, string downText)
+        {
+            _textOptions.WrapTextWidth = img.Width - HorizontalSpacing * 2;
+
+            (int fontSize, RectangleF sizeRect) = GetAdjustedFont(upText, _textOptions.WrapTextWidth, img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
+            Font font = new Font(_dummyFont, fontSize);
+
+            var startPoint = new PointF(HorizontalSpacing, VerticalSpacing);
+            DrawTextOnPosition(img, upText, font, startPoint);
+
+            if (downText != null)
+            {
+                (fontSize, sizeRect) = GetAdjustedFont(downText, _textOptions.WrapTextWidth,
+                    img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
+                Font fontDown = new Font(_dummyFont, fontSize);
+
+                float y = img.Height - sizeRect.Height;
+                startPoint = new PointF(HorizontalSpacing, y);
+
+                DrawTextOnPosition(img, downText, fontDown, startPoint);
             }
         }
 
-        public int GetAdjustedFont(Graphics graphicRef, string graphicString, string originalFontName, FontStyle style, int containerWidth, int containerHeight, int maxFontSize, int minFontSize)
+        void DrawTextOnPosition(Image<Rgba32> img, string text, Font font, PointF startPoint)
         {
-            Font testFont = null;      
+            img.Mutate(c => c
+                .DrawText(_textOptions, text.ToUpper(), font, _outlinePen, startPoint)
+                .DrawText(_textOptions, text.ToUpper(), font, Rgba32.White, startPoint));
+        }
+
+        public (int, RectangleF) GetAdjustedFont(string graphicString, float containerWidth, float containerHeight, int maxFontSize,
+            int minFontSize)
+        {
+            var sizeRect = new RectangleF();
             for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
             {
-                testFont = new Font(originalFontName, adjustedSize, style);
+                var testFont = new Font(_dummyFont, adjustedSize);
+                var renderOptions = new RendererOptions(testFont)
+                {
+                    WrappingWidth = containerWidth
+                };
 
                 // Test the string with the new size
-                SizeF adjustedSizeNew = graphicRef.MeasureString(graphicString, testFont);
-                float volume = adjustedSizeNew.Height * adjustedSizeNew.Width;
+                sizeRect = TextMeasurer.MeasureBounds(graphicString, renderOptions);
+                float volume = sizeRect.Height * sizeRect.Width;
 
-                if(volume < containerWidth * containerHeight)
+                if (volume < containerWidth * containerHeight)
                 {
                     // Good font, return it
-                    return adjustedSize;
+                    return (adjustedSize, sizeRect);
                 }
             }
-
-            return minFontSize;
-        }
-
-        Graphics GetGraphicsFromImage(Image img)
-        {
-            Graphics g = Graphics.FromImage(img);
-
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
-            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-
-            return g;
+            
+            return (minFontSize, sizeRect);
         }
     }
 }

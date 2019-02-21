@@ -7,7 +7,7 @@ using DSharpPlus.Entities;
 namespace SKNIBot.Core.Commands.UniCommands
 {
     [CommandsGroup("Uczelnia")]
-    public class WhenArmageddonCommand
+    public class WhenArmageddonCommand : BaseCommandModule
     {
         /// <summary>
         /// Zwraca kiedy są najbliższe wykłady z systemów wbudowanych
@@ -24,10 +24,20 @@ namespace SKNIBot.Core.Commands.UniCommands
             await ctx.TriggerTypingAsync();
 
             var today = DateTime.Today;
+            
+            /*if (member == null)
+            {
+                await ctx.RespondAsync("Spokojnie, zbiorniczki to w przyszłym semestrze.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Patrz " + member.Mention + ", " + ctx.User.Mention + " nie może się doczekać zbiorniczków.");
+            }*/
+
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
             var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)today.DayOfWeek + 7) % 7;
             var nextWednesday = today.AddDays(daysUntilWednesday);
-            var nextLectures = nextWednesday.AddHours(14);
+            var nextLectures = nextWednesday.AddHours(12);
 
             var timeSpan = nextLectures - DateTime.Now;
             if (timeSpan.TotalSeconds < 0)
@@ -43,8 +53,11 @@ namespace SKNIBot.Core.Commands.UniCommands
             else
             {
                 await ctx.RespondAsync("Najbliższe wykłady z systemów wbudowanych są za: " + timeSpan.Days + " dni " +
-                    timeSpan.Hours + " godzin " + timeSpan.Minutes + " minut " + timeSpan.Seconds + " sekund " + ctx.User.Mention);
+                    timeSpan.Hours + " godzin " + timeSpan.Minutes + " minut " + timeSpan.Seconds + " sekund " + member.Mention);
             }
+
+            
+           
         }
     }
 }

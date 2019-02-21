@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
-namespace SKNIBot.Core.Commands.OtherCommands
+namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Różne")]
-    public class RandomCommand {
+    public class RandomCommand : BaseCommandModule
+    {
         private Random _random;
 
         public RandomCommand() {

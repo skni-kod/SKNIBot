@@ -10,14 +10,17 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.Net.WebSocket;
+using DSharpPlus.EventArgs;
+using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
+using SKNIBot.Core.Services;
 
 namespace SKNIBot.Core
 {
     public class Bot
     {
         public static DiscordClient DiscordClient { get; set; }
-        private CommandsNextModule _commands { get; set; }
+        private CommandsNextExtension _commands { get; set; }
 
         public void Run()
         {
@@ -35,15 +38,16 @@ namespace SKNIBot.Core
 
                 AutoReconnect = true,
                 LogLevel = LogLevel.Debug,
-                UseInternalLogHandler = true
+                UseInternalLogHandler = true,
+
+                WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-            DiscordClient.SetWebSocketClient<WebSocket4NetClient>();
 
             var commandsConfig = new CommandsNextConfiguration
             {
-                StringPrefix = SettingsLoader.Container.Prefix,
+                StringPrefixes = new [] {SettingsLoader.Container.Prefix},
                 EnableDms = true,
                 EnableMentionPrefix = true,
                 CaseSensitive = false
@@ -54,13 +58,65 @@ namespace SKNIBot.Core
             _commands.CommandExecuted += Commands_CommandExecuted;
             _commands.CommandErrored += Commands_CommandErrored;
 
+            DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
+            DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
+            DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
+
             await DiscordClient.ConnectAsync();
+        }
+
+
+        private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in new message.");
+                }
+            }
+        }
+
+        private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in edited message.");
+                }
+            }
+        }
+
+        private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
+        {
+            if (e.Channel.IsPrivate == false)
+            {
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in reactions.");
+                }
+            }
         }
 
         private void SetNetworkParameters()
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 |
-                                                   SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         private void RegisterCommands()
@@ -78,6 +134,29 @@ namespace SKNIBot.Core
                 {
                     var genericRegisterCommandMethod = registerCommandsMethod.MakeGenericMethod(type);
                     genericRegisterCommandMethod.Invoke(_commands, null);
+                }
+
+                foreach(var method in type.GetMethods())
+                {
+                    
+                    var attribute = method.GetCustomAttribute<MessageRespondAttribute>();
+                    if (attribute != null)
+                    {
+                        Console.WriteLine("Dappa");
+                        if (!method.IsStatic)
+                        {
+                            throw new ArgumentException("Methods with MessageRespondAttribute must be static!");
+                        }
+
+                        DiscordClient.MessageCreated += async e =>
+                        {
+                            if (e.Author.IsBot)
+                                return;
+
+                            var del = (AsyncEventHandler<MessageCreateEventArgs>)Delegate.CreateDelegate(typeof(AsyncEventHandler<MessageCreateEventArgs>), method);
+                            await del.Invoke(e);
+                        };
+                    }
                 }
             }
         }
@@ -143,3 +222,5 @@ namespace SKNIBot.Core
         }
     }
 }
+
+

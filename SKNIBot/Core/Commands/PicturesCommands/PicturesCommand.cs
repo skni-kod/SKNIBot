@@ -1,16 +1,17 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
     [CommandsGroup("Obrazki")]
-    public class PicturesCommand
+    public class PicturesCommand : BaseCommandModule
     {
         [Command("picture")]
         [Description("Wyświetl obrazek!")]
@@ -27,9 +28,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                     return;
                 }
 
-                // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var pictureLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => DbFunctions.Like(p.Name, pictureName)))
+                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name.ToLower() == pictureName.ToLower()))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 
@@ -40,12 +40,8 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 }
 
                 var response = pictureLink;
-                if (member != null)
-                {
-                    response += $" {member.Mention}";
-                }
 
-                await ctx.RespondAsync(response);
+                await PostEmbedHelper.PostEmbed(ctx, "Obrazek", member?.Mention, response);
             }
         }
 

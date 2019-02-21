@@ -9,7 +9,7 @@ using DSharpPlus.CommandsNext.Attributes;
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class GraphCommand
+    public class GraphCommand : BaseCommandModule
     {
         private Random _random;
 

@@ -16,7 +16,7 @@ using SKNIBot.Core.Helpers.Pagination;
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class OnlineCommand
+    public class OnlineCommand : BaseCommandModule
     {
         private const int UpdateOnlineInterval = 1000 * 60;
         private const int UsernameFieldLength = 35;
@@ -43,7 +43,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx, [Description("Dostępne: username, last, total.")] string orderBy = "total")
+        public async Task Online(CommandContext ctx, [Description("Dostępne: last, total.")] string orderBy = "total")
         {
             await ctx.TriggerTypingAsync();
 
@@ -54,75 +54,120 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await message.CreateReactionAsync(DiscordEmoji.FromName(Bot.DiscordClient, PaginationManager.RightEmojiName));
         }
 
-        private string GetOnlineList(int currentPage, string orderBy, DiscordGuild guild)
+        private void AddLostSoulsToDatabase()
         {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(PaginationIdentifier);
-            stringBuilder.Append(" ");
-            stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount()));
-            stringBuilder.Append(" ");
-            stringBuilder.Append(GetOrderByHeader(orderBy));
-            stringBuilder.Append(".\n");
-
-            stringBuilder.Append("```");
-
-            stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
-            stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
-            stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
-            stringBuilder.Append("\n");
-            stringBuilder.Append(new string('-', TotalFieldsLength));
-            stringBuilder.Append("\n");
-
             using (var databaseContext = new DynamicDBContext())
             {
-                var onlineStatsQuery = databaseContext.OnlineStats
-                    .OrderByDescending(p => p.TotalTime);
+                var allGuilds = Bot.DiscordClient.Guilds;
+
+                var allSouls = allGuilds.SelectMany(
+                    p => p.Value.Members
+                        .Where(m => !m.IsBot)
+                        .Select(m => m.Id.ToString()))
+                    .Distinct()
+                    .ToList();
+
+                var allSoulsInDatabase = databaseContext.OnlineStats.Select(p => p.UserID).ToList();
+                var usersIdWhichAreNotInDatabase = allSouls.Except(allSoulsInDatabase).ToList();
+
+                foreach (var soulId in usersIdWhichAreNotInDatabase)
+                {
+                    databaseContext.OnlineStats.Add(new OnlineStats
+                    {
+                        UserID = soulId,
+                        LastOnline = DateTime.MinValue,
+                        TotalTime = 0
+                    });
+
+                    Console.WriteLine("New lost soul has been added: " + soulId);
+                }
+
+                databaseContext.SaveChanges();
+            }
+        }
+
+        private string GetOnlineList(int currentPage, string orderBy, DiscordGuild guild)
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                var onlineStatsQuery = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime);
 
                 switch (orderBy)
                 {
-                    case "username": onlineStatsQuery = onlineStatsQuery.OrderBy(p => p.Username); break;
                     case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
                     case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
+                    case "members": onlineStatsQuery = onlineStatsQuery
+                        .Where(p => guild.Members.Any(gm =>
+                            gm.Id == ulong.Parse(p.UserID) &&
+                            gm.Roles.Any(r => r.Name == "Członek")))
+                        .OrderByDescending(p => p.TotalTime);
+                        break;
                 }
 
-                var onlineStats = onlineStatsQuery.Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
+                var usersInGuild = guild.Members.Select(p => p.Id.ToString());
+                var onlineStats = onlineStatsQuery.Where(p => usersInGuild.Contains(p.UserID)).Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
+
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append(PaginationIdentifier);
+                stringBuilder.Append(" ");
+                stringBuilder.Append(_paginationManager.GeneratePaginationHeader(currentPage, GetPagesCount(onlineStatsQuery.Count())));
+                stringBuilder.Append(" ");
+                stringBuilder.Append(GetOrderByHeader(orderBy));
+                stringBuilder.Append(".\n");
+
+                stringBuilder.Append("```");
+
+                stringBuilder.Append("Nazwa użytkownika".PadRight(UsernameFieldLength));
+                stringBuilder.Append("Ostatnio online".PadRight(LastOnlineFieldLength));
+                stringBuilder.Append("Łączny czas [h]".PadRight(TotalTimeFieldLength));
+                stringBuilder.Append("\n");
+                stringBuilder.Append(new string('-', TotalFieldsLength));
+                stringBuilder.Append("\n");
 
                 foreach (var user in onlineStats)
                 {
-                    var displayName = GetDisplayName(user.Username, guild);
+                    var displayName = GetDisplayName(user.UserID, guild);
                     var username = displayName.PadRight(UsernameFieldLength);
-                    var lastOnline = user.LastOnline.ToString("yyyy-MM-dd HH:mm").PadRight(LastOnlineFieldLength);
+
+                    var lastOnline = (user.LastOnline != DateTime.MinValue
+                        ? user.LastOnline.ToString("yyyy-MM-dd HH:mm")
+                        : "brak danych")
+                        .PadRight(LastOnlineFieldLength);
 
                     var totalTimeInHours = (float)user.TotalTime / 60;
                     var totalTime = totalTimeInHours.ToString("0.0").PadRight(TotalTimeFieldLength);
 
                     stringBuilder.Append($"{username}{lastOnline}{totalTime}\n");
                 }
-            }
 
-            stringBuilder.Append("```");
-            return stringBuilder.ToString();
+                stringBuilder.Append("```");
+                return stringBuilder.ToString();
+            }
         }
 
         private void UpdateOnlineCallback(object state)
         {
             _updateOnlineTimer.Change(UpdateOnlineInterval, Timeout.Infinite);
 
+            AddLostSoulsToDatabase();
+
             using (var databaseContext = new DynamicDBContext())
             {
                 var onlineUsers = Bot.DiscordClient.Presences.Where(p => !p.Value.User.IsBot && p.Value.Status != UserStatus.Offline).ToList();
                 foreach (var user in onlineUsers)
                 {
-                    var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.Username == user.Value.User.Username);
+                    var userId = user.Value.User.Id.ToString();
+                    var onlineStats = databaseContext.OnlineStats.FirstOrDefault(p => p.UserID == userId);
+
                     if (onlineStats == null)
                     {
-                        // Remove seconds and milliseconds from date to better ordering
+                        // Remove seconds and milliseconds from date for better ordering
                         var now = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
                         var fixedNow = DateTime.Parse(now);
 
                         onlineStats = new OnlineStats
                         {
-                            Username = user.Value.User.Username,
+                            UserID = user.Value.User.Id.ToString(),
                             LastOnline = fixedNow,
                             TotalTime = 0
                         };
@@ -140,12 +185,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
         }
 
-        private int GetPagesCount()
+        private int GetPagesCount(int membersCount)
         {
-            using (var databaseContext = new DynamicDBContext())
-            {
-                return databaseContext.OnlineStats.Count() / ItemsPerPage + 1;
-            }
+            return membersCount / ItemsPerPage + 1;
         }
 
         private string GetOrderByHeader(string orderBy)
@@ -161,9 +203,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return orderBy;
         }
 
-        private string GetDisplayName(string username, DiscordGuild guild)
+        private string GetDisplayName(string usernameID, DiscordGuild guild)
         {
-            var displayName = guild.Members.First(p => p.Username == username).DisplayName;
+            var displayName = guild.Members.First(p => p.Id == ulong.Parse(usernameID)).DisplayName;
             if (displayName.Length > UsernameFieldLength)
             {
                 return displayName.Substring(0, UsernameFieldLength - UsernameFieldMargin) + "...";
