@@ -11,7 +11,7 @@ namespace SKNIBot.Core.MessageResponds
         public static async Task Respond(DSharpPlus.EventArgs.MessageCreateEventArgs args)
         {
             var msg = args.Message.Content.ToLower();
-            if (msg.Contains("xd") || msg.Contains("iks de") || msg.Contains("eks di"))
+            if (msg.Contains("xd") || msg.Contains("iks de") || msg.Contains("eks di") || msg.Contains("iksde"))
             {
                 await args.Channel.TriggerTypingAsync();
                 await args.Channel.SendMessageAsync("XD");
