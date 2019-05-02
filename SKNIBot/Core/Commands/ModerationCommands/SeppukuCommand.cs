@@ -17,7 +17,16 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.TriggerTypingAsync();
 
             await ctx.Member.RemoveAsync("Popełnił Seppuku. Gloria Victis!");
-            await ctx.RespondAsync($"{ctx.Member.DisplayName} popełnił Seppuku");
+            
+
+            var embed = new DSharpPlus.Entities.DiscordEmbedBuilder()
+            {
+                Color = Helpers.ColorHelper.RandomColor()
+            };
+            var candle = DSharpPlus.Entities.DiscordEmoji.FromName(ctx.Client, ":candle:");
+            embed.AddField($"{ctx.Member.DisplayName} popełnił Seppuku",candle.ToString());
+            embed.ImageUrl = "https://media1.tenor.com/images/6f64764b4b7874465d83de68342347cc/tenor.gif?itemid=4854729";
+            await ctx.RespondAsync(embed: embed);
         }
     }
 }
