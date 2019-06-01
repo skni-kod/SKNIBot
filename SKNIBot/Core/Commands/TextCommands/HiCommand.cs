@@ -14,6 +14,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             305642795706744833, // Coedo#2037
             231846704947658752, // Szatku#4105
             263061784762515457, // Amy#4589
+            256313921164673024, // Suzuri#9636 
         };
 
         [Command("cześć")]
