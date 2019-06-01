@@ -50,7 +50,8 @@ namespace SKNIBot.Core
                 StringPrefixes = new [] {SettingsLoader.Container.Prefix},
                 EnableDms = true,
                 EnableMentionPrefix = true,
-                CaseSensitive = false
+                CaseSensitive = false,
+                IgnoreExtraArguments = true
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
