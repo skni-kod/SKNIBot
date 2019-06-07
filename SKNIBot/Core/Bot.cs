@@ -210,7 +210,7 @@ namespace SKNIBot.Core
                 {
                     Color = new DiscordColor("#CD171E")
                 };
-                embed.AddField("Błąd", responseBuilder.ToString());
+                embed.AddField("Błąd", responseBuilder.ToString().Substring(0, Math.Min(responseBuilder.Length, 1000)));
 
                 e.Context.RespondAsync("", false, embed);
             }
