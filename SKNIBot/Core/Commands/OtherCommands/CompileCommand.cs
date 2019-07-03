@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     public class CompileCommand : BaseCommandModule
     {
         private const string ApiEndpoint = "https://api.jdoodle.com/v1/execute";
-        private const char ArgNamePrefix = '%';
+        private const string ArgNamePrefix = "%/";
 
         private List<string> CodeArgAliases = new List<string> { "kod", "code" };
         private List<string> LangArgAliases = new List<string> { "język", "language", "lang" };
@@ -67,7 +67,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     // get version number
                     version = inputSplited[i].Substring(argName.Length).Trim();
                     int dummyResult;
-                    if(int.TryParse(version, out dummyResult) == false)
+                    if (int.TryParse(version, out dummyResult) == false)
                     {
                         // version isn't number
                         await ctx.RespondAsync("Version must be number");
@@ -87,12 +87,15 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 return;
             }
 
-            var result = GetCompilationResult(langName, input, code, version);
-
-            await ctx.RespondAsync(embed: GetEmbedResult(result));
+            var result = await GetCompilationResult(ctx, langName, input, code, version);
+            if (result != null)
+            {
+                var embed = GetEmbedResult(result);
+                await ctx.RespondAsync(embed: embed);
+            }
         }
 
-        private CompilationResultContainer GetCompilationResult(string language, string input, string code, string version)
+        private async Task<CompilationResultContainer> GetCompilationResult(CommandContext ctx, string language, string input, string code, string version)
         {
             var compileRequest = new CompileRequestContainer
             {
@@ -109,15 +112,39 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var webClient = new WebClient();
             webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-            var response = webClient.UploadString(ApiEndpoint, compileRequestJSON);
-            return JsonConvert.DeserializeObject<CompilationResultContainer>(response);
+            try
+            {
+                var response = webClient.UploadString(ApiEndpoint, compileRequestJSON);
+                return JsonConvert.DeserializeObject<CompilationResultContainer>(response);
+            }
+            catch (WebException ex)
+            {
+
+                var embed = new DiscordEmbedBuilder()
+                    .WithColor(new DiscordColor(1f, 0f, 0f));
+
+                var response = ex.Response as HttpWebResponse;
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    embed.AddField("Bład", "Serwer zwrócił błąd 400 - Bad Request. Najparawdopodobniej został podany jezyk nie obsługiwany przez jDoodle. Tak 'js' i 'javacript' nie są obsługiwane, trzeba użyć 'nodejs'");
+                }
+                else
+                {
+                    embed.AddField(response.StatusCode.ToString(), ex.Message);
+                }
+
+                await ctx.RespondAsync(embed: embed);
+            }
+
+            return null;
         }
 
         private DiscordEmbed GetEmbedResult(CompilationResultContainer compilationResult)
         {
             var output = compilationResult.output == "" ? "Brak" : compilationResult.output;
 
-            var embedResult = new DiscordEmbedBuilder();
+            var embedResult = new DiscordEmbedBuilder()
+                .WithColor(new DiscordColor(0f, 1f, 0f));
             embedResult.AddField("Rezultat", output);
 
             return embedResult;
