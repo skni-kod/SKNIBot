@@ -15,42 +15,24 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     public class CompileCommand : BaseCommandModule
     {
         private const string ApiEndpoint = "https://api.jdoodle.com/v1/execute";
+        private const char ArgNamePrefix = '%';
 
         [Command("kompiluj")]
-        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Składnia: !kompiluj [język], [wejście], [kod]. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs")]
+        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs")]
         [Aliases("compile", "uruchom", "run")]
         public async Task Compile(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
-            var splitInput = ctx.RawArgumentString.Split('\n').ToList();
-            var header = splitInput[0].Split(',').ToList();
+            var inputMessage = ctx.RawArgumentString;
 
-            var language = header[0].Trim();
-            var input = header[1].Trim();
+            var inputSplited = inputMessage.Split(ArgNamePrefix).ToList();
+            inputSplited.RemoveAll(s => s.Length == 0);
 
-            var startIndex = splitInput[1].StartsWith("```", StringComparison.InvariantCulture) ? 2 : 1;
-            var endIndex = splitInput[1].StartsWith("```", StringComparison.InvariantCulture) ? splitInput.Count - 1 : splitInput.Count;
 
-            var code = "";
-            for (var i = startIndex; i < endIndex; i++)
+            for (int i = 0; i < inputSplited.Count; i++)
             {
-                code += splitInput[i] + "\n";
-            }
-
-            code = code.Trim();
-
-            try
-            {
-                var compilationResult = GetCompilationResult(language, input, code);
-                var compilationEmbedResult = GetEmbedResult(compilationResult);
-
-                await ctx.RespondAsync("", false, compilationEmbedResult);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
+                await ctx.RespondAsync(inputSplited[i]);
             }
         }
 
