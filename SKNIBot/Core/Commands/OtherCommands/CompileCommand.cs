@@ -95,13 +95,13 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
 
             if (langName.Length == 0)
             {
-                await ctx.RespondAsync("Langauge name is needed");
+                await WriteError(ctx, "Błąd w nazwie języka lub nie została określona.");
                 return;
             }
 
             if (code.Length == 0)
             {
-                await ctx.RespondAsync("Code is actually really needed");
+                await WriteError(ctx, "Błąd w polu kodu lub nie został określony.");
                 return;
             }
 
@@ -119,6 +119,15 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
                 .WithColor(new DiscordColor(0f, 0f, 1f));
 
             embed.AddField("Pomoc", _helpText);
+            await ctx.RespondAsync(embed: embed);
+        }
+
+        private async Task WriteError(CommandContext ctx, string errorText)
+        {
+            var embed = new DiscordEmbedBuilder()
+                .WithColor(new DiscordColor(1f, 0f, 0f))
+                .AddField("Bład", errorText);
+
             await ctx.RespondAsync(embed: embed);
         }
 
@@ -147,20 +156,15 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
             catch (WebException ex)
             {
 
-                var embed = new DiscordEmbedBuilder()
-                    .WithColor(new DiscordColor(1f, 0f, 0f));
-
                 var response = ex.Response as HttpWebResponse;
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    embed.AddField("Bład", "Serwer zwrócił błąd 400 - Bad Request. Najparawdopodobniej został podany jezyk nie obsługiwany przez jDoodle. Tak 'js' i 'javacript' nie są obsługiwane, trzeba użyć 'nodejs'");
+                    await WriteError(ctx, "Serwer zwrócił błąd 400 - Bad Request. Najparawdopodobniej został podany jezyk nie obsługiwany przez jDoodle. Tak 'js' i 'javacript' nie są obsługiwane, trzeba użyć 'nodejs'");
                 }
                 else
                 {
-                    embed.AddField(response.StatusCode.ToString(), ex.Message);
+                    await WriteError(ctx, ex.Message);
                 }
-
-                await ctx.RespondAsync(embed: embed);
             }
 
             return null;
