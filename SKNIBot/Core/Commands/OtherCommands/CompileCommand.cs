@@ -23,15 +23,33 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private List<string> InputArgAliases = new List<string> { "input", "wejście" };
         private List<string> VersionArgAliases = new List<string> { "wersja", "version" };
 
+        private string _helpText = @"Przykład zastosowania komendy:
+!kompiluj
+%/lang rust
+%/code
+```rust
+fn main() {
+    println!(""Hello World!"");
+}```
+
+Składnia przekazywania argumentów to: %/<nazwa> <wartość>.
+Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i lang są wymagane."
+;
+
 
         [Command("kompiluj")]
-        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs")]
+        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs. Wywołaj komendę 'kompuluj help' aby uzyskać więcej informacji")]
         [Aliases("compile", "uruchom", "run")]
         public async Task Compile(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
             var inputMessage = ctx.RawArgumentString;
+            if (inputMessage == "help")
+            {
+                WriteHelp(ctx);
+                return;
+            }
 
             // split message content by prefix and remove empty strings
             var inputSplited = inputMessage.Split(ArgNamePrefix).ToList();
@@ -93,6 +111,15 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 var embed = GetEmbedResult(result);
                 await ctx.RespondAsync(embed: embed);
             }
+        }
+
+        private async Task WriteHelp(CommandContext ctx)
+        {
+            var embed = new DiscordEmbedBuilder()
+                .WithColor(new DiscordColor(0f, 0f, 1f));
+
+            embed.AddField("Pomoc", _helpText);
+            await ctx.RespondAsync(embed: embed);
         }
 
         private async Task<CompilationResultContainer> GetCompilationResult(CommandContext ctx, string language, string input, string code, string version)
