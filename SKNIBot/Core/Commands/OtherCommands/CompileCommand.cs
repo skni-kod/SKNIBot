@@ -27,7 +27,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 !kompiluj
 %/lang rust
 %/code
-```rust
+```
 fn main() {
     println!(""Hello World!"");
 }```
@@ -47,7 +47,7 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
             var inputMessage = ctx.RawArgumentString;
             if (inputMessage == "help")
             {
-                WriteHelp(ctx);
+                await WriteHelp(ctx);
                 return;
             }
 
