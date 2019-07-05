@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 %/code
 ```
 fn main() {
-    println!(""Hello World!"");
+    println!(""Hello, World!"");
 }```
 
 Składnia przekazywania argumentów to: %/<nazwa> <wartość>.
@@ -38,7 +38,7 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
 
 
         [Command("kompiluj")]
-        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs. Wywołaj komendę 'kompuluj help' aby uzyskać więcej informacji")]
+        [Description("Kompiluje dany kod źródłowy i wyświetla wynik. Lista języków pod adresem https://www.jdoodle.com/compiler-api/docs. Wywołaj komendę 'kompiluj help' aby uzyskać więcej informacji.")]
         [Aliases("compile", "uruchom", "run")]
         public async Task Compile(CommandContext ctx)
         {
@@ -64,31 +64,29 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
             for (int i = 0; i < inputSplited.Count; i++)
             {
                 var argName = inputSplited[i].Split(new[] { ' ', '\n' }).First().ToLower();
+                var argValue = inputSplited[i].Substring(argName.Length).Trim();
 
                 if (LangArgAliases.Contains(argName))
                 {
-                    // parse language name
-                    langName = inputSplited[i].Substring(argName.Length).Trim();
+                    langName = argValue;
                 }
                 else if (CodeArgAliases.Contains(argName))
                 {
-                    // get code
-                    code = inputSplited[i].Substring(argName.Length).Trim().Trim('`');
+                    // trim possible ``` in code block
+                    code = argValue.Trim('`');
                 }
                 else if (InputArgAliases.Contains(argName))
                 {
-                    // get input list
-                    input = inputSplited[i].Substring(argName.Length).Trim();
+                    input = argValue;
                 }
                 else if (VersionArgAliases.Contains(argName))
                 {
-                    // get version number
-                    version = inputSplited[i].Substring(argName.Length).Trim();
-                    int dummyResult;
-                    if (int.TryParse(version, out dummyResult) == false)
+                    version = argValue;
+
+                    if (version.Any(c => c < '0' || c > '9'))
                     {
-                        // version isn't number
-                        await ctx.RespondAsync("Version must be number");
+                        await WriteError(ctx, "Pole wersji musi być liczbą");
+                        return;
                     }
                 }
             }
@@ -126,7 +124,8 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
         {
             var embed = new DiscordEmbedBuilder()
                 .WithColor(new DiscordColor(1f, 0f, 0f))
-                .AddField("Bład", errorText);
+                .AddField("Bład", errorText)
+                .AddField("Pomoc", "Napisz `!kompiluj help` aby uzyskać więcej informacji");
 
             await ctx.RespondAsync(embed: embed);
         }
@@ -159,7 +158,7 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
                 var response = ex.Response as HttpWebResponse;
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    await WriteError(ctx, "Serwer zwrócił błąd 400 - Bad Request. Najparawdopodobniej został podany jezyk nie obsługiwany przez jDoodle. Tak 'js' i 'javacript' nie są obsługiwane, trzeba użyć 'nodejs'");
+                    await WriteError(ctx, "Serwer zwrócił błąd 400 - Bad Request. Najparawdopodobniej został podany jezyk nie obsługiwany przez jDoodle. Tak 'js' i 'javacript' nie są obsługiwane, trzeba użyć 'nodejs'.");
                 }
                 else
                 {
