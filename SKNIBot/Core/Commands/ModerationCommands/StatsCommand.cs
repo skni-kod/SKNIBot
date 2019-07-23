@@ -46,11 +46,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             var allMessages = new List<DiscordMessage>();
 
-            foreach (var channel in ctx.Guild.Channels.Where(p => p.Type == ChannelType.Text))
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
                 try
                 {
-                    var messages = await GetAllMessagesFromChannel(channel);
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
                     allMessages.AddRange(messages);
                 }
                 catch (UnauthorizedException ex)
@@ -127,11 +127,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
             var allMessages = new List<DiscordMessage>();
-            foreach (var channel in ctx.Guild.Channels.Where(p => p.Type == ChannelType.Text))
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
                 try
                 {
-                    var messages = await GetAllMessagesFromChannel(channel);
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
                     allMessages.AddRange(messages);
                 }
                 catch (UnauthorizedException ex)

@@ -62,8 +62,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 var allSouls = allGuilds.SelectMany(
                     p => p.Value.Members
-                        .Where(m => !m.IsBot)
-                        .Select(m => m.Id.ToString()))
+                        .Where(m => !m.Value.IsBot)
+                        .Select(m => m.Value.Id.ToString()))
                     .Distinct()
                     .ToList();
 
@@ -98,13 +98,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
                     case "members": onlineStatsQuery = onlineStatsQuery
                         .Where(p => guild.Members.Any(gm =>
-                            gm.Id == ulong.Parse(p.UserID) &&
-                            gm.Roles.Any(r => r.Name == "Członek")))
+                            gm.Value.Id == ulong.Parse(p.UserID) &&
+                            gm.Value.Roles.Any(r => r.Name == "Członek")))
                         .OrderByDescending(p => p.TotalTime);
                         break;
                 }
 
-                var usersInGuild = guild.Members.Select(p => p.Id.ToString());
+                var usersInGuild = guild.Members.Select(p => p.Value.Id.ToString());
                 var onlineStats = onlineStatsQuery.Where(p => usersInGuild.Contains(p.UserID)).Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
 
                 var stringBuilder = new StringBuilder();
@@ -205,7 +205,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private string GetDisplayName(string usernameID, DiscordGuild guild)
         {
-            var displayName = guild.Members.First(p => p.Id == ulong.Parse(usernameID)).DisplayName;
+            var displayName = guild.Members.First(p => p.Value.Id == ulong.Parse(usernameID)).Value.DisplayName;
             if (displayName.Length > UsernameFieldLength)
             {
                 return displayName.Substring(0, UsernameFieldLength - UsernameFieldMargin) + "...";

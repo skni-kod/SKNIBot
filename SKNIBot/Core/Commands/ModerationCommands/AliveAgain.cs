@@ -46,12 +46,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             foreach (var role in _MyRoles)
             {
-                var r = ctx.Guild.Roles.FirstOrDefault(p => p.Name.Equals(role, StringComparison.CurrentCultureIgnoreCase));
+                var r = ctx.Guild.Roles.FirstOrDefault(p => p.Value.Name.Equals(role, StringComparison.CurrentCultureIgnoreCase));
 
-                if (r == null) continue;
-                if (ctx.Member.Roles.Contains(r)) continue;
+                if (r.Value == null) continue;
+                if (ctx.Member.Roles.Contains(r.Value)) continue;
 
-                await ctx.Member.GrantRoleAsync(r, "Prawdopodobnie ktoś mnie wyrzucił...");
+                await ctx.Member.GrantRoleAsync(r.Value, "Prawdopodobnie ktoś mnie wyrzucił...");
             }
 
             await ctx.Member.ModifyAsync(m => m.Nickname = "Pawel \"Pawel Jeden\" Dziedzic");

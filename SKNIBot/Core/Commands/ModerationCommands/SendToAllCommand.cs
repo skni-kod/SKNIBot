@@ -21,19 +21,19 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.TriggerTypingAsync();
 
             var sentMessagesCount = 0;
-            foreach (var member in ctx.Guild.Members.Where(m => !m.IsBot && m.Roles.Select(r => r.Mention).Contains(role)))
+            foreach (var member in ctx.Guild.Members.Where(m => !m.Value.IsBot && m.Value.Roles.Select(r => r.Mention).Contains(role)))
             {
                 try
                 {
-                    var dm = await member.CreateDmChannelAsync();
+                    var dm = await member.Value.CreateDmChannelAsync();
                     await dm.SendMessageAsync(message);
 
-                    Bot.DiscordClient.DebugLogger.LogMessage(LogLevel.Info, "SKNI Bot", "Wysłano wiadomość do " + member.DisplayName, DateTime.Now);
+                    Bot.DiscordClient.DebugLogger.LogMessage(LogLevel.Info, "SKNI Bot", "Wysłano wiadomość do " + member.Value.DisplayName, DateTime.Now);
                     sentMessagesCount++;
                 }
                 catch (Exception ex)
                 {
-                    await ctx.RespondAsync($"Nie udało się wysłać wiadomości do {member.DisplayName}: {ex}");
+                    await ctx.RespondAsync($"Nie udało się wysłać wiadomości do {member.Value.DisplayName}: {ex}");
                 }
             }
 

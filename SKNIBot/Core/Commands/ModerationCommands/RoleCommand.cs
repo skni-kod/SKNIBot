@@ -39,7 +39,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 List<DiscordRole> discordRoles = new List<DiscordRole>();
                 foreach (AssignRole assignRole in dbServer.AssignRoles)
                 {
-                    discordRoles.Add(serverRoles.Where(p => p.Id.ToString() == assignRole.RoleID).FirstOrDefault());
+                    discordRoles.Add(serverRoles.FirstOrDefault(p => p.Value.Id.ToString() == assignRole.RoleID).Value);
 
                 }
 
@@ -83,13 +83,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == ctx.RawArgumentString)
                     {
                         // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Id))
+                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
                         {
                             // Check if user already has this role
-                            if (HasUserRole(ctx.Member, serverRole))
+                            if (HasUserRole(ctx.Member, serverRole.Value))
                             {
                                 await ctx.RespondAsync("Posiadasz już tę role.");
                                 return;
@@ -98,7 +98,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                             // User who triggered is owner, we can add role without problem
                             if (ctx.User == ctx.Guild.Owner)
                             {
-                                await ctx.Member.GrantRoleAsync(serverRole, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                                await ctx.Member.GrantRoleAsync(serverRole.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
                                 await ctx.RespondAsync("Rola nadana.");
                             }
                             // User who triggered isn't owner, we need to check if role is lower than the highest role he has
@@ -106,9 +106,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                             {
                                 var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
                                 // Role is lower than the highest role user has
-                                if (serverRole.Position < userTheHighestRolePosition)
+                                if (serverRole.Value.Position < userTheHighestRolePosition)
                                 {
-                                    await ctx.Member.GrantRoleAsync(serverRole, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                                    await ctx.Member.GrantRoleAsync(serverRole.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
                                     await ctx.RespondAsync("Rola nadana.");
                                 }
                                 // Role is equal or higher than the highest role user has
@@ -144,13 +144,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == ctx.RawArgumentString)
                     {
                         // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Id))
+                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
                         {
                             // Check if user already has this role
-                            if (!HasUserRole(ctx.Member, serverRole))
+                            if (!HasUserRole(ctx.Member, serverRole.Value))
                             {
                                 await ctx.RespondAsync("Nie posiadasz tej roli.");
                                 return;
@@ -159,7 +159,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                             // User who triggered is owner, we can add role without problem
                             if (ctx.User == ctx.Guild.Owner)
                             {
-                                await ctx.Member.RevokeRoleAsync(serverRole, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                                await ctx.Member.RevokeRoleAsync(serverRole.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
                                 await ctx.RespondAsync("Rola odebrana.");
                             }
                             // User who triggered isn't owner, we need to check if role is lower than the highest role he has
@@ -167,9 +167,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                             {
                                 var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
                                 // Role is lower than the highest role user has
-                                if (serverRole.Position < userTheHighestRolePosition)
+                                if (serverRole.Value.Position < userTheHighestRolePosition)
                                 {
-                                    await ctx.Member.RevokeRoleAsync(serverRole, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                                    await ctx.Member.RevokeRoleAsync(serverRole.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
                                     await ctx.RespondAsync("Rola odebrana.");
                                 }
                                 // Role is the highest role user has
@@ -206,10 +206,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == ctx.RawArgumentString)
                     {
                         // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Id))
+                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
                         {
                             await ctx.RespondAsync("Rola jest już na liście.");
                             return;
@@ -218,7 +218,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         // User who triggered is owner, we can add role without problem
                         if (ctx.User == ctx.Guild.Owner)
                         {
-                            AssignRole assingRole = new AssignRole(serverRole.Id);
+                            AssignRole assingRole = new AssignRole(serverRole.Value.Id);
                             assingRole.Server = dbServer;
                             databaseContext.Add(assingRole);
                             databaseContext.SaveChanges();
@@ -229,9 +229,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         {
                             var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
                             // Role is lower than the highest role user has
-                            if (serverRole.Position < userTheHighestRolePosition)
+                            if (serverRole.Value.Position < userTheHighestRolePosition)
                             {
-                                AssignRole assingRole = new AssignRole(serverRole.Id);
+                                AssignRole assingRole = new AssignRole(serverRole.Value.Id);
                                 assingRole.Server = dbServer;
                                 databaseContext.Add(assingRole);
                                 databaseContext.SaveChanges();
@@ -269,11 +269,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == ctx.RawArgumentString)
                     {
 
                         // Check if role is already in database
-                        if (!IsRoleInDatabase(dbServer, serverRole.Id))
+                        if (!IsRoleInDatabase(dbServer, serverRole.Value.Id))
                         {
                             await ctx.RespondAsync("Roli nie ma na liście.");
                             return;
@@ -282,7 +282,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         // User who triggered is owner, we can add role without problem
                         if (ctx.User == ctx.Guild.Owner)
                         {
-                            dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Id.ToString());
+                            dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Value.Id.ToString());
                             databaseContext.SaveChanges();
                             await ctx.RespondAsync("Rola usunięta z listy ról.");
                         }
@@ -291,9 +291,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         {
                             var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
                             // Role is lower than the highest role user has
-                            if (serverRole.Position < userTheHighestRolePosition)
+                            if (serverRole.Value.Position < userTheHighestRolePosition)
                             {
-                                dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Id.ToString());
+                                dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Value.Id.ToString());
                                 databaseContext.SaveChanges();
                                 await ctx.RespondAsync("Rola usunięta z listy ról.");
                             }
