@@ -15,7 +15,7 @@ namespace SKNIBot.Core.Commands.ManagementCommands
         [Command("zmieńNazwe")]
         [Aliases("changeName")]
         [Description("Zmienia nazwę bota.\nMusisz być dopisany jako twórca bota aby wykonać tę komendę.")]
-        public async Task ChangeName(CommandContext ctx, [Description("Nowa nazwa bota.")] string name = null)
+        public async Task ChangeName(CommandContext ctx, [Description("Nowa nazwa bota.")] [RemainingText] string name = null)
         {
             if(DeveloperHelper.IsDeveloper(ctx.User.Id))
             {

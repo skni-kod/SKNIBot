@@ -27,15 +27,15 @@ namespace SKNIBot.Core.Commands.ManagementCommands
 
         [Command("opis")]
         [Description("Zmienia opis bota.\nMusisz być dopisany jako twórca bota aby wykonać tę komendę.")]
-        public async Task Description(CommandContext ctx, [Description("Nowy opis.")] string description = null)
+        public async Task Description(CommandContext ctx, [Description("Nowy opis.")] [RemainingText] string message = null)
         {
             if (DeveloperHelper.IsDeveloper(ctx.User.Id))
             {
-                _description = description;
+                _description = message;
 
                 try
                 {
-                    await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
+                    await ctx.Client.UpdateStatusAsync(new DiscordActivity(message));
                 }
                 catch (Exception ie)
                 {
