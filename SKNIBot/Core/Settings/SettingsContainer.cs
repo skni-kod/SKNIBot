@@ -1,4 +1,5 @@
-﻿namespace SKNIBot.Core.Settings
+﻿
+namespace SKNIBot.Core.Settings
 {
     public class SettingsContainer
     {
