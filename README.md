@@ -6,7 +6,7 @@ lizards, compiler, statistics, chess, moderation commands and more.
 
 # Compilation
 
-Before compilation you need to create necessary JSON files. Nake new JSONs "release.json" and "debug.json" using "settings.json.example" as template. Put in these JSONs api token of your bot. There are two JSONs. One for test pruposes and one for publishig bot. Make sure you also checked "Copy to Output Directory" in both JSON's properties.
+Before compilation you need to create necessary JSON files. Nake new JSONs "release.json" and "debug.json" using "settings.json.example" as template. Put in these JSONs api token of your bot. There are two JSONs. One for test pruposes and one for publishig bot. Second JSON file you need to create is "developers.json" using "developers.json.example". You should put here yours and yours contributors Discord ID as array of strings. Make sure you also checked "Copy to Output Directory" in both JSON's properties.
 
 # Used libraries
 

@@ -33,7 +33,7 @@ namespace SKNIBot.Core
         {
             var connectionConfig = new DiscordConfiguration
             {
-                Token = SettingsLoader.Container.Token,
+                Token = SettingsLoader.SettingsContainer.Token,
                 TokenType = TokenType.Bot,
 
                 AutoReconnect = true,
@@ -47,7 +47,7 @@ namespace SKNIBot.Core
 
             var commandsConfig = new CommandsNextConfiguration
             {
-                StringPrefixes = new [] {SettingsLoader.Container.Prefix},
+                StringPrefixes = new [] {SettingsLoader.SettingsContainer.Prefix},
                 EnableDms = true,
                 EnableMentionPrefix = true,
                 CaseSensitive = false,

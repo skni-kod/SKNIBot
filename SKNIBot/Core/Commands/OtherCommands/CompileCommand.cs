@@ -134,8 +134,8 @@ Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i
         {
             var compileRequest = new CompileRequestContainer
             {
-                clientId = SettingsLoader.Container.JDoodle_Client_ID,
-                clientSecret = SettingsLoader.Container.JDoodle_Client_Secret,
+                clientId = SettingsLoader.SettingsContainer.JDoodle_Client_ID,
+                clientSecret = SettingsLoader.SettingsContainer.JDoodle_Client_Secret,
                 language = language,
                 script = code,
                 stdin = input,

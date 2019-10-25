@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.TriggerTypingAsync();
 
             var client = new WebClient();
-            var url = client.DownloadString("https://api.waa.ai/shorten?url=" + link + "&key=" + SettingsLoader.Container.Waaai_Key);
+            var url = client.DownloadString("https://api.waa.ai/shorten?url=" + link + "&key=" + SettingsLoader.SettingsContainer.Waaai_Key);
             var linkContainer = JsonConvert.DeserializeObject<LinkContainer>(url);
 
             await ctx.RespondAsync(linkContainer.Data.Url);
