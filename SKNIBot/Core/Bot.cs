@@ -40,7 +40,7 @@ namespace SKNIBot.Core
                 LogLevel = LogLevel.Debug,
                 UseInternalLogHandler = true,
 
-                WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
+                // WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
