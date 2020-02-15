@@ -9,8 +9,8 @@
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00656" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00653" />
     <PackageReference Include="DSharpPlus.WebSocket.WebSocket4NetCore" Version="4.0.0-nightly-00653" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0004" />
     <PackageReference Include="SpotifyWebApi-Core" Version="0.0.7" />
   </ItemGroup>
