@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace SKNIBot.Core.Services
 {
     class EmojiCounterService
     {
-        public async void countEmojiInMessage(DiscordMessage message)
+        public async Task CountEmojiInMessage(DiscordMessage message)
         {
 
             if (message.Author.IsCurrent == true || message.Content == null)
@@ -88,7 +89,7 @@ namespace SKNIBot.Core.Services
             }
         }
 
-        public async void countEmojiReaction(DiscordUser user, DiscordEmoji emoji, DiscordChannel channel)
+        public async Task CountEmojiReaction(DiscordUser user, DiscordEmoji emoji, DiscordChannel channel)
         {
             if (user.IsCurrent == false)
             {

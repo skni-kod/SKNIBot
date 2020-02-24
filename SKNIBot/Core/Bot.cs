@@ -74,7 +74,7 @@ namespace SKNIBot.Core
                 try
                 {
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    emojiCounterService.countEmojiInMessage(e.Message);
+                    await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -90,7 +90,7 @@ namespace SKNIBot.Core
                 try
                 {
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    emojiCounterService.countEmojiInMessage(e.Message);
+                    await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -106,7 +106,7 @@ namespace SKNIBot.Core
                 try
                 {
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+                    await emojiCounterService.CountEmojiReaction(e.User, e.Emoji, e.Channel);
                 }
                 catch (Exception ie)
                 {
