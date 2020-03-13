@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Commands.TextCommands
     {
         [Command("covid19")]
         [Description("COVID-19")]
-        [Aliases("korona")]
+        [Aliases("korona", "wirus", "covid-19")]
         public async Task Covid19(CommandContext ctx, string country)
         {
             await ctx.TriggerTypingAsync();
@@ -28,12 +28,11 @@ namespace SKNIBot.Core.Commands.TextCommands
                 var url = client.DownloadString("https://coronavirus-tracker-api.herokuapp.com/all");
                 var covid19Container = JsonConvert.DeserializeObject<Covid19Container>(url);
 
-                ///await ctx.RespondAsync(embed: BuildEmbed(covid19Container));
+                await ctx.RespondAsync(embed: BuildCountryEmbed(covid19Container, country));
             }
         }
 
         [Command("covid19")]
-        [Description("COVID-19")]
         public async Task Covid19(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -49,11 +48,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private DiscordEmbed BuildSummaryEmbed(Covid19Container covid19Container)
         {
-            var lastUpdateTime = covid19Container.Confirmed.Locations.First().History.Max(p => p.Key);
-            var embed = new DiscordEmbedBuilder()
-                .WithTitle("Koronne statystyki")
-                .WithColor(DiscordColor.Blue)
-                .WithFooter($"Ostatnia aktualizacja: {lastUpdateTime:D}");
+            var embed = CreateEmbed(covid19Container);
 
             var confirmedPolandStats = covid19Container.Confirmed.Locations.First(p => p.Country == "Poland");
             var deathsPolandStats = covid19Container.Deaths.Locations.First(p => p.Country == "Poland");
@@ -102,6 +97,38 @@ namespace SKNIBot.Core.Commands.TextCommands
                 string.Join('\n', topRecovered.Select(p => $"{p.Key}: {p.Value:+0;-#} w ciągu ostatnich 24 godzin")));
 
             return embed;
+        }
+
+        private DiscordEmbed BuildCountryEmbed(Covid19Container covid19Container, string country)
+        {
+            var embed = CreateEmbed(covid19Container);
+
+            var confirmedPolandStats = covid19Container.Confirmed.Locations.First(p => p.Country == country);
+            var deathsPolandStats = covid19Container.Deaths.Locations.First(p => p.Country == country);
+            var recoveredPolandStats = covid19Container.Recovered.Locations.First(p => p.Country == country);
+            var deathRatioPoland = (float)deathsPolandStats.Latest / confirmedPolandStats.Latest;
+
+            var confirmedPolandChange = GetChange(confirmedPolandStats.Latest, confirmedPolandStats.History);
+            var deathsPolandChange = GetChange(deathsPolandStats.Latest, deathsPolandStats.History);
+            var recoveredPolandChange = GetChange(recoveredPolandStats.Latest, recoveredPolandStats.History);
+
+            embed.AddField($"**{country}**",
+                $"Zarażeni: {confirmedPolandStats.Latest} ({confirmedPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
+                $"Ofiary śmiertelne: {deathsPolandStats.Latest} ({deathsPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
+                $"Wyleczeni: {recoveredPolandStats.Latest} ({recoveredPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
+                "--------------------------\n" +
+                $"Współczynnik śmiertelności: {deathRatioPoland:P}");
+
+            return embed;
+        }
+
+        private DiscordEmbedBuilder CreateEmbed(Covid19Container covid19Container)
+        {
+            var lastUpdateTime = covid19Container.Confirmed.Locations.First().History.Max(p => p.Key);
+            return new DiscordEmbedBuilder()
+                .WithTitle("Koronne statystyki")
+                .WithColor(DiscordColor.Blue)
+                .WithFooter($"Ostatnia aktualizacja: {lastUpdateTime:D}");
         }
 
         private int GetChange(int latest, Dictionary<DateTime, int> stats)
