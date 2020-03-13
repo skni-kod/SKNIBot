@@ -9,6 +9,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.TextContainers.Covid19;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
@@ -48,21 +49,22 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private DiscordEmbed BuildSummaryEmbed(Covid19Container covid19Container)
         {
+            var lastUpdateTime = covid19Container.Confirmed.Locations.First().History.Max(p => p.Key);
             var embed = new DiscordEmbedBuilder()
                 .WithTitle("Koronne statystyki")
                 .WithColor(DiscordColor.Blue)
-                .WithFooter($"Ostatnia aktualizacja: {covid19Container.Confirmed.LastUpdated:G}");
+                .WithFooter($"Ostatnia aktualizacja: {lastUpdateTime:D}");
 
             var confirmedPolandStats = covid19Container.Confirmed.Locations.First(p => p.Country == "Poland");
             var deathsPolandStats = covid19Container.Deaths.Locations.First(p => p.Country == "Poland");
             var recoveredPolandStats = covid19Container.Recovered.Locations.First(p => p.Country == "Poland");
             var deathRatioPoland = (float) deathsPolandStats.Latest / confirmedPolandStats.Latest;
 
-            var confirmedPolandChange = confirmedPolandStats.Latest - GetChange(confirmedPolandStats.History);
-            var deathsPolandChange = deathsPolandStats.Latest - GetChange(deathsPolandStats.History);
-            var recoveredPolandChange = recoveredPolandStats.Latest - GetChange(recoveredPolandStats.History);
+            var confirmedPolandChange = GetChange(confirmedPolandStats.Latest, confirmedPolandStats.History);
+            var deathsPolandChange = GetChange(deathsPolandStats.Latest, deathsPolandStats.History);
+            var recoveredPolandChange = GetChange(recoveredPolandStats.Latest, recoveredPolandStats.History);
 
-            embed.AddField($"**Polska** (stan na {covid19Container.Confirmed.LastUpdated:G})",
+            embed.AddField($"**Polska**",
                 $"Zarażeni: {confirmedPolandStats.Latest} ({confirmedPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Ofiary śmiertelne: {deathsPolandStats.Latest} ({deathsPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Wyleczeni: {recoveredPolandStats.Latest} ({recoveredPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
@@ -74,38 +76,91 @@ namespace SKNIBot.Core.Commands.TextCommands
             var recoveredWorld = covid19Container.Recovered.Latest;
             var deathRatioWorld = (float)deathsWorld / confirmedWorld;
 
-            var confirmedWorldChange = confirmedWorld - GetChange(covid19Container.Confirmed);
-            var deathsWorldChange = deathsWorld - GetChange(covid19Container.Deaths);
-            var recoveredWorldChange = recoveredWorld - GetChange(covid19Container.Recovered);
+            var confirmedWorldChange = GetChange(confirmedWorld, covid19Container.Confirmed);
+            var deathsWorldChange = GetChange(deathsWorld, covid19Container.Deaths);
+            var recoveredWorldChange = GetChange(recoveredWorld, covid19Container.Recovered);
 
-            embed.AddField($"**Świat** (stan na {covid19Container.Confirmed.LastUpdated:G})",
+            embed.AddField($"**Świat**",
                 $"Zarażeni: {confirmedWorld} ({confirmedWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Ofiary śmiertelne: {deathsWorld} ({deathsWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Wyleczeni: {recoveredWorld} ({recoveredWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 "--------------------------\n" +
-                $"Współczynnik śmiertelności: {deathRatioWorld:P}");
+                $"Współczynnik śmiertelności: {deathRatioWorld:P}\n" +
+                "\u200B");
+
+            var topConfirmed = GetCountriesWithTheBiggestChange(covid19Container.Confirmed, 3);
+            var topDeaths = GetCountriesWithTheBiggestChange(covid19Container.Deaths, 3);
+            var topRecovered = GetCountriesWithTheBiggestChange(covid19Container.Recovered, 3);
+
+            embed.AddField("**Największy przyrost zarażeń**",
+                string.Join('\n', topConfirmed.Select(p => $"{p.Key}: {p.Value:+0;-#} w ciągu ostatnich 24 godzin")));
+
+            embed.AddField("**Największy przyrost ofiar śmiertelnych**",
+                string.Join('\n', topDeaths.Select(p => $"{p.Key}: {p.Value:+0;-#} w ciągu ostatnich 24 godzin")));
+
+            embed.AddField("**Największy przyrost wyleczonych**",
+                string.Join('\n', topRecovered.Select(p => $"{p.Key}: {p.Value:+0;-#} w ciągu ostatnich 24 godzin")));
 
             return embed;
         }
 
-        private int GetChange(Dictionary<DateTime, int> stats)
+        private int GetChange(int latest, Dictionary<DateTime, int> stats)
         {
-            return stats
+            return latest - stats
                 .OrderByDescending(p => p.Key)
                 .Skip(1)
                 .First()
                 .Value;
         }
 
-        private int GetChange(Covid19Stats stats)
+        private int GetChange(int latest, Covid19Stats stats)
         {
-            return stats.Locations
+            return latest - stats.Locations
                 .Select(p =>
                     p.History
                         .OrderByDescending(q => q.Key)
                         .Skip(1)
                         .First())
+                .OrderByDescending(p => p.Key)
                 .Sum(p => p.Value);
+        }
+
+        private Dictionary<DateTime, int> GetMergedData(Covid19Stats stats, string country = null)
+        {
+            return stats.Locations
+                .AsQueryable()
+                .WhereIf(country != null, p => p.Country == country)
+                .SelectMany(p => p.History)
+                .GroupBy(p => p.Key)
+                .Select(p => new KeyValuePair<DateTime, int>(p.Key, p.Sum(q => q.Value)))
+                .OrderByDescending(p => p.Key)
+                .ToDictionary(p => p.Key, p => p.Value);
+        }
+
+        private Dictionary<string, int> GetCountriesWithTheBiggestChange(Covid19Stats stats, int count)
+        {
+            var countryNames = stats.Locations
+                .GroupBy(p => p.Country)
+                .Select(p => p.Key)
+                .ToList();
+
+            var mergedData = countryNames
+                .Select(name => new
+                {
+                    Country = name,
+                    Data = GetMergedData(stats, name)
+                })
+                .ToList();
+
+            return mergedData
+                .Select(p => new
+                {
+                    Country = p.Country,
+                    Change = GetChange(p.Data.First().Value, p.Data)
+                })
+                .OrderByDescending(p => p.Change)
+                .Take(count)
+                .ToDictionary(p => p.Country, p => p.Change);
         }
     }
 }
