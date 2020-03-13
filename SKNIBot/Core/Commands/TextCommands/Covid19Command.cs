@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,7 +17,7 @@ namespace SKNIBot.Core.Commands.TextCommands
     {
         private DateTime _lastCacheUpdate;
         private Covid19Container _covidCache;
-        private const int _cacheTimeMinutes = 60;
+        private const int _cacheTimeMinutes = 120;
 
         public Covid19Command()
         {
@@ -31,7 +30,15 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task Covid19(CommandContext ctx, string country)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync(embed: BuildCountryEmbed(country));
+
+            var embed = BuildCountryEmbed(country);
+            if (embed == null)
+            {
+                await ctx.RespondAsync("Country not found");
+                return;
+            }
+
+            await ctx.RespondAsync(embed: embed);
         }
 
         [Command("covid19")]
@@ -72,7 +79,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             var deathsPolandChange = GetChange(deathsPolandStats.Latest, deathsPolandStats.History);
             var recoveredPolandChange = GetChange(recoveredPolandStats.Latest, recoveredPolandStats.History);
 
-            embed.AddField($"**Polska**",
+            embed.AddField("**Polska**",
                 $"Zarażeni: {confirmedPolandStats.Latest} ({confirmedPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Ofiary śmiertelne: {deathsPolandStats.Latest} ({deathsPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Wyleczeni: {recoveredPolandStats.Latest} ({recoveredPolandChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
@@ -88,7 +95,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             var deathsWorldChange = GetChange(deathsWorld, _covidCache.Deaths);
             var recoveredWorldChange = GetChange(recoveredWorld, _covidCache.Recovered);
 
-            embed.AddField($"**Świat**",
+            embed.AddField("**Świat**",
                 $"Zarażeni: {confirmedWorld} ({confirmedWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Ofiary śmiertelne: {deathsWorld} ({deathsWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
                 $"Wyleczeni: {recoveredWorld} ({recoveredWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
@@ -114,6 +121,11 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private DiscordEmbed BuildCountryEmbed(string country)
         {
+            if (!_covidCache.Confirmed.Locations.Any(p => p.Country == country))
+            {
+                return null;
+            }
+
             var embed = CreateEmbed();
 
             var confirmedPolandStats = _covidCache.Confirmed.Locations.First(p => p.Country == country);
