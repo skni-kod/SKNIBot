@@ -37,7 +37,7 @@ namespace SKNIBot.Core.Commands.UniCommands
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
             var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)today.DayOfWeek + 7) % 7;
             var nextWednesday = today.AddDays(daysUntilWednesday);
-            var nextLectures = nextWednesday.AddHours(12);
+            var nextLectures = nextWednesday.AddHours(12).AddMinutes(15);
 
             var timeSpan = nextLectures - DateTime.Now;
             if (timeSpan.TotalSeconds < 0)
