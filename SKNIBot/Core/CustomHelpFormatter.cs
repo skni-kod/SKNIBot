@@ -113,7 +113,7 @@ namespace SKNIBot.Core
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
             {
-                embed.AddField(group.Key, string.Join(", ", group.Value));
+                embed.AddField(group.Key, string.Join(", ", group.Value.Distinct()));
             }
 
             return new CommandHelpMessage(string.Empty, embed);
