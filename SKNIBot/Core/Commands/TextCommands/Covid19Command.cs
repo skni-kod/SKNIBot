@@ -16,43 +16,56 @@ namespace SKNIBot.Core.Commands.TextCommands
     [CommandsGroup("Tekst")]
     public class Covid19Command : BaseCommandModule
     {
+        private DateTime _lastCacheUpdate;
+        private Covid19Container _covidCache;
+        private const int _cacheTimeMinutes = 60;
+
+        public Covid19Command()
+        {
+            UpdateCache();
+        }
+
         [Command("covid19")]
         [Description("COVID-19")]
         [Aliases("korona", "wirus", "covid-19")]
         public async Task Covid19(CommandContext ctx, string country)
         {
             await ctx.TriggerTypingAsync();
-
-            using (var client = new WebClient())
-            {
-                var url = client.DownloadString("https://coronavirus-tracker-api.herokuapp.com/all");
-                var covid19Container = JsonConvert.DeserializeObject<Covid19Container>(url);
-
-                await ctx.RespondAsync(embed: BuildCountryEmbed(covid19Container, country));
-            }
+            await ctx.RespondAsync(embed: BuildCountryEmbed(country));
         }
 
         [Command("covid19")]
         public async Task Covid19(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync(embed: BuildSummaryEmbed());
+        }
 
+        private void UpdateCache()
+        {
+            if ((DateTime.Now - _lastCacheUpdate).TotalMinutes < _cacheTimeMinutes)
+            {
+                return;
+            }
+
+            Console.WriteLine("Updating COVID-19 cache...");
             using (var client = new WebClient())
             {
                 var url = client.DownloadString("https://coronavirus-tracker-api.herokuapp.com/all");
-                var covid19Container = JsonConvert.DeserializeObject<Covid19Container>(url);
 
-                await ctx.RespondAsync(embed: BuildSummaryEmbed(covid19Container));
+                _covidCache = JsonConvert.DeserializeObject<Covid19Container>(url);
+                _lastCacheUpdate = DateTime.Now;
             }
+            Console.WriteLine("Done!");
         }
 
-        private DiscordEmbed BuildSummaryEmbed(Covid19Container covid19Container)
+        private DiscordEmbed BuildSummaryEmbed()
         {
-            var embed = CreateEmbed(covid19Container);
+            var embed = CreateEmbed();
 
-            var confirmedPolandStats = covid19Container.Confirmed.Locations.First(p => p.Country == "Poland");
-            var deathsPolandStats = covid19Container.Deaths.Locations.First(p => p.Country == "Poland");
-            var recoveredPolandStats = covid19Container.Recovered.Locations.First(p => p.Country == "Poland");
+            var confirmedPolandStats = _covidCache.Confirmed.Locations.First(p => p.Country == "Poland");
+            var deathsPolandStats = _covidCache.Deaths.Locations.First(p => p.Country == "Poland");
+            var recoveredPolandStats = _covidCache.Recovered.Locations.First(p => p.Country == "Poland");
             var deathRatioPoland = (float) deathsPolandStats.Latest / confirmedPolandStats.Latest;
 
             var confirmedPolandChange = GetChange(confirmedPolandStats.Latest, confirmedPolandStats.History);
@@ -66,14 +79,14 @@ namespace SKNIBot.Core.Commands.TextCommands
                 "--------------------------\n" +
                 $"Współczynnik śmiertelności: {deathRatioPoland:P}");
 
-            var confirmedWorld = covid19Container.Confirmed.Latest;
-            var deathsWorld = covid19Container.Deaths.Latest;
-            var recoveredWorld = covid19Container.Recovered.Latest;
+            var confirmedWorld = _covidCache.Confirmed.Latest;
+            var deathsWorld = _covidCache.Deaths.Latest;
+            var recoveredWorld = _covidCache.Recovered.Latest;
             var deathRatioWorld = (float)deathsWorld / confirmedWorld;
 
-            var confirmedWorldChange = GetChange(confirmedWorld, covid19Container.Confirmed);
-            var deathsWorldChange = GetChange(deathsWorld, covid19Container.Deaths);
-            var recoveredWorldChange = GetChange(recoveredWorld, covid19Container.Recovered);
+            var confirmedWorldChange = GetChange(confirmedWorld, _covidCache.Confirmed);
+            var deathsWorldChange = GetChange(deathsWorld, _covidCache.Deaths);
+            var recoveredWorldChange = GetChange(recoveredWorld, _covidCache.Recovered);
 
             embed.AddField($"**Świat**",
                 $"Zarażeni: {confirmedWorld} ({confirmedWorldChange:+0;-#} w ciągu ostatnich 24 godzin)\n" +
@@ -83,9 +96,9 @@ namespace SKNIBot.Core.Commands.TextCommands
                 $"Współczynnik śmiertelności: {deathRatioWorld:P}\n" +
                 "\u200B");
 
-            var topConfirmed = GetCountriesWithTheBiggestChange(covid19Container.Confirmed, 3);
-            var topDeaths = GetCountriesWithTheBiggestChange(covid19Container.Deaths, 3);
-            var topRecovered = GetCountriesWithTheBiggestChange(covid19Container.Recovered, 3);
+            var topConfirmed = GetCountriesWithTheBiggestChange(_covidCache.Confirmed, 3);
+            var topDeaths = GetCountriesWithTheBiggestChange(_covidCache.Deaths, 3);
+            var topRecovered = GetCountriesWithTheBiggestChange(_covidCache.Recovered, 3);
 
             embed.AddField("**Największy przyrost zarażeń**",
                 string.Join('\n', topConfirmed.Select(p => $"{p.Key}: {p.Value:+0;-#} w ciągu ostatnich 24 godzin")));
@@ -99,13 +112,13 @@ namespace SKNIBot.Core.Commands.TextCommands
             return embed;
         }
 
-        private DiscordEmbed BuildCountryEmbed(Covid19Container covid19Container, string country)
+        private DiscordEmbed BuildCountryEmbed(string country)
         {
-            var embed = CreateEmbed(covid19Container);
+            var embed = CreateEmbed();
 
-            var confirmedPolandStats = covid19Container.Confirmed.Locations.First(p => p.Country == country);
-            var deathsPolandStats = covid19Container.Deaths.Locations.First(p => p.Country == country);
-            var recoveredPolandStats = covid19Container.Recovered.Locations.First(p => p.Country == country);
+            var confirmedPolandStats = _covidCache.Confirmed.Locations.First(p => p.Country == country);
+            var deathsPolandStats = _covidCache.Deaths.Locations.First(p => p.Country == country);
+            var recoveredPolandStats = _covidCache.Recovered.Locations.First(p => p.Country == country);
             var deathRatioPoland = (float)deathsPolandStats.Latest / confirmedPolandStats.Latest;
 
             var confirmedPolandChange = GetChange(confirmedPolandStats.Latest, confirmedPolandStats.History);
@@ -122,9 +135,9 @@ namespace SKNIBot.Core.Commands.TextCommands
             return embed;
         }
 
-        private DiscordEmbedBuilder CreateEmbed(Covid19Container covid19Container)
+        private DiscordEmbedBuilder CreateEmbed()
         {
-            var lastUpdateTime = covid19Container.Confirmed.Locations.First().History.Max(p => p.Key);
+            var lastUpdateTime = _covidCache.Confirmed.Locations.First().History.Max(p => p.Key);
             return new DiscordEmbedBuilder()
                 .WithTitle("Koronne statystyki")
                 .WithColor(DiscordColor.Blue)
