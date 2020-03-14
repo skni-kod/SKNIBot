@@ -30,6 +30,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task Covid19(CommandContext ctx, string country)
         {
             await ctx.TriggerTypingAsync();
+            UpdateCache();
 
             var embed = BuildCountryEmbed(country);
             if (embed == null)
@@ -45,6 +46,8 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task Covid19(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+            UpdateCache();
+
             await ctx.RespondAsync(embed: BuildSummaryEmbed());
         }
 
