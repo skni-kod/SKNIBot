@@ -9,7 +9,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
-using DSharpPlus.Net.WebSocket;
 using DSharpPlus.EventArgs;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
@@ -39,8 +38,7 @@ namespace SKNIBot.Core
                 AutoReconnect = true,
                 LogLevel = LogLevel.Debug,
                 UseInternalLogHandler = true,
-
-                // WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
+                
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
