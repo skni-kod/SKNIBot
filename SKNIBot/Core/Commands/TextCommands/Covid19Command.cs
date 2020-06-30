@@ -21,7 +21,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         public Covid19Command()
         {
-            UpdateCache();
+            
         }
 
         [Command("covid19")]
