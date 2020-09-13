@@ -26,5 +26,35 @@ namespace SKNIBot.Core.Commands.ManagementCommands
                 await ctx.RespondAsync("You aren't my father.");
             }
         }
+
+        [Command("zmienPseudonim")]
+        [Aliases("changeNick", "zmienNick")]
+        [Description("Zmień pseudonim bota.")]
+        public async Task ChangeNick(CommandContext ctx, [Description("Nowy pseudonim.")] [RemainingText] string name)
+        {
+            if (DeveloperHelper.IsDeveloper(ctx.User.Id))
+            {
+                await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = name);
+            }
+            else
+            {
+                await ctx.RespondAsync("You aren't my father.");
+            }  
+        }
+
+        [Command("usunPseudonim")]
+        [Aliases("deleteNick", "usunNick")]
+        [Description("Usuń pseudonim bota.")]
+        public async Task RemoveNick(CommandContext ctx)
+        {
+            if (DeveloperHelper.IsDeveloper(ctx.User.Id))
+            {
+                await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = null);
+            }
+            else
+            {
+                await ctx.RespondAsync("You aren't my father.");
+            }
+        }
     }
 }
