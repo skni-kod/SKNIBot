@@ -13,6 +13,8 @@ using DSharpPlus.EventArgs;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
 using SKNIBot.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
+using SKNIBot.Core.Services.RolesService;
 
 namespace SKNIBot.Core
 {
@@ -46,10 +48,11 @@ namespace SKNIBot.Core
             var commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new [] {SettingsLoader.SettingsContainer.Prefix},
-                EnableDms = true,
+                EnableDms = false,
                 EnableMentionPrefix = true,
                 CaseSensitive = false,
-                IgnoreExtraArguments = true
+                IgnoreExtraArguments = true,
+                Services = BuildDependencies()
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
@@ -64,6 +67,19 @@ namespace SKNIBot.Core
             await DiscordClient.ConnectAsync();
         }
 
+        private ServiceProvider BuildDependencies()
+        {
+            return new ServiceCollection()
+
+            // Singletons
+
+            // Helpers
+
+            // Services
+            .AddScoped<AssignRolesService>()
+
+            .BuildServiceProvider();
+        }
 
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
