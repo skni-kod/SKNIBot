@@ -63,6 +63,7 @@ namespace SKNIBot.Core
             DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
             DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
             DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
+            DiscordClient.GuildMemberAdded += DiscordClient_UserJoinedAsync;
 
             await DiscordClient.ConnectAsync();
         }
@@ -125,6 +126,22 @@ namespace SKNIBot.Core
                 catch (Exception ie)
                 {
                     Console.WriteLine("Error: Counting emoji in reactions.");
+                }
+            }
+        }
+
+        private async Task DiscordClient_UserJoinedAsync(DSharpPlus.EventArgs.GuildMemberAddEventArgs e)
+        {
+            if (e.Guild.Id == SettingsLoader.SettingsContainer.ClubServer)
+            {
+                try
+                {
+                    var channel = e.Guild.GetChannel(SettingsLoader.SettingsContainer.ClubChannelForWelcomeMessage);
+                    await channel.SendMessageAsync("Hej " + e.Member.Mention + " Mamy do Ciebie prośbę - ustaw pseudonim na Imię \"Ksywka\" Nazwisko");
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Sending welcome message.");
                 }
             }
         }

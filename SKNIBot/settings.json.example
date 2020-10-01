@@ -1,6 +1,8 @@
 ﻿{
   "token": "secret-value",
   "prefix": "!",
+  "clubServer": "",
+  "clubChannelForWelcomeMessage": "",
 
   "clever_key": "secret-key",
   "waaai_key": "link-key",
