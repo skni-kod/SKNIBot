@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using Microsoft.Extensions.Logging;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
@@ -28,7 +29,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     var dm = await member.Value.CreateDmChannelAsync();
                     await dm.SendMessageAsync(message);
 
-                    Bot.DiscordClient.DebugLogger.LogMessage(LogLevel.Info, "SKNI Bot", "Wysłano wiadomość do " + member.Value.DisplayName, DateTime.Now);
+                    Bot.DiscordClient.Logger.Log(LogLevel.Information, "SKNI Bot", "Wysłano wiadomość do " + member.Value.DisplayName, DateTime.Now);
                     sentMessagesCount++;
                 }
                 catch (Exception ex)

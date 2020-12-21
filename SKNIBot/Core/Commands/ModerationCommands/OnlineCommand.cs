@@ -43,7 +43,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("online")]
         [Description("Wyświetla statystyki dotyczące czasu online użytkowników.")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Online(CommandContext ctx, [Description("Dostępne: last, total.")] string orderBy = "total")
+        public async Task Online(CommandContext ctx, [Description("Dostępne: last, total.")] [RemainingText] string orderBy = "total")
         {
             await ctx.TriggerTypingAsync();
 
@@ -90,20 +90,25 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             using (var databaseContext = new DynamicDBContext())
             {
-                var onlineStatsQuery = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime);
+                var onlineStatsQuery = databaseContext.OnlineStats.OrderByDescending(p => p.TotalTime).ToList();
 
                 switch (orderBy)
                 {
-                    case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline); break;
-                    case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime); break;
-                    case "members": onlineStatsQuery = onlineStatsQuery
-                        .Where(p => guild.Members.Any(gm =>
-                            gm.Value.Id == ulong.Parse(p.UserID) &&
-                            gm.Value.Roles.Any(r => r.Name == "Członek")))
-                        .OrderByDescending(p => p.TotalTime);
-                        break;
+                    case "last": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.LastOnline).ToList(); break;
+                    case "total": onlineStatsQuery = onlineStatsQuery.OrderByDescending(p => p.TotalTime).ToList(); break;
+                    default:
+                    {
+                        onlineStatsQuery = onlineStatsQuery
+                            .Where(p => guild.Members.Any(gm =>
+                                gm.Value.Id == ulong.Parse(p.UserID) &&
+                                gm.Value.Roles.Any(r => r.Name == orderBy)))
+                            .OrderByDescending(p => p.TotalTime)
+                            .ToList();
+                            break;
+                    }
                 }
 
+                guild.RequestMembersAsync().GetAwaiter().GetResult();
                 var usersInGuild = guild.Members.Select(p => p.Value.Id.ToString());
                 var onlineStats = onlineStatsQuery.Where(p => usersInGuild.Contains(p.UserID)).Skip((currentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
 
@@ -214,7 +219,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return displayName;
         }
 
-        private async Task DiscordClientOnMessageReactionAdded(MessageReactionAddEventArgs reactionEvent)
+        private async Task DiscordClientOnMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs reactionEvent)
         {
             if (reactionEvent.User.IsBot) return;
 

@@ -10,10 +10,12 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Emzi0767.Utilities;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
 using SKNIBot.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Services.RolesService;
 
 namespace SKNIBot.Core
@@ -36,11 +38,8 @@ namespace SKNIBot.Core
             {
                 Token = SettingsLoader.SettingsContainer.Token,
                 TokenType = TokenType.Bot,
-
                 AutoReconnect = true,
-                LogLevel = LogLevel.Debug,
-                UseInternalLogHandler = true,
-                
+                Intents = DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.Guilds
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
@@ -82,7 +81,7 @@ namespace SKNIBot.Core
             .BuildServiceProvider();
         }
 
-        private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        private async Task DiscordClient_MessageCreatedAsync(DiscordClient client, DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
             if (e.Channel.IsPrivate == false)
             {
@@ -98,7 +97,7 @@ namespace SKNIBot.Core
             }
         }
 
-        private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
+        private async Task DiscordClient_MessageUpdatedAsync(DiscordClient client, DSharpPlus.EventArgs.MessageUpdateEventArgs e)
         {
             if (e.Channel.IsPrivate == false)
             {
@@ -114,7 +113,7 @@ namespace SKNIBot.Core
             }
         }
 
-        private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
+        private async Task DiscordClient_MessageReactionAddedAsync(DiscordClient client, DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
         {
             if (e.Channel.IsPrivate == false)
             {
@@ -130,7 +129,7 @@ namespace SKNIBot.Core
             }
         }
 
-        private async Task DiscordClient_UserJoinedAsync(DSharpPlus.EventArgs.GuildMemberAddEventArgs e)
+        private async Task DiscordClient_UserJoinedAsync(DiscordClient client, DSharpPlus.EventArgs.GuildMemberAddEventArgs e)
         {
             if (e.Guild.Id == SettingsLoader.SettingsContainer.ClubServer)
             {
@@ -170,7 +169,6 @@ namespace SKNIBot.Core
 
                 foreach(var method in type.GetMethods())
                 {
-                    
                     var attribute = method.GetCustomAttribute<MessageRespondAttribute>();
                     if (attribute != null)
                     {
@@ -180,26 +178,26 @@ namespace SKNIBot.Core
                             throw new ArgumentException("Methods with MessageRespondAttribute must be static!");
                         }
 
-                        DiscordClient.MessageCreated += async e =>
+                        DiscordClient.MessageCreated += async (client, e) =>
                         {
                             if (e.Author.IsBot)
                                 return;
 
-                            var del = (AsyncEventHandler<MessageCreateEventArgs>)Delegate.CreateDelegate(typeof(AsyncEventHandler<MessageCreateEventArgs>), method);
-                            await del.Invoke(e);
+                            var del = (AsyncEventHandler<Bot, MessageCreateEventArgs>)Delegate.CreateDelegate(typeof(AsyncEventHandler<Bot, MessageCreateEventArgs>), method);
+                            await del.Invoke(this, e);
                         };
                     }
                 }
             }
         }
 
-        private Task Commands_CommandExecuted(CommandExecutionEventArgs e)
+        private Task Commands_CommandExecuted(CommandsNextExtension extension, CommandExecutionEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "SKNI Bot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
+            e.Context.Client.Logger.Log(LogLevel.Information, "SKNI Bot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
             return Task.FromResult(0);
         }
 
-        private Task Commands_CommandErrored(CommandErrorEventArgs e)
+        private Task Commands_CommandErrored(CommandsNextExtension extension, CommandErrorEventArgs e)
         {
             var responseBuilder = new StringBuilder();
 
@@ -246,7 +244,7 @@ namespace SKNIBot.Core
                 e.Context.RespondAsync("", false, embed);
             }
 
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "SKNI Bot",
+            e.Context.Client.Logger.Log(LogLevel.Error, "SKNI Bot",
                 $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' " +
                 $"but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
 
