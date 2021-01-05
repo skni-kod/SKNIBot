@@ -5,8 +5,9 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using SKNIBot.Core.Helpers;
 
-namespace SKNIBot.Core.Commands.ModerationCommands
+namespace SKNIBot.Core.Commands.ManagementCommands
 {
     [CommandsGroup("Zarządzanie")]
     public class DescriptionCommand : BaseCommandModule
@@ -25,22 +26,28 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         }
 
         [Command("opis")]
-        [Description("Zmienia opis bota.")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Description(CommandContext ctx, [Description("Nowy opis.")] string description = null)
+        [Description("Zmienia opis bota.\nMusisz być dopisany jako twórca bota aby wykonać tę komendę.")]
+        public async Task Description(CommandContext ctx, [Description("Nowy opis.")] [RemainingText] string message = null)
         {
-            _description = description;
+            if (DeveloperHelper.IsDeveloper(ctx.User.Id))
+            {
+                _description = message;
 
-            try
-            {
-                await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
+                try
+                {
+                    await ctx.Client.UpdateStatusAsync(new DiscordActivity(message));
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Can't set status.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
-            catch (Exception ie)
+            else
             {
-                Console.WriteLine("Error: Can't set status.");
-                Console.WriteLine("Exception: " + ie.Message);
-                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                Console.WriteLine("Stack trace: " + ie.StackTrace);
+                await ctx.RespondAsync("You aren't my father.");
             }
         }
 

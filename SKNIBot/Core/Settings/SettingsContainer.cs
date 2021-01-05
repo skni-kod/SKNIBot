@@ -1,9 +1,12 @@
-﻿namespace SKNIBot.Core.Settings
+﻿
+namespace SKNIBot.Core.Settings
 {
     public class SettingsContainer
     {
         public string Token { get; set; }
         public string Prefix { get; set; }
+        public ulong ClubServer { get; set; }
+        public ulong ClubChannelForWelcomeMessage { get; set; }
         public string Waaai_Key { get; set; }
         public string JDoodle_Client_ID { get; set; }
         public string JDoodle_Client_Secret { get; set; }

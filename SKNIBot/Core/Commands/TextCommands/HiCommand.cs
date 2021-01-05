@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
@@ -14,6 +15,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             305642795706744833, // Coedo#2037
             231846704947658752, // Szatku#4105
             263061784762515457, // Amy#4589
+            256313921164673024, // Suzuri#9636 
         };
 
         [Command("cześć")]
@@ -22,7 +24,7 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task Czesc(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            if (_developers.Contains(ctx.User.Id))
+            if (DeveloperHelper.IsDeveloper(ctx.User.Id))
             {
                 await ctx.RespondAsync("Cześć mój programisto " + ctx.User.Mention);
             }

@@ -5,93 +5,242 @@ using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Helpers;
+using SKNIBot.Core.Services.RolesService;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class RoleCommand : BaseCommandModule
+    class RoleCommand : BaseCommandModule
     {
-        [Command("DodajRolę")]
-        [Aliases("DodajRole", "PrzypiszRole", "PrzypiszRolę")]
-        [Description("Dodaj rolę związaną z technologią którą znasz.")]
-        public async Task AddRole(CommandContext ctx, [Description("Nazwa roli")] string name)
+        private AssignRolesService _assignRolesService;
+
+        public RoleCommand(AssignRolesService assignRolesService)
+        {
+            _assignRolesService = assignRolesService;
+        }
+
+        [Command("pokazRole")]
+        [Description("Pokazuje role, które można przydzielić sobie na tym serwerze.")]
+        public async Task ShowRoles(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new StaticDBContext())
+            var assignRoles = _assignRolesService.GetRoles(ctx.Guild.Id);
+
+            if (assignRoles.Count == 0)
             {
-                var role = ctx.Guild.Roles.FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                await ctx.RespondAsync("Na tym serwerze nie ma ról, które można sobie przypisać.");
+            }
+            else
+            {
+                // Get server roles.
+                var serverRoles = ctx.Guild.Roles;
 
-                if (role == null)
+                List<DiscordRole> discordRoles = new List<DiscordRole>();
+                foreach (ulong roleId in assignRoles)
                 {
-                    await ctx.RespondAsync("Nie ma takiej roli!");
-                    return;
+                    discordRoles.Add(serverRoles.Where(p => p.Value.Id == roleId).FirstOrDefault().Value);
                 }
 
-                if (!databaseContext.Roles.Any(p => p.RoleId == role.Id.ToString()))
-                {
-                    await ctx.RespondAsync("Nie możesz przypisać tej roli!");
-                    return;
-                }
-
-                if (ctx.Member.Roles.Contains(role))
-                {
-                    await ctx.RespondAsync("Jesteś już przypisany do tej roli!");
-                    return;
-                }
-
-                await ctx.Member.GrantRoleAsync(role, "Przypisana przez Bocika");
-                await ctx.RespondAsync("Rola przypisana!");
+                List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
+                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**");
             }
         }
 
-        [Command("UsuńRolę")]
-        [Aliases("UsuńRole", "UsunRole")]
-        [Description("Usuń przypisaną rolę.")]
-        public async Task RemoveRole(CommandContext ctx, [Description("Nazwa roli")] string name)
+        [Command("nadajRole")]
+        [Description("Dodaje role z listy ról.")]
+        [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
+        public async Task GiveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new StaticDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
             {
-                var role = ctx.Guild.Roles.FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
+            }
 
-                if (role == null)
+            if (HasUserRole(ctx.Member, role.Value))
+            {
+                await ctx.RespondAsync("Posiadasz już tę rolę.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
                 {
-                    await ctx.RespondAsync("Nie ma takiej roli!");
+                    await ctx.RespondAsync("Moje role są za nisko abym mógł nadać tę rolę.");
                     return;
                 }
 
-                if (!databaseContext.Roles.Any(p => p.RoleId == role.Id.ToString()))
-                {
-                    await ctx.RespondAsync("Nie możesz zostać usunięty z tej roli!");
-                    return;
-                }
-
-                if (!ctx.Member.Roles.Contains(role))
-                {
-                    await ctx.RespondAsync("Nie jesteś przypisany do tej roli!");
-                    return;
-                }
-
-                await ctx.Member.RevokeRoleAsync(role, "Usunięta przez Bocika");
-                await ctx.RespondAsync("Rola usunięta!");
+                await ctx.Member.GrantRoleAsync(role.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                await ctx.RespondAsync("Rola nadana.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Roli nie ma na liście.");
             }
         }
 
-        [Command("WylistujRole")]
-        [Aliases("Role")]
-        [Description("Wylistuj wszystkie role które możesz przypisać sobie za pomocą komend `!DodajRole`.")]
-        public async Task ListAllRoles(CommandContext ctx)
+        [Command("odbierzRole")]
+        [Description("Odbiera role z listy ról.")]
+        [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
+        public async Task RemoveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new StaticDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
             {
-                var roles = ctx.Guild.Roles.Where(p => databaseContext.Roles.Select(r => r.RoleId).Contains(p.Id.ToString())).OrderBy(p => p.Name).ToList();
-                await ctx.RespondAsync(string.Join(", ", roles.Select(p => p.Name)));
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
             }
+
+            if (!HasUserRole(ctx.Member, role.Value))
+            {
+                await ctx.RespondAsync("Nie posiadasz tej roli.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
+                {
+                    await ctx.RespondAsync("Moje role są za nisko abym mógł odebrać tę rolę.");
+                    return;
+                }
+                await ctx.Member.RevokeRoleAsync(role.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                await ctx.RespondAsync("Rola odebrana.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Roli nie ma na liście.");
+            }
+        }
+
+
+        [Command("dodajRole")]
+        [Description("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.")]
+        [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
+        public async Task AddRole(CommandContext ctx, [RemainingText] string message)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
+            {
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                await ctx.RespondAsync("Rola jest już na liście.");
+                return;
+            }
+
+            // User who triggered is owner, we can add role without problem or user who triggered isn't owner, we need to check if role is lower than the highest role he has
+            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
+            if (ctx.User == ctx.Guild.Owner || role.Value.Position < userTheHighestRolePosition)
+            {
+                // Add role to database
+                _assignRolesService.AddRoleToDatabase(ctx.Guild.Id, role.Value.Id);
+                await ctx.RespondAsync("Rola dodana do listy ról.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Nie możesz dodać tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+            }
+        }
+
+        [Command("usunRole")]
+        [Description("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.")]
+        [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
+        public async Task DeleteRole(CommandContext ctx, [RemainingText] string message)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
+            {
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
+            }
+
+            if (!_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                await ctx.RespondAsync("Roli nie ma na liście.");
+                return;
+            }
+
+            // User who triggered is owner, we can add role without problem or user who triggered isn't owner, we need to check if role is lower than the highest role he has
+            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
+            if (ctx.User == ctx.Guild.Owner || role.Value.Position < userTheHighestRolePosition)
+            {
+                // Add role to database
+                _assignRolesService.RemoveRoleFromDatabase(ctx.Guild.Id, role.Value.Id);
+                await ctx.RespondAsync("Rola usunięta z listy ról.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Nie możesz usunąć tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+            }
+        }
+
+        private bool HasUserRole(DiscordMember member, DiscordRole role)
+        {
+            foreach (var memberRole in member.Roles)
+            {
+                if (memberRole == role)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CanBotModifyThisRole(DiscordRole role, List<DiscordRole> botRoles)
+        {
+            int highestBotRole = GetTheHighestRolePosition(botRoles);
+            if (role.Position < highestBotRole)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private int GetTheHighestRolePosition(List<DiscordRole> roles)
+        {
+            int position = 0;
+            foreach (var role in roles)
+            {
+                if (role.Position > position)
+                {
+                    position = role.Position;
+                }
+            }
+
+            return position;
         }
     }
 }

@@ -108,12 +108,12 @@ namespace SKNIBot.Core
 
         private CommandHelpMessage BuildGeneralHelp(DiscordEmbedBuilder embed)
         {
-            embed.AddField("HELP", "Wpisz " + SettingsLoader.Container.Prefix + "help <command_name> aby uzyskać więcej informacji.");
+            embed.AddField("HELP", "Wpisz " + SettingsLoader.SettingsContainer.Prefix + "help <command_name> aby uzyskać więcej informacji.");
 
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
             {
-                embed.AddField(group.Key, string.Join(", ", group.Value));
+                embed.AddField(group.Key, string.Join(", ", group.Value.Distinct()));
             }
 
             return new CommandHelpMessage(string.Empty, embed);

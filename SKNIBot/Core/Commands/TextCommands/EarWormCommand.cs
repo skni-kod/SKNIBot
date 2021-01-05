@@ -150,8 +150,8 @@ namespace SKNIBot.Core.Commands.TextCommands
             var param = new AuthParameters
             {
                 Scopes = Scope.All,
-                ClientId = SettingsLoader.Container.Spotify_Client_Id,
-                ClientSecret = SettingsLoader.Container.Spotify_Client_Secret,
+                ClientId = SettingsLoader.SettingsContainer.Spotify_Client_Id,
+                ClientSecret = SettingsLoader.SettingsContainer.Spotify_Client_Secret,
                 RedirectUri = "http://google.com",
                 ShowDialog = false, // Set to true to login each time.
             };

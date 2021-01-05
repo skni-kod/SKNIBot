@@ -13,7 +13,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
     {
         [Command("httppies")]
         [Description("Składnia to `!httppies {kod}`. Napisz `!httppies kody` aby otrzymać listę dostępnych kodów.")]
-        [Aliases("httpninu", "httpdog")]
+        [Aliases("httpinu", "httpdog")]
         public async Task HttpInu(CommandContext ctx, [Description("Numer kodu")] string numer = null)
         {
             await ctx.TriggerTypingAsync();

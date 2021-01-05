@@ -16,7 +16,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         [Command("picture")]
         [Description("Wyświetl obrazek!")]
         [Aliases("pic")]
-        public async Task Picture(CommandContext ctx, [Description("Wpisz !pic list aby uzyskać listę dostępnych opcji.")] string pictureName = null, [Description("Wzmianka")] DiscordMember member = null)
+        public async Task Picture(CommandContext ctx, [Description("Wpisz !pic list aby uzyskać listę dostępnych opcji.")] string pictureName = "", [Description("Wzmianka")] DiscordMember member = null)
         {
             await ctx.TriggerTypingAsync();
 

@@ -22,14 +22,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var role = ctx.Guild.Roles.Where(r => r.Name == roleName).FirstOrDefault();
-            if(role == null)
+            var role = ctx.Guild.Roles.Where(r => r.Value.Name == roleName).FirstOrDefault();
+            if(role.Value == null)
             {
                 await ctx.RespondAsync("Nie znaleziono podanej roli");
                 return;
             }
 
-            await role.ModifyAsync(color: color);
+            await role.Value.ModifyAsync(color: color);
             await ctx.RespondAsync("My job is done");
         }
 
@@ -41,14 +41,14 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var role = ctx.Guild.Roles.Where(r => r.Name == roleName).FirstOrDefault();
-            if (role == null)
+            var role = ctx.Guild.Roles.Where(r => r.Value.Name == roleName).FirstOrDefault();
+            if (role.Value == null)
             {
                 await ctx.RespondAsync("Nie znaleziono podanej roli");
                 return;
             }
 
-            await role.ModifyAsync(color: ColorHelper.RandomColor());
+            await role.Value.ModifyAsync(color: ColorHelper.RandomColor());
             await ctx.RespondAsync("My job is done");
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             var messages = await GetAllMessagesFromChannel(ctx.Channel);
             var userMessagesStats = CountUserMessages(messages);
-            var response = await GetResponse(userMessagesStats, ctx.Channel.Name, ctx.Guild);
+            var response = await GetStatsResponse(userMessagesStats, ctx.Channel.Name, ctx.Guild);
 
             await ctx.RespondAsync(response);
         }
@@ -45,11 +46,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             var allMessages = new List<DiscordMessage>();
 
-            foreach (var channel in ctx.Guild.Channels.Where(p => p.Type == ChannelType.Text))
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
                 try
                 {
-                    var messages = await GetAllMessagesFromChannel(channel);
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
                     allMessages.AddRange(messages);
                 }
                 catch (UnauthorizedException ex)
@@ -97,7 +98,50 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
 
             var userMessagesStats = CountUserMessages(allMessages);
-            var response = await GetResponse(userMessagesStats, "all", ctx.Guild);
+            var response = await GetStatsResponse(userMessagesStats, "all", ctx.Guild);
+
+            await ctx.RespondAsync(response);
+        }
+
+        [Command("msgstats")]
+        [Description("Wyświetla statystyki wiadomości dla poszczególnych miesięcy.")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task MsgStats(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            
+            var messages = await GetAllMessagesFromChannel(ctx.Channel);
+            var groupedMessages = GroupMessagesByMonths(messages);
+            var response = await GetMsgStatsResponse(groupedMessages, ctx.Channel.Name, ctx.Guild);
+
+            await ctx.RespondAsync(response);
+        }
+
+        [Command("msgstatsall")]
+        [Description("Wyświetla statystyki wiadomości we wszystkich kanałach dla poszczególnych miesięcy.")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task MsgStatsAll(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+
+            var allMessages = new List<DiscordMessage>();
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
+            {
+                try
+                {
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
+                    allMessages.AddRange(messages);
+                }
+                catch (UnauthorizedException ex)
+                {
+
+                }
+            }
+            
+            var groupedMessages = GroupMessagesByMonths(allMessages);
+            var response = await GetMsgStatsResponse(groupedMessages, "all", ctx.Guild);
 
             await ctx.RespondAsync(response);
         }
@@ -123,24 +167,33 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return messagesList;
         }
 
-        private List<KeyValuePair<ulong, int>> CountUserMessages(List<DiscordMessage> messages)
+        private IEnumerable<KeyValuePair<ulong, int>> CountUserMessages(List<DiscordMessage> messages)
         {
-            var stats = new Dictionary<ulong, int>();
-
-            foreach (var message in messages)
-            {
-                if (!stats.ContainsKey(message.Author.Id))
+            return messages
+                .GroupBy(p => p.Author.Id, (authorId, authorMessages) => new
                 {
-                    stats[message.Author.Id] = 0;
-                }
-
-                stats[message.Author.Id]++;
-            }
-
-            return stats.OrderByDescending(p => p.Value).ToList();
+                    AuthorId = authorId,
+                    MessagesCount = authorMessages.Count()
+                })
+                .Select(p => new KeyValuePair<ulong, int>(p.AuthorId, p.MessagesCount))
+                .OrderByDescending(p => p.Value)
+                .ToList();
         }
 
-        private async Task<string> GetResponse(List<KeyValuePair<ulong, int>> userMessagesStats, string channelName, DiscordGuild guild)
+        private IEnumerable<KeyValuePair<string, int>> GroupMessagesByMonths(List<DiscordMessage> messages)
+        {
+            return messages
+                .GroupBy(p => p.CreationTimestamp.ToString("yyyy/MM"), (monthAndYear, messagesInMonth) => new
+                {
+                    MonthAndYear = monthAndYear,
+                    MessagesCount = messagesInMonth.Count()
+                })
+                .Select(p => new KeyValuePair<string, int>(p.MonthAndYear, p.MessagesCount))
+                .OrderByDescending(p => p.Key)
+                .ToList();
+        }
+
+        private async Task<string> GetStatsResponse(IEnumerable<KeyValuePair<ulong, int>> userMessagesStats, string channelName, DiscordGuild guild)
         {
             var response = new StringBuilder();
 
@@ -166,6 +219,31 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 {
 
                 }
+            }
+
+            response.Append("```");
+
+            return response.ToString();
+        }
+
+        private async Task<string> GetMsgStatsResponse(IEnumerable<KeyValuePair<string, int>> groupedMessages, string channelName, DiscordGuild guild)
+        {
+            var response = new StringBuilder();
+
+            response.Append($"Statystyki dla kanału **#{channelName}:**\n");
+            response.Append("```");
+            response.Append("Data".PadRight(UsernameFieldLength));
+            response.Append("Liczba wiadomości".PadRight(MessagesCountFieldLength));
+            response.Append("\n");
+            response.Append(new string('-', TotalFieldsLength));
+            response.Append("\n");
+
+            foreach (var monthData in groupedMessages.Take(25))
+            {
+                var month = monthData.Key.PadRight(UsernameFieldLength);
+                var messagesCount = monthData.Value.ToString().PadRight(MessagesCountFieldLength);
+
+                response.Append($"{month}{messagesCount}\n");
             }
 
             response.Append("```");

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Tekst")]
     class PepeCommands : BaseCommandModule
     {
         string _rain =
