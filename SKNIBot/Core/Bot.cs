@@ -24,7 +24,6 @@ namespace SKNIBot.Core
     {
         public static DiscordClient DiscordClient { get; set; }
         private CommandsNextExtension _commands { get; set; }
-
         public void Run()
         {
             Connect();
@@ -189,6 +188,7 @@ namespace SKNIBot.Core
                     }
                 }
             }
+            
         }
 
         private Task Commands_CommandExecuted(CommandsNextExtension extension, CommandExecutionEventArgs e)
