@@ -13,7 +13,6 @@ using DSharpPlus.EventArgs;
 using Emzi0767.Utilities;
 using SKNIBot.Core.Commands.YouTubeCommands;
 using SKNIBot.Core.Settings;
-using DSharpPlus.VoiceNext;
 using SKNIBot.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,14 +23,12 @@ namespace SKNIBot.Core
     public class Bot
     {
         public static DiscordClient DiscordClient { get; set; }
-        static VoiceNextExtension voice { get; set; }
         private CommandsNextExtension _commands { get; set; }
         public void Run()
         {
             Connect();
             SetNetworkParameters();
             RegisterCommands();
-            voice = DiscordClient.UseVoiceNext();
         }
 
         private async void Connect()
