@@ -12,6 +12,7 @@ namespace SKNIBot.Core.Database
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<Emoji> Emojis { get; set; }
         public virtual DbSet<AssignRole> AssignRoles { get; set; }
+        public virtual DbSet<WelcomeMessage> WelcomeMessages { get; set; }
 
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {
