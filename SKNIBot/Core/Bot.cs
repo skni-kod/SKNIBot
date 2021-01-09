@@ -40,7 +40,7 @@ namespace SKNIBot.Core
                 Token = SettingsLoader.SettingsContainer.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                Intents = DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.Guilds
+                Intents = DiscordIntents.All
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
