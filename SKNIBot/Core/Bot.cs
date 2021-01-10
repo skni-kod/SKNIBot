@@ -203,13 +203,13 @@ namespace SKNIBot.Core
         {
             e.Context.Client.Logger.Log(LogLevel.Error, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}.");
 
-            var responseBuilder = new StringBuilder();
+            StringBuilder messageToSend = new StringBuilder();
 
             switch (e.Exception)
             {
                 case Checks​Failed​Exception ex:
                     {
-                        StringBuilder messageToSend = new StringBuilder();
+                        
                         messageToSend.Append("Brak wystarczających uprawnień").AppendLine();
 
                         var failedChecks = ex.FailedChecks;
@@ -236,20 +236,32 @@ namespace SKNIBot.Core
                             }
                         }
 
+                        messageToSend.Append($"---------------------------\n");
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
+
                         await PostEmbedHelper.PostEmbed(e.Context, "Błąd", messageToSend.ToString());
-                        break;
+                        return;
                     }
                 case UnauthorizedException _:
                     {
-                        await e.Context.Member.SendMessageAsync("Brak wystarczających uprawnień");
-                        break;
+                        messageToSend.Append($"---------------------------\n");
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
+                        await e.Context.Member.SendMessageAsync(messageToSend.ToString());
+                        return;
                     }
 
                 default:
                     {
-                        break;
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
+
+                        await PostEmbedHelper.PostEmbed(e.Context, "Błąd", messageToSend.ToString());
+                        return;
                     }
-            }
+            }    
+
         }
     }
 }
