@@ -17,6 +17,8 @@ using SKNIBot.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Services.RolesService;
+using DSharpPlus.Exceptions;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core
 {
@@ -38,7 +40,7 @@ namespace SKNIBot.Core
                 Token = SettingsLoader.SettingsContainer.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                Intents = DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.Guilds
+                Intents = DiscordIntents.All
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
@@ -197,58 +199,69 @@ namespace SKNIBot.Core
             return Task.FromResult(0);
         }
 
-        private Task Commands_CommandErrored(CommandsNextExtension extension, CommandErrorEventArgs e)
+        private async Task Commands_CommandErrored(CommandsNextExtension extension, CommandErrorEventArgs e)
         {
-            var responseBuilder = new StringBuilder();
+            e.Context.Client.Logger.Log(LogLevel.Error, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}.");
+
+            StringBuilder messageToSend = new StringBuilder();
 
             switch (e.Exception)
             {
-                case CommandNotFoundException _:
-                {
-                    responseBuilder.Append("Nieznana komenda, wpisz !help aby uzyskać listę wszystkich dostępnych.");
-                    break;
-                }
+                case Checks​Failed​Exception ex:
+                    {
+                        
+                        messageToSend.Append("Brak wystarczających uprawnień").AppendLine();
 
-                case ChecksFailedException _:
-                {
-                    var failedCheck = ((ChecksFailedException)e.Exception).FailedChecks.First();
-                    var permission = (RequirePermissionsAttribute)failedCheck;
+                        var failedChecks = ex.FailedChecks;
+                        foreach (var failedCheck in failedChecks)
+                        {
+                            if (failedCheck is RequireBotPermissionsAttribute failBot)
+                            {
+                                messageToSend.Append("Ja potrzebuję");
+                                messageToSend.Append(": ");
+                                messageToSend.Append(failBot.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
+                            }
+                            else if (failedCheck is RequireUserPermissionsAttribute failUser)
+                            {
+                                messageToSend.Append("Ty potrzebujesz");
+                                messageToSend.Append(": ");
+                                messageToSend.Append(failUser.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
+                            }
+                            else if (failedCheck is RequireOwnerAttribute)
+                            {
+                                messageToSend.Append("Tylko mój włąściciel może to wykonać");
+                                messageToSend.AppendLine();
+                            }
+                        }
 
-                    responseBuilder.Append("Nie masz uprawnień do wykonania tej akcji :<\n");
-                    responseBuilder.Append($"Wymagane: *{permission.Permissions.ToPermissionString()}*");
-                    break;
-                }
+                        messageToSend.Append($"---------------------------\n");
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
 
-                case ArgumentException _:
-                {
-                    responseBuilder.Append($"Nieprawidłowe parametry komendy, wpisz `!help {e.Command.Name}` aby uzyskać ich listę.\n");
-                    break;
-                }
+                        await PostEmbedHelper.PostEmbed(e.Context, "Błąd", messageToSend.ToString());
+                        return;
+                    }
+                case UnauthorizedException _:
+                    {
+                        messageToSend.Append($"---------------------------\n");
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
+                        await e.Context.Member.SendMessageAsync(messageToSend.ToString());
+                        return;
+                    }
 
                 default:
-                {
-                    responseBuilder.Append($"**{e.Exception.Message}**\n");
-                    responseBuilder.Append($"{e.Exception.StackTrace}\n");
-                    break;
-                }
-            }
+                    {
+                        messageToSend.Append($"**{e.Exception.Message}**\n");
+                        messageToSend.Append($"{e.Exception.StackTrace}\n");
 
-            if (responseBuilder.Length != 0)
-            {
-                var embed = new DiscordEmbedBuilder
-                {
-                    Color = new DiscordColor("#CD171E")
-                };
-                embed.AddField("Błąd", responseBuilder.ToString().Substring(0, Math.Min(responseBuilder.Length, 1000)));
+                        await PostEmbedHelper.PostEmbed(e.Context, "Błąd", messageToSend.ToString());
+                        return;
+                    }
+            }    
 
-                e.Context.RespondAsync("", false, embed);
-            }
-
-            e.Context.Client.Logger.Log(LogLevel.Error, "SKNI Bot",
-                $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' " +
-                $"but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
-
-            return Task.FromResult(0);
         }
     }
 }
