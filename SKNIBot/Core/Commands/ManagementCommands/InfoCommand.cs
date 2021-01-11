@@ -17,10 +17,15 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             }
             return Number;
         }
-        struct Node
+        class Node
         {
             public int Number;
             public string Name;
+            public Node(int a, string b)
+            {
+                Number = a;
+                Name = b;
+            }
         }
         [Command("oserwerze")]
         [Description("Pokazuje info o serwerze.")]
@@ -46,8 +51,8 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             int index = 0;
             foreach (var item in ctx.Guild.Roles.Values)
             {
-                role[index].Number = item.Position;
-                role[index].Name = item.Name;
+                Node tmp=new Node(item.Position, item.Name);
+                role[index] = tmp;
                 index++;
             }
             for (int j = 0; j <= role.Length - 2; j++)
