@@ -72,7 +72,14 @@ namespace SKNIBot.Core.Commands.ManagementCommands
                 lRol[j] = role[j].Name;
             var RoleList = string.Join(", ", lRol);
             MsgContent.AppendLine(RoleList);
-            await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, MsgContent.ToString());
+            var embed = new DSharpPlus.Entities.DiscordEmbedBuilder()
+            {
+                Color = Helpers.ColorHelper.RandomColor()
+            };       
+            embed.WithTitle(ctx.Guild.Name);
+            embed.WithThumbnail(ctx.Guild.IconUrl);
+            embed.WithDescription(MsgContent.ToString());
+            await ctx.RespondAsync(embed: embed);
         }
     }
 }
