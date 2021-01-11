@@ -7,7 +7,7 @@ namespace SKNIBot.Core.Commands.ManagementCommands
     [CommandsGroup("Zarządzanie")]
     public class InfoCommands : BaseCommandModule
     {
-        public int Licz_Kanaly(CommandContext ctx, string Type)
+        public int CountChannels(CommandContext ctx, string Type)
         {
             int Number = 0;
             foreach (var item in ctx.Guild.Channels.Values)
@@ -36,8 +36,8 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             int size = time.Length;
             time = time.Remove(size - 6);
             Node[] role = new Node[count];
-            int Voice = Licz_Kanaly(ctx, "Voice");
-            int Text = Licz_Kanaly(ctx, "Text");
+            int Voice = CountChannels(ctx, "Voice");
+            int Text = CountChannels(ctx, "Text");
             int Total = Voice + Text;
             string tresc;
             tresc =
@@ -69,11 +69,7 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             }
             string[] lRol = new string[count];
             for(int j = 0; j < count; j++)
-            {
                 lRol[j] = role[j].Name;
-            }
-            /*foreach (var item in role)
-                tresc += item.Name + "\n";*/
             var listaRol = string.Join(", ", lRol);
             tresc += listaRol;
             await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, tresc);
