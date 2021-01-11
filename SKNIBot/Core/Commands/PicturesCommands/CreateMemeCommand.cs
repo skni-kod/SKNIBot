@@ -35,7 +35,10 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
         public CreateMemeCommand()
         {
-            _dummyFont = SystemFonts.CreateFont("Liberation Mono", 20);
+            FontCollection collection = new FontCollection();
+            FontFamily family = collection.Install("Fonts/liberation-mono/LiberationMono-Regular.ttf");
+            _dummyFont = family.CreateFont(20);
+
             _textOptions = new TextGraphicsOptions()
             {
                 VerticalAlignment = VerticalAlignment.Top,
