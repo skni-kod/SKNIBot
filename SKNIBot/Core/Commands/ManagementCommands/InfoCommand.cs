@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -62,8 +62,15 @@ namespace SKNIBot.Core.Commands.ManagementCommands
                     }
                 }
             }
-            foreach (var item in role)
-                tresc += item.Name + "\n";
+            string[] lRol = new string[count];
+            for(int j = 0; j < count; j++)
+            {
+                lRol[j] = role[j].Name;
+            }
+            /*foreach (var item in role)
+                tresc += item.Name + "\n";*/
+            var listaRol = string.Join(", ", lRol);
+            tresc += listaRol;
             await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, tresc);
         }
 
