@@ -1,3 +1,4 @@
+using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -39,15 +40,14 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             int Voice = CountChannels(ctx, "Voice");
             int Text = CountChannels(ctx, "Text");
             int Total = Voice + Text;
-            string tresc;
-            tresc =
-                "**:id: ID serwera: **`" + ctx.Guild.Id + "`\n" +
-                ":bust_in_silhouette: **Właściciel: **" + ctx.Guild.Owner.Nickname +
-                "\n:calendar: **Serwer utworzony dnia: **"+time+
-                "\n:busts_in_silhouette: **Liczba użytkowników: **" + ctx.Guild.MemberCount+
-                "\n:arrow_forward: **Kanały: **Voice: `"+Voice+"`|Text: `"+Text+"`|"+"W sumie: "+ "**" + Total + "**" +
-                "\n**:arrow_forward:  Role na serwerze: **" + count+"\n";
-            //"\n**Channls: **"+ctx.Guild.Channels;
+            StringBuilder MsgContent = new StringBuilder();
+
+            MsgContent.AppendLine("**:id: ID serwera: **`" + ctx.Guild.Id+"`");
+            MsgContent.AppendLine(":bust_in_silhouette: **Właściciel: **" + ctx.Guild.Owner.Nickname);
+            MsgContent.AppendLine(":calendar: **Serwer utworzony dnia: **" + time);
+            MsgContent.AppendLine(":busts_in_silhouette: **Liczba użytkowników: **" + ctx.Guild.MemberCount);
+            MsgContent.AppendLine(":arrow_forward: **Kanały: **Voice: `" + Voice + "`|Text: `" + Text + "`|" + "W sumie: " + "**" + Total + "**");
+            MsgContent.AppendLine("**:arrow_forward:  Role na serwerze: **" + count);
             int index = 0;
             foreach (var item in ctx.Guild.Roles.Values)
             {
@@ -70,10 +70,9 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             string[] lRol = new string[count];
             for(int j = 0; j < count; j++)
                 lRol[j] = role[j].Name;
-            var listaRol = string.Join(", ", lRol);
-            tresc += listaRol;
-            await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, tresc);
+            var RoleList = string.Join(", ", lRol);
+            MsgContent.AppendLine(RoleList);
+            await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, MsgContent.ToString());
         }
-
     }
 }
