@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Services.RolesService;
 using DSharpPlus.Exceptions;
 using SKNIBot.Core.Helpers;
+using SKNIBot.Core.Services.WelcomeMessageService;
 
 namespace SKNIBot.Core
 {
@@ -78,6 +79,7 @@ namespace SKNIBot.Core
 
             // Services
             .AddScoped<AssignRolesService>()
+            .AddScoped<WelcomeMessageService>()
 
             .BuildServiceProvider();
         }

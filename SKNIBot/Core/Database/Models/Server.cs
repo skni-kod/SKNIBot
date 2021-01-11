@@ -16,6 +16,6 @@ namespace SKNIBot.Core.Database.Models
 
         public virtual List<Emoji> Emojis { get; set; }
         public virtual List<AssignRole> AssignRoles { get; set; }
-        public virtual WelcomeMessage WelcomeMessages { get; set; }
+        public virtual WelcomeMessage WelcomeMessage { get; set; }
     }
 }
