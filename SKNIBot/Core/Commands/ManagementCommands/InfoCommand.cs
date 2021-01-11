@@ -42,12 +42,12 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             int Total = Voice + Text;
             StringBuilder MsgContent = new StringBuilder();
 
-            MsgContent.AppendLine("**:id: ID serwera: **`" + ctx.Guild.Id+"`");
-            MsgContent.AppendLine(":bust_in_silhouette: **Właściciel: **" + ctx.Guild.Owner.Nickname);
-            MsgContent.AppendLine(":calendar: **Serwer utworzony dnia: **" + time);
-            MsgContent.AppendLine(":busts_in_silhouette: **Liczba użytkowników: **" + ctx.Guild.MemberCount);
-            MsgContent.AppendLine(":arrow_forward: **Kanały: **Voice: `" + Voice + "`|Text: `" + Text + "`|" + "W sumie: " + "**" + Total + "**");
-            MsgContent.AppendLine("**:arrow_forward:  Role na serwerze: **" + count);
+            MsgContent.Append("**:id: ID serwera: **`").Append(ctx.Guild.Id).Append("`").AppendLine();
+            MsgContent.Append(":bust_in_silhouette: **Właściciel: **").Append(ctx.Guild.Owner.Nickname).AppendLine();
+            MsgContent.Append(":calendar: **Serwer utworzony dnia: **").Append(time).AppendLine();
+            MsgContent.Append(":busts_in_silhouette: **Liczba użytkowników: **").Append(ctx.Guild.MemberCount).AppendLine();
+            MsgContent.Append(":arrow_forward: **Kanały: **Voice: `").Append(Voice).Append("`|Text: `").Append(Text).Append("`|").Append("W sumie: ").Append("**").Append(Total).Append("**").AppendLine();
+            MsgContent.Append("**:arrow_forward:  Role na serwerze: **").Append(count).AppendLine();
             int index = 0;
             foreach (var item in ctx.Guild.Roles.Values)
             {
