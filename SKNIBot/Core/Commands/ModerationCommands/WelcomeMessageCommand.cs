@@ -59,5 +59,22 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             _welcomeMessageService.SetWelcomeMessage(ctx.Guild.Id, channel.Id, message);
             await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Ustawiono nową wiadomość powitalną");
         }
+
+        [Command("zmienKanalWiadomosciPowitalnej")]
+        [Description("Zmienia kanał wiadomości powitalnej. Wiadomość musi być uprzednio ustawiona na serwerze.")]
+        [Aliases("zmieńKanałWiadomościPowitalnej")]
+        public async Task ChangeWelcomeMessageChannel(CommandContext ctx, [Description("Nowy kanał do wysyłania wiadomości.")] DiscordChannel channel)
+        {
+            await ctx.TriggerTypingAsync();
+            if(_welcomeMessageService.IsWelcomeMessageOnServer(ctx.Guild.Id))
+            {
+                _welcomeMessageService.ChangeWelcomeMessageChannel(ctx.Guild.Id, channel.Id);
+                await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Zmieniono kanał wiadomości powitalnej.");
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Najpierw ustaw wiadomość powitalną.");
+            }
+        }
     }
 }

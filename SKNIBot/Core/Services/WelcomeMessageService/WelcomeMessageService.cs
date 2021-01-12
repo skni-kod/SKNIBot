@@ -50,7 +50,25 @@ namespace SKNIBot.Core.Services.WelcomeMessageService
             }
         }
 
-        private bool IsWelcomeMessageOnServer(ulong serverId)
+        public bool ChangeWelcomeMessageChannel(ulong serverId, ulong newChannelId)
+        {
+            if(IsWelcomeMessageOnServer(serverId))
+            {
+                using (var databaseContext = new DynamicDBContext())
+                {
+                    Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).Include(p => p.WelcomeMessage).FirstOrDefault();
+                    dbServer.WelcomeMessage.ChannelID = newChannelId.ToString();
+                    databaseContext.SaveChanges();
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsWelcomeMessageOnServer(ulong serverId)
         {
             using (var databaseContext = new DynamicDBContext())
             {
