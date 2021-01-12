@@ -48,41 +48,6 @@ namespace SKNIBot.Core.Services.WelcomeMessageService
                 dbServer.WelcomeMessage.Content = message;
                 databaseContext.SaveChanges();
             }
-            // Check if server already has message
-            /*if (IsWelcomeMessageOnServer(serverId))
-            {
-
-                using (var databaseContext = new DynamicDBContext())
-                {
-                    Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).Include(p => p.WelcomeMessage).FirstOrDefault();
-                    dbServer.WelcomeMessage.ChannelID = channelId.ToString();
-                    dbServer.WelcomeMessage.Content = message;
-                    databaseContext.SaveChanges();
-                }
-            }
-            else
-            {
-                using (var databaseContext = new DynamicDBContext())
-                {
-                    // Check if server exist
-                    Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).Include(p => p.WelcomeMessage).FirstOrDefault();
-                    if(dbServer != null)
-                    {
-                        dbServer.WelcomeMessage = new WelcomeMessage();
-                        dbServer.WelcomeMessage.ChannelID = channelId.ToString();
-                        dbServer.WelcomeMessage.Content = message;
-                        databaseContext.SaveChanges();
-                    }
-                    else
-                    {
-                        Server server = new Server(serverId);
-                        dbServer.WelcomeMessage.ChannelID = channelId.ToString();
-                        dbServer.WelcomeMessage.Content = message;
-                        databaseContext.Add(server);
-                        databaseContext.SaveChanges();
-                    }
-                }
-            }*/
         }
 
         private bool IsWelcomeMessageOnServer(ulong serverId)
