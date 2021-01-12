@@ -68,6 +68,24 @@ namespace SKNIBot.Core.Services.WelcomeMessageService
             }
         }
 
+        public bool ChangeWelcomeMessageContent(ulong serverId, string newContent)
+        {
+            if (IsWelcomeMessageOnServer(serverId))
+            {
+                using (var databaseContext = new DynamicDBContext())
+                {
+                    Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).Include(p => p.WelcomeMessage).FirstOrDefault();
+                    dbServer.WelcomeMessage.Content = newContent;
+                    databaseContext.SaveChanges();
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public bool IsWelcomeMessageOnServer(ulong serverId)
         {
             using (var databaseContext = new DynamicDBContext())
