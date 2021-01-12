@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.WelcomeMessageService;
 using System;
@@ -19,8 +20,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             _welcomeMessageService = welcomeMessageService;
         }
 
-        [Command("showWelcomeMessage")]
+        [Command("pokazWiadomoscPowitalna")]
         [Description("Pokazuje czy wiadomość powitalna istnieje, jej kanał oraz treść.")]
+        [Aliases("pokażWiadomośćPowitalną")]
         public async Task ShowWelcomeMessage(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -46,6 +48,16 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Na tym serwerze nie ma ustawionej wiadomości powitalnej");
             }
+        }
+
+        [Command("ustawWiadomoscPowitalna")]
+        [Description("Ustawia kanał i treść powitalnej widomości./nMożna użyć `{UserMention}` jako miejsca do wstawienia wzmianki.")]
+        [Aliases("ustawWiadomośćPowitalną")]
+        public async Task SetWelcomeMessage(CommandContext ctx, [Description("Kanał do wysyłania wiadomości.")]  DiscordChannel channel, [Description("Treść wiadomości.")] [RemainingText] string message)
+        {
+            await ctx.TriggerTypingAsync();
+            _welcomeMessageService.SetWelcomeMessage(ctx.Guild.Id, channel.Id, message);
+            await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Ustawiono nową wiadomość powitalną");
         }
     }
 }
