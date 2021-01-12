@@ -78,7 +78,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         }
 
         [Command("zmienTrescWiadomosciPowitalnej")]
-        [Description("Zmienia kanał wiadomości powitalnej. Wiadomość musi być uprzednio ustawiona na serwerze.")]
+        [Description("Zmienia treść wiadomości powitalnej. Wiadomość musi być uprzednio ustawiona na serwerze.")]
         [Aliases("zmieńTreśćWiadomościPowitalnej")]
         public async Task ChangeWelcomeMessageContent(CommandContext ctx, [Description("Nowa treść wiadomości.")][RemainingText] string message)
         {
@@ -91,6 +91,23 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             else
             {
                 await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Najpierw ustaw wiadomość powitalną.");
+            }
+        }
+
+        [Command("usunWiadomoscPowitalna")]
+        [Description("Usuwa wiadomość powitalną.")]
+        [Aliases("usuńWiadomośćPowitalną")]
+        public async Task RemoveelcomeMessage(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            if (_welcomeMessageService.IsWelcomeMessageOnServer(ctx.Guild.Id))
+            {
+                _welcomeMessageService.RemoveWelcomeMessage(ctx.Guild.Id);
+                await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Wiadomość powitalna została usunięta.");
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wiadomość powitalna", "Na serwerze nie ma wiadomości powitalnej.");
             }
         }
     }
