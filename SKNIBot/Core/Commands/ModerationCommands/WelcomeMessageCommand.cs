@@ -23,6 +23,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("pokazWiadomoscPowitalna")]
         [Description("Pokazuje czy wiadomość powitalna istnieje, jej kanał oraz treść.")]
         [Aliases("pokażWiadomośćPowitalną")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task ShowWelcomeMessage(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -53,6 +54,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("ustawWiadomoscPowitalna")]
         [Description("Ustawia kanał i treść powitalnej widomości./nMożna użyć `{UserMention}` jako miejsca do wstawienia wzmianki.")]
         [Aliases("ustawWiadomośćPowitalną")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task SetWelcomeMessage(CommandContext ctx, [Description("Kanał do wysyłania wiadomości.")]  DiscordChannel channel, [Description("Treść wiadomości.")] [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
@@ -63,6 +65,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("zmienKanalWiadomosciPowitalnej")]
         [Description("Zmienia kanał wiadomości powitalnej. Wiadomość musi być uprzednio ustawiona na serwerze.")]
         [Aliases("zmieńKanałWiadomościPowitalnej")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task ChangeWelcomeMessageChannel(CommandContext ctx, [Description("Nowy kanał do wysyłania wiadomości.")] DiscordChannel channel)
         {
             await ctx.TriggerTypingAsync();
@@ -80,6 +83,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("zmienTrescWiadomosciPowitalnej")]
         [Description("Zmienia treść wiadomości powitalnej. Wiadomość musi być uprzednio ustawiona na serwerze.")]
         [Aliases("zmieńTreśćWiadomościPowitalnej")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task ChangeWelcomeMessageContent(CommandContext ctx, [Description("Nowa treść wiadomości.")][RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
@@ -97,6 +101,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [Command("usunWiadomoscPowitalna")]
         [Description("Usuwa wiadomość powitalną.")]
         [Aliases("usuńWiadomośćPowitalną")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task RemoveelcomeMessage(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

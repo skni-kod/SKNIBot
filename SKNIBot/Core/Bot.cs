@@ -136,8 +136,7 @@ namespace SKNIBot.Core
         private async Task DiscordClient_UserJoinedAsync(DiscordClient client, DSharpPlus.EventArgs.GuildMemberAddEventArgs e)
         {
             WelcomeMessageHandler welcomeMessageHandler = new WelcomeMessageHandler(client.GetCommandsNext().Services.GetService<WelcomeMessageService>());
-            welcomeMessageHandler.SendWelcomeMessage(client, e);
-            
+            welcomeMessageHandler.SendWelcomeMessage(client, e);  
         }
 
         private void SetNetworkParameters()
