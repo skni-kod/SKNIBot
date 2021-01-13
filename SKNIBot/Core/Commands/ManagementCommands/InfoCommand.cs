@@ -8,7 +8,7 @@ namespace SKNIBot.Core.Commands.ManagementCommands
     [CommandsGroup("Zarządzanie")]
     public class InfoCommands : BaseCommandModule
     {
-        public int CountChannels(CommandContext ctx, string Type)
+        private int CountChannels(CommandContext ctx, string Type)
         {
             int Number = 0;
             foreach (var item in ctx.Guild.Channels.Values)
@@ -18,7 +18,7 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             }
             return Number;
         }
-        class Node
+        private class Node
         {
             public int Number;
             public string Name;
@@ -37,17 +37,17 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             int size = time.Length;
             time = time.Remove(size - 6);
             Node[] role = new Node[count];
-            int Voice = CountChannels(ctx, "Voice");
-            int Text = CountChannels(ctx, "Text");
-            int Total = Voice + Text;
-            StringBuilder MsgContent = new StringBuilder();
-
-            MsgContent.Append("**:id: ID serwera: **`").Append(ctx.Guild.Id).Append("`").AppendLine();
-            MsgContent.Append(":bust_in_silhouette: **Właściciel: **").Append(ctx.Guild.Owner.Nickname).AppendLine();
-            MsgContent.Append(":calendar: **Serwer utworzony dnia: **").Append(time).AppendLine();
-            MsgContent.Append(":busts_in_silhouette: **Liczba użytkowników: **").Append(ctx.Guild.MemberCount).AppendLine();
-            MsgContent.Append(":arrow_forward: **Kanały: **Voice: `").Append(Voice).Append("`|Text: `").Append(Text).Append("`|").Append("W sumie: ").Append("**").Append(Total).Append("**").AppendLine();
-            MsgContent.Append("**:arrow_forward:  Role na serwerze: **").Append(count).AppendLine();
+            int voice = CountChannels(ctx, "Voice");
+            int text = CountChannels(ctx, "Text");
+            int total = voice + text;
+            StringBuilder msgContent = new StringBuilder()
+            .AppendLine("**:globe_with_meridians: [Strona koła](https://kod.prz.edu.pl/#/)**")
+            .Append("**:id: ID serwera: **`").Append(ctx.Guild.Id).Append("`").AppendLine()
+            .Append(":bust_in_silhouette: **Właściciel: **").Append(ctx.Guild.Owner.Nickname).AppendLine()
+            .Append(":calendar: **Serwer utworzony dnia: **").Append(time).AppendLine()
+            .Append(":busts_in_silhouette: **Liczba użytkowników: **").Append(ctx.Guild.MemberCount).AppendLine()
+            .Append(":arrow_forward: **Kanały: **Voice: `").Append(voice).Append("`|Text: `").Append(text).Append("`|").Append("W sumie: ").Append("**").Append(total).Append("**").AppendLine()
+            .Append("**:arrow_forward:  Role na serwerze: **").Append(count).AppendLine();
             int index = 0;
             foreach (var item in ctx.Guild.Roles.Values)
             {
@@ -70,9 +70,14 @@ namespace SKNIBot.Core.Commands.ManagementCommands
             string[] lRol = new string[count];
             for(int j = 0; j < count; j++)
                 lRol[j] = role[j].Name;
-            var RoleList = string.Join(", ", lRol);
-            MsgContent.AppendLine(RoleList);
-            await Helpers.PostEmbedHelper.PostEmbed(ctx, ctx.Guild.Name, MsgContent.ToString());
+            var roleList = string.Join(", ", lRol);
+            msgContent.AppendLine(roleList);
+            var embed = new DSharpPlus.Entities.DiscordEmbedBuilder()
+                .WithTitle(ctx.Guild.Name)
+                .WithThumbnail(ctx.Guild.IconUrl)
+                .WithDescription(msgContent.ToString())
+                .WithColor(Helpers.ColorHelper.RandomColor());
+            await ctx.RespondAsync(embed: embed);
         }
     }
 }
