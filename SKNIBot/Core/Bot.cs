@@ -19,6 +19,8 @@ using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Services.RolesService;
 using DSharpPlus.Exceptions;
 using SKNIBot.Core.Helpers;
+using SKNIBot.Core.Services.WelcomeMessageService;
+using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
 
 namespace SKNIBot.Core
 {
@@ -78,6 +80,7 @@ namespace SKNIBot.Core
 
             // Services
             .AddScoped<AssignRolesService>()
+            .AddScoped<WelcomeMessageService>()
 
             .BuildServiceProvider();
         }
@@ -132,18 +135,8 @@ namespace SKNIBot.Core
 
         private async Task DiscordClient_UserJoinedAsync(DiscordClient client, DSharpPlus.EventArgs.GuildMemberAddEventArgs e)
         {
-            if (e.Guild.Id == SettingsLoader.SettingsContainer.ClubServer)
-            {
-                try
-                {
-                    var channel = e.Guild.GetChannel(SettingsLoader.SettingsContainer.ClubChannelForWelcomeMessage);
-                    await channel.SendMessageAsync("Hej " + e.Member.Mention + " Mamy do Ciebie prośbę - ustaw pseudonim na Imię \"Ksywka\" Nazwisko");
-                }
-                catch (Exception ie)
-                {
-                    Console.WriteLine("Error: Sending welcome message.");
-                }
-            }
+            WelcomeMessageHandler welcomeMessageHandler = new WelcomeMessageHandler(client.GetCommandsNext().Services.GetService<WelcomeMessageService>());
+            welcomeMessageHandler.SendWelcomeMessage(client, e);  
         }
 
         private void SetNetworkParameters()
