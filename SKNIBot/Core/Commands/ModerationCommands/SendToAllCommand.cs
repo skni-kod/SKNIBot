@@ -29,7 +29,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.RespondAsync("Wysyłanie orędzia");
 
             var sentMessagesCount = 0;
-            foreach (var member in ctx.Guild.Members.Where(m => !m.Value.IsBot && m.Value.Roles.Contains(role)))
+
+            DiscordMessage progressBarMessage = await ctx.RespondAsync("`----------" + " 0 %`");
+            foreach (var member in members)
             {
                 try
                 {
@@ -47,10 +49,16 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     };
 
                     await dm.SendMessageAsync(null, false, embed);
+                    sentMessagesCount++;
+
+                    try
+                    {
+                        await progressBarMessage.ModifyAsync(CreateProgressBar(members.Count(), sentMessagesCount));
+                    }
+                    catch { }
 
                     Bot.DiscordClient.Logger.Log(LogLevel.Information, "SKNI Bot",
-                        $"Wysłano wiadomość do {member.Value.DisplayName} ({member.Value.Username}#{member.Value.Discriminator})", DateTime.Now);
-                    sentMessagesCount++;
+                        $"Wysłano wiadomość do {member.Value.DisplayName} ({member.Value.Username}#{member.Value.Discriminator})", DateTime.Now);        
                 }
                 catch (Exception ex)
                 {
@@ -59,6 +67,25 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             }
 
             await ctx.RespondAsync($"Zrobiłem swoje, teraz ty mierz się z gniewem ludu. Wysłano {sentMessagesCount} wiadomości.");
+        }
+
+        private string CreateProgressBar(int numberOfRecivers, int value)
+        {
+            int length = 10;
+            float part = (float)value / (float)numberOfRecivers;
+            StringBuilder builder = new StringBuilder();
+            builder.Append('`');
+            for (int i = 0; i < part * 10; ++i)
+            {
+                builder.Append('=');
+            }
+            for(int i = builder.Length; builder.Length <= length; ++i)
+            {
+                builder.Append('-');
+            }
+            builder.Append(" " + part * 100 + " %");
+            builder.Append('`');
+            return builder.ToString();
         }
     }
 }
