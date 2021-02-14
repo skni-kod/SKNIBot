@@ -26,6 +26,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             var members = ctx.Guild.Members.Where(m => !m.Value.IsBot && m.Value.Roles.Contains(role));
 
+            await ctx.RespondAsync($"Znaleziono {members.Count()} ofiar");
+
             await ctx.RespondAsync("Wysyłanie orędzia");
 
             var sentMessagesCount = 0;
@@ -65,6 +67,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     await ctx.RespondAsync($"Nie udało się wysłać orędzia do {member.Value.DisplayName} ({member.Value.Username}#{member.Value.Discriminator}): {ex}");
                 }
             }
+
+            try
+            {
+                await progressBarMessage.ModifyAsync(CreateProgressBar(members.Count(), members.Count()));
+            }
+            catch { }
 
             await ctx.RespondAsync($"Zrobiłem swoje, teraz ty mierz się z gniewem ludu. Wysłano {sentMessagesCount} wiadomości.");
         }
