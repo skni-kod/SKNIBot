@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         [Command("8Ball")]
         [Description("Magic 8 ball odpowie na wszystkie twoje pytania!")]
-        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] string question)
+        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] [RemainingText] string question)
         {
             await ctx.TriggerTypingAsync();
 
@@ -40,7 +40,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         [Command("8BallAdd")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task EightBallAdd(CommandContext ctx, string newResponse) {
+        public async Task EightBallAdd(CommandContext ctx, [Description("Nowa odpowiedź")][RemainingText] string newResponse) {
             await ctx.TriggerTypingAsync();
 
            using(var db = new StaticDBContext()) {

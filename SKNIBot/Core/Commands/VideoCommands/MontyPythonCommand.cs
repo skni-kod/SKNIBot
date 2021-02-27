@@ -5,9 +5,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
 
-namespace SKNIBot.Core.Commands.YouTubeCommands
+namespace SKNIBot.Core.Commands.VideoCommands
 {
-    [CommandsGroup("YouTube")]
+    [CommandsGroup("Wideo")]
     public class MontyPythonCommand : BaseCommandModule
     {
         private Random _random;

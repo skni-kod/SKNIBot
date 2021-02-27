@@ -6,9 +6,9 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
 
-namespace SKNIBot.Core.Commands.YouTubeCommands
+namespace SKNIBot.Core.Commands.VideoCommands
 {
-    [CommandsGroup("YouTube")]
+    [CommandsGroup("Wideo")]
     public class YouTubeCommand : BaseCommandModule
     {
         [Command("youtube")]
