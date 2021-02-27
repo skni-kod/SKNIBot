@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
-using SKNIBot.Core.Database.Models.StaticDB;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Settings;
 using SpotifyWebApi;
 using SpotifyWebApi.Api;
@@ -64,7 +64,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private string getToday()
         {
-            using (StaticDBContext db = new StaticDBContext())
+            using (DynamicDBContext db = new DynamicDBContext())
             {
                 var track = db.SpotifyEarWorms.Where(e => e.Category == TypeOfPeriod.DAY).OrderByDescending(e => e.DayStamp).FirstOrDefault();
                 if (track == null)
@@ -81,7 +81,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private string getWeek()
         {
-            using (StaticDBContext db = new StaticDBContext())
+            using (DynamicDBContext db = new DynamicDBContext())
             {
                 var track = db.SpotifyEarWorms.Where(e => e.Category == TypeOfPeriod.WEEK).OrderByDescending(e => e.DayStamp).FirstOrDefault();
                 if (track == null)
@@ -98,7 +98,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private string getMonth()
         {
-            using (StaticDBContext db = new StaticDBContext())
+            using (DynamicDBContext db = new DynamicDBContext())
             {
                 var track = db.SpotifyEarWorms.Where(e => e.Category == TypeOfPeriod.MONTH).OrderByDescending(e => e.DayStamp).FirstOrDefault();
                 if (track == null)
@@ -115,7 +115,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         private string getYear()
         {
-            using (StaticDBContext db = new StaticDBContext())
+            using (DynamicDBContext db = new DynamicDBContext())
             {
                 var track = db.SpotifyEarWorms.Where(e => e.Category == TypeOfPeriod.YEAR).OrderByDescending(e => e.DayStamp).FirstOrDefault();
                 if (track == null)
@@ -130,7 +130,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             }
         }
 
-        private string newSong(StaticDBContext db, TypeOfPeriod typeOfPeriod)
+        private string newSong(DynamicDBContext db, TypeOfPeriod typeOfPeriod)
         {
             var newTrack = getSongFromApi();
             SpotifyEarWorm earWorm = new SpotifyEarWorm

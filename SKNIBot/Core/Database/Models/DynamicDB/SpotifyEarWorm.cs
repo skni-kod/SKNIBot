@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SKNIBot.Core.Database.Models.StaticDB
+namespace SKNIBot.Core.Database.Models.DynamicDB
 {
     public enum TypeOfPeriod {DAY, WEEK, MONTH, YEAR}
     public class SpotifyEarWorm
