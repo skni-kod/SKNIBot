@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Microsoft.EntityFrameworkCore;
 using SKNIBot.Core.Database;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;

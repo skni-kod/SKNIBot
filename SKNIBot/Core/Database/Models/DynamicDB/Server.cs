@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace SKNIBot.Core.Database.Models
+namespace SKNIBot.Core.Database.Models.DynamicDB
 {
     public class Server
     {

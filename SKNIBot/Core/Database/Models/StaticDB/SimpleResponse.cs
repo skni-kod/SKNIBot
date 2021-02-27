@@ -1,4 +1,4 @@
-﻿namespace SKNIBot.Core.Database.Models
+﻿namespace SKNIBot.Core.Database.Models.StaticDB
 {
     public class SimpleResponse
     {

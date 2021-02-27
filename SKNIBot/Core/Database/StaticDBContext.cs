@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database.Logger;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.StaticDB;
 
 namespace SKNIBot.Core.Database
 {

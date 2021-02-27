@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SKNIBot.Core.Database.Models
+namespace SKNIBot.Core.Database.Models.DynamicDB
 {
     public class OnlineStats
     {

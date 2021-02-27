@@ -46,7 +46,7 @@ namespace SKNIBot.Core.Commands.TextCommands
            using(var db = new StaticDBContext()) {
                 var command = db.Commands.FirstOrDefault(c => c.Name == "8Ball");
 
-                db.SimpleResponses.Add(new Database.Models.SimpleResponse {
+                db.SimpleResponses.Add(new Database.Models.StaticDB.SimpleResponse {
                     Content = newResponse,
                     CommandID = command.ID
                 });

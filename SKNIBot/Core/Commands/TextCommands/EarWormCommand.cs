@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using SKNIBot.Core.Database;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.StaticDB;
 using SKNIBot.Core.Settings;
 using SpotifyWebApi;
 using SpotifyWebApi.Api;

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SKNIBot.Core.Database.Models
+namespace SKNIBot.Core.Database.Models.StaticDB
 {
     public enum TypeOfPeriod {DAY, WEEK, MONTH, YEAR}
     public class SpotifyEarWorm
