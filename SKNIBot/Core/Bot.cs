@@ -21,6 +21,7 @@ using DSharpPlus.Exceptions;
 using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.WelcomeMessageService;
 using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
+using SKNIBot.Core.Services.ArchCounterService;
 
 namespace SKNIBot.Core
 {
@@ -79,6 +80,7 @@ namespace SKNIBot.Core
             // Helpers
 
             // Services
+            .AddScoped<ArchCounterService>()
             .AddScoped<AssignRolesService>()
             .AddScoped<WelcomeMessageService>()
 
