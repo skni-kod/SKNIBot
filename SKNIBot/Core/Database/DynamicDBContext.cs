@@ -13,6 +13,7 @@ namespace SKNIBot.Core.Database
         public virtual DbSet<Emoji> Emojis { get; set; }
         public virtual DbSet<AssignRole> AssignRoles { get; set; }
         public virtual DbSet<WelcomeMessage> WelcomeMessages { get; set; }
+        public virtual DbSet<ServerVariable> ServerVariables { get; set; }
 
         public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
 
