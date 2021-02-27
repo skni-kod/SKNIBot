@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SKNIBot.Core.Database.Models
+﻿namespace SKNIBot.Core.Database.Models.DynamicDB
 {
     public class JavaThing
     {

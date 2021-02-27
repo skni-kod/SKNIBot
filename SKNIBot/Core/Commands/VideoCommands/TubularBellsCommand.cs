@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SKNIBot.Core.Commands.YouTubeCommands
+namespace SKNIBot.Core.Commands.VideoCommands
 {
-    [CommandsGroup("YouTube")]
+    [CommandsGroup("Wideo")]
     class TubularBellsCommand : BaseCommandModule
     {
         static List<string> list = new List<string>(new string[] {

@@ -19,7 +19,7 @@ namespace SKNIBot.Core.Commands.TextCommands
 
         [Command("8Ball")]
         [Description("Magic 8 ball odpowie na wszystkie twoje pytania!")]
-        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] string question)
+        public async Task EightBall(CommandContext ctx, [Description("Twoje pytanie")] [RemainingText] string question)
         {
             await ctx.TriggerTypingAsync();
 
@@ -35,24 +35,6 @@ namespace SKNIBot.Core.Commands.TextCommands
                     .First();
 
                 await ctx.RespondAsync($"8Ball mówi: {randomResponse}");
-            }
-        }
-
-        [Command("8BallAdd")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task EightBallAdd(CommandContext ctx, string newResponse) {
-            await ctx.TriggerTypingAsync();
-
-           using(var db = new StaticDBContext()) {
-                var command = db.Commands.FirstOrDefault(c => c.Name == "8Ball");
-
-                db.SimpleResponses.Add(new Database.Models.SimpleResponse {
-                    Content = newResponse,
-                    CommandID = command.ID
-                });
-
-                await db.SaveChangesAsync();
-                await ctx.RespondAsync($"Odpowiedź '{newResponse}' dodana");
             }
         }
 
