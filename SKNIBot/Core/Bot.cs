@@ -11,7 +11,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Emzi0767.Utilities;
-using SKNIBot.Core.Commands.YouTubeCommands;
+using SKNIBot.Core.Commands.VideoCommands;
 using SKNIBot.Core.Settings;
 using SKNIBot.Core.Services;
 using Microsoft.Extensions.DependencyInjection;

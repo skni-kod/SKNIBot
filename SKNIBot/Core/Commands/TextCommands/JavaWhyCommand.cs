@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Extensions;
 
 namespace SKNIBot.Core.Commands.TextCommands

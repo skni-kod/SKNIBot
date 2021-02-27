@@ -33,7 +33,7 @@ fn main() {
 }```
 
 Składnia przekazywania argumentów to: %/<nazwa> <wartość>.
-Aktualnie wspierane argumenyty `lang`,`code`,`input`,`version`, argumenty code i lang są wymagane."
+Aktualnie wspierane argumenty `lang`,`code`,`input`,`version`, argumenty code i lang są wymagane."
 ;
 
 

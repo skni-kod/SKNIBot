@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database.Logger;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.StaticDB;
 
 namespace SKNIBot.Core.Database
 {
@@ -17,10 +17,6 @@ namespace SKNIBot.Core.Database
 
         public virtual DbSet<HangmanCategory> HangmanCategories { get; set; }
         public virtual DbSet<HangmanWord> HangmanWords { get; set; }
-
-        public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
-
-        public virtual DbSet<Role> Roles { get; set; }
 
         public StaticDBContext() : base(GetOptions("Data Source=StaticDatabase.sqlite"))
         {

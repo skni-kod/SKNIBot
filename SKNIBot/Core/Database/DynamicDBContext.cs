@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database.Logger;
-using SKNIBot.Core.Database.Models;
+using SKNIBot.Core.Database.Models.DynamicDB;
 
 namespace SKNIBot.Core.Database
 {
@@ -13,6 +13,8 @@ namespace SKNIBot.Core.Database
         public virtual DbSet<Emoji> Emojis { get; set; }
         public virtual DbSet<AssignRole> AssignRoles { get; set; }
         public virtual DbSet<WelcomeMessage> WelcomeMessages { get; set; }
+
+        public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
 
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {

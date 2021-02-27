@@ -7,14 +7,14 @@ using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.TextContainers;
 
-namespace SKNIBot.Core.Commands.TextCommands
+namespace SKNIBot.Core.Commands.PicturesCommands
 {
-    [CommandsGroup("Różne")]
+    [CommandsGroup("Obrazki")]
     class AskCommand : BaseCommandModule
     {
         [Command("ask")]
         [Description("Zapytaj o coś bota.")]
-        public async Task Avatar(CommandContext ctx, [Description("Pytanie")] string question = null)
+        public async Task Avatar(CommandContext ctx, [Description("Pytanie")] [RemainingText] string question = null)
         {
             await ctx.TriggerTypingAsync();
 

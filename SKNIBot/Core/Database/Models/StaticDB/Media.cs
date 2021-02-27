@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SKNIBot.Core.Database.Models
+namespace SKNIBot.Core.Database.Models.StaticDB
 {
     public class Media
     {
