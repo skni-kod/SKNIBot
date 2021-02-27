@@ -38,24 +38,6 @@ namespace SKNIBot.Core.Commands.TextCommands
             }
         }
 
-        [Command("8BallAdd")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task EightBallAdd(CommandContext ctx, [Description("Nowa odpowiedź")][RemainingText] string newResponse) {
-            await ctx.TriggerTypingAsync();
-
-           using(var db = new StaticDBContext()) {
-                var command = db.Commands.FirstOrDefault(c => c.Name == "8Ball");
-
-                db.SimpleResponses.Add(new Database.Models.StaticDB.SimpleResponse {
-                    Content = newResponse,
-                    CommandID = command.ID
-                });
-
-                await db.SaveChangesAsync();
-                await ctx.RespondAsync($"Odpowiedź '{newResponse}' dodana");
-            }
-        }
-
         [Command("8BallList")]
         public async Task EightBallList(CommandContext ctx)
         {
