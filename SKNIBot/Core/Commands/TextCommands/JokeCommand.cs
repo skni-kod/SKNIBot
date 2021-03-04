@@ -5,17 +5,18 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
+using SKNIBot.Core.Services.SimpleResponseService;
 
 namespace SKNIBot.Core.Commands.TextCommands
 {
     [CommandsGroup("Tekst")]
-    public class JokeCommand : BaseCommandModule
+    class JokeCommand : BaseCommandModule
     {
-        private Random _random;
+        private SimpleResponseService _simpleResponseService;
 
-        public JokeCommand()
+        public JokeCommand(SimpleResponseService simpleResponseService)
         {
-            _random = new Random();
+            _simpleResponseService = simpleResponseService;
         }
 
         [Command("żart")]
@@ -25,25 +26,15 @@ namespace SKNIBot.Core.Commands.TextCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new StaticDBContext())
+            string answer = _simpleResponseService.GetAnswer("Joke");
+
+            if (member != null)
             {
-                var jokes = databaseContext.SimpleResponses.Where(p => p.Command.Name == "Joke");
-                var randomIndex = _random.Next(jokes.Count());
-
-                var jokeContent = jokes
-                    .OrderBy(p => p.ID)
-                    .Select(p => p.Content)
-                    .Skip(randomIndex)
-                    .First();
-
-                //Jeżeli długość jest jeden nie podano kodu
-                if (member != null)
-                {
-                    jokeContent += " " + member.Mention;
-                }
-
-                await ctx.RespondAsync(jokeContent);
+                answer += " " + member.Mention;
             }
+
+            await ctx.RespondAsync(answer);
+            
         }
     }
 }
