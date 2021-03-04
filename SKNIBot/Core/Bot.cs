@@ -22,6 +22,7 @@ using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.WelcomeMessageService;
 using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
 using SKNIBot.Core.Services.ArchCounterService;
+using SKNIBot.Core.Services.SimpleResponseService;
 
 namespace SKNIBot.Core
 {
@@ -82,6 +83,7 @@ namespace SKNIBot.Core
             // Services
             .AddScoped<ArchCounterService>()
             .AddScoped<AssignRolesService>()
+            .AddScoped<SimpleResponseService>()
             .AddScoped<WelcomeMessageService>()
 
             .BuildServiceProvider();
