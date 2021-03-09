@@ -14,20 +14,56 @@ namespace SKNIBot.Core.Services.SimpleResponseService
         {
             _random = new Random();
         }
-        public string GetAnswer(string commandName)
+        public SimpleResponseResponse<SimpleResponseElement> GetAnswer(string commandName)
         {
             using (var databaseContext = new StaticDBContext())
             {
+                var command = databaseContext.Commands.Where(p => p.Name == commandName).FirstOrDefault();
+                if(command == null)
+                {
+                    return new SimpleResponseResponse<SimpleResponseElement>(SimpleResponseResult.NoSuchCommand);
+                }
 
                 var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName);
                 var randomIndex = _random.Next(responses.Count());
 
+                if(responses.Count() == 0)
+                {
+                    return new SimpleResponseResponse<SimpleResponseElement>(SimpleResponseResult.CommandHasNoResponses);
+                }
+
                 var response = responses
                     .OrderBy(p => p.ID)
-                    .Select(p => p.Content)
                     .Skip(randomIndex)
                     .First();
-                return response;
+
+                var list = new List<SimpleResponseElement>();
+                return new SimpleResponseResponse<SimpleResponseElement>(new SimpleResponseElement(response.Content, response.Type ));
+            }
+        }
+
+        public SimpleResponseResponse<List<SimpleResponseElement>> GetAnswers(string commandName)
+        {
+            using (var databaseContext = new StaticDBContext())
+            {
+                var command = databaseContext.Commands.Where(p => p.Name == commandName).FirstOrDefault();
+                if (command == null)
+                {
+                    return new SimpleResponseResponse<List<SimpleResponseElement>>(SimpleResponseResult.NoSuchCommand);
+                }
+
+                var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName);
+                if (responses.Count() == 0)
+                {
+                    return new SimpleResponseResponse<List<SimpleResponseElement>>(SimpleResponseResult.CommandHasNoResponses);
+                }
+
+                var list = new List<SimpleResponseElement>();
+                foreach(var response in responses)
+                {
+                    list.Add(new SimpleResponseElement(response.Content, response.Type));
+                }
+                return new SimpleResponseResponse<List<SimpleResponseElement>>(list);
             }
         }
     }
