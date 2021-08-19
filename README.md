@@ -1,5 +1,4 @@
 ﻿# Bocik
-<a href="https://travis-ci.org/Tearth/SKNIBot"><img src="https://travis-ci.org/Tearth/SKNIBot.svg" alt="Build status"></img></a>
 
 Discord bot developed by the SKNI (Studenckie Koło Naukowe Informatyków "KOD") members. It contains a lot of various commands
 which includes: random cats, dogs, animu, xkcd comics, SpaceX launches, 8Ball, wiki articles, hangman, Monty Python,
