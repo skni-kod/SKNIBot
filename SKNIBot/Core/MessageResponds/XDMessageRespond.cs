@@ -8,7 +8,7 @@ namespace SKNIBot.Core.MessageResponds
     public class XDMessageRespond
     {
         [MessageRespond]
-        public static async Task Respond(DSharpPlus.EventArgs.MessageCreateEventArgs args)
+        public static async Task Respond(Bot bot, DSharpPlus.EventArgs.MessageCreateEventArgs args)
         {
             var msg = args.Message.Content.ToLower();
             if (msg.Contains("xd") || msg.Contains("iks de") || msg.Contains("eks di") || msg.Contains("iksde"))

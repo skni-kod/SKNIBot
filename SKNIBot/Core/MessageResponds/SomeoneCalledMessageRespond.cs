@@ -8,7 +8,7 @@ namespace SKNIBot.Core.MessageResponds
     public class SomeoneCalledMessageRespond
     {
         [MessageRespond]
-        public static async Task Respond(DSharpPlus.EventArgs.MessageCreateEventArgs args)
+        public static async Task Respond(Bot bot, DSharpPlus.EventArgs.MessageCreateEventArgs args)
         {
             if (args.Message.Content.ToLower().Contains("bocik"))
             {

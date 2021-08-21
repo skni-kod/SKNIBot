@@ -17,7 +17,7 @@ namespace SKNIBot.Core.MessageResponds
         }
 
         [MessageRespond]
-        public static async Task Respond(DSharpPlus.EventArgs.MessageCreateEventArgs args)
+        public static async Task Respond(Bot bot, DSharpPlus.EventArgs.MessageCreateEventArgs args)
         {
             if (DateTime.Now.Day != _dayWhenEmotionalTitanicFluteHasBeenSent)
             {
