@@ -180,7 +180,7 @@ namespace SKNIBot.Core
                         {
                             if (e.Author.IsBot)
                                 return;
-
+                               
                             var del = (AsyncEventHandler<Bot, MessageCreateEventArgs>)Delegate.CreateDelegate(typeof(AsyncEventHandler<Bot, MessageCreateEventArgs>), method);
                             await del.Invoke(this, e);
                         };
