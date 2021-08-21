@@ -78,7 +78,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                         break;
                 }
             }
-            await PostLongMessageHelper.PostLongMessage(ctx, answers.Responses.Select(p => p.Content).ToList(), "8Ball");
+            await PostLongMessageHelper.PostLongMessage(ctx, answers.Responses.Select(p => p.Content).ToList(), "\n", "8Ball");
         }
     }
 }
