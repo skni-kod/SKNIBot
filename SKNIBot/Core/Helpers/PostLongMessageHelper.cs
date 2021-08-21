@@ -23,16 +23,22 @@ namespace SKNIBot.Core.Helpers
     }
     class PostLongMessageHelper
     {
-        public static async Task PostLongMessage(CommandContext ctx, string strings, string header = null, string imageLink = null, string footerText = null,
+        public static async Task PostLongMessage(CommandContext ctx, string strings, string separator = null, string header = null, string imageLink = null, string footerText = null,
             string footerThumbnailLink = null, string embedThumbnailLink = null, string color = null)
         {
-            await PostLongMessage(ctx, strings.Split(' ').ToList(), header, imageLink, footerText, footerThumbnailLink, embedThumbnailLink, color);
+            await PostLongMessage(ctx, strings.Split(' ').ToList(), separator, header, imageLink, footerText, footerThumbnailLink, embedThumbnailLink, color);
             return;
         }
-        public static async Task PostLongMessage(CommandContext ctx, List<string> strings, string header = null, string imageLink = null, string footerText = null,
+        public static async Task PostLongMessage(CommandContext ctx, List<string> strings, string separator = null, string header = null, string imageLink = null, string footerText = null,
             string footerThumbnailLink = null, string embedThumbnailLink = null, string color = null)
         {
             StringBuilder response = new StringBuilder(2000);
+
+            if(separator == null)
+            {
+                separator = ", ";
+            }
+
             foreach (string s in strings)
             {
                 // If part of message exceedes 1800 characters throw exception
@@ -49,7 +55,7 @@ namespace SKNIBot.Core.Helpers
 
                 if (strings.IndexOf(s) != strings.Count - 1)
                 {
-                    response.Append(", ");
+                    response.Append(separator);
                 }
             }
             if (response.Length > 0)

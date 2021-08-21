@@ -48,7 +48,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
 
                 List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
-                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**");
+                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), null, "**Role dostępne na serwerze to:**");
             }
         }
 
