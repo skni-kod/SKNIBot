@@ -23,6 +23,7 @@ using SKNIBot.Core.Services.WelcomeMessageService;
 using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
 using SKNIBot.Core.Services.ArchCounterService;
 using SKNIBot.Core.Services.SimpleResponseService;
+using SKNIBot.Core.Services.MessageResponseService;
 
 namespace SKNIBot.Core
 {
@@ -30,6 +31,7 @@ namespace SKNIBot.Core
     {
         public static DiscordClient DiscordClient { get; set; }
         private CommandsNextExtension _commands { get; set; }
+        private MessageResponseService _messageResponseService;
         public void Run()
         {
             Connect();
@@ -48,6 +50,8 @@ namespace SKNIBot.Core
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
+
+            _messageResponseService = new MessageResponseService();
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -68,6 +72,7 @@ namespace SKNIBot.Core
             DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
             DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
             DiscordClient.GuildMemberAdded += DiscordClient_UserJoinedAsync;
+            DiscordClient.MessageCreated += DiscordClient_MessageCreated;
 
             await DiscordClient.ConnectAsync();
         }
@@ -77,6 +82,7 @@ namespace SKNIBot.Core
             return new ServiceCollection()
 
             // Singletons
+            .AddSingleton(_messageResponseService)
 
             // Helpers
 
@@ -142,6 +148,18 @@ namespace SKNIBot.Core
             WelcomeMessageHandler welcomeMessageHandler = new WelcomeMessageHandler(client.GetCommandsNext().Services.GetService<WelcomeMessageService>());
             welcomeMessageHandler.SendWelcomeMessage(client, e);  
         }
+        private async Task DiscordClient_MessageCreated(DiscordClient sender, MessageCreateEventArgs e)
+        {
+            var responses = _messageResponseService.GetResponses(e.Message.Content);
+            if (responses.Count > 0)
+            {
+                await e.Channel.TriggerTypingAsync();
+                foreach (var response in responses)
+                {
+                    await e.Channel.SendMessageAsync(response);
+                }
+            }
+        }
 
         private void SetNetworkParameters()
         {
@@ -170,7 +188,6 @@ namespace SKNIBot.Core
                     var attribute = method.GetCustomAttribute<MessageRespondAttribute>();
                     if (attribute != null)
                     {
-                        Console.WriteLine("Dappa");
                         if (!method.IsStatic)
                         {
                             throw new ArgumentException("Methods with MessageRespondAttribute must be static!");
