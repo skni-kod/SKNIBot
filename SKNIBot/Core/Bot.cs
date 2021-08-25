@@ -150,6 +150,9 @@ namespace SKNIBot.Core
         }
         private async Task DiscordClient_MessageCreated(DiscordClient sender, MessageCreateEventArgs e)
         {
+            // Don't sent responses to bots
+            if (e.Author.IsBot)
+                return;
             var responses = _messageResponseService.GetResponses(e.Message.Content);
             if (responses.Count > 0)
             {
