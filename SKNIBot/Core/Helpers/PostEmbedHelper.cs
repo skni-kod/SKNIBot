@@ -60,7 +60,7 @@ namespace SKNIBot.Core.Helpers
                 embed.Thumbnail.Url = embedThumbnailLink;
             }
 
-            await ctx.RespondAsync(null, false, embed);
+            await ctx.RespondAsync(embed);
         }
     }
 }

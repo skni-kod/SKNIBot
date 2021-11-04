@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Proxima.Core;
 using Proxima.Core.Boards;
 using Proxima.Core.Boards.Friendly;
@@ -63,7 +64,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 CreateSession();
 
-                var boardMessage = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Nowa gra utworzona:**");
+                var boardMessage = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Nowa gra utworzona:**").WithFile("board.png", GetBoardImage()));
                 _messageIds.Add(boardMessage.Id);
             }
             else
@@ -120,7 +121,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _selectedPositions.Add(fromPosition);
                 _selectedPositions.Add(toPosition);
 
-                var playerBoardMsg = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Ruch gracza:**");
+                var playerBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch gracza:**").WithFile("board.png", GetBoardImage()));
                 _messageIds.Add(playerBoardMsg.Id);
 
                 var thinkingMessage = await ctx.RespondAsync("Myślę...");
@@ -132,7 +133,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 await thinkingMessage.DeleteAsync();
 
-                var aiBoardMsg = await ctx.RespondWithFileAsync("board.png", GetBoardImage(), "**Ruch AI:**");
+                var aiBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch AI:**").WithFile("board.png", GetBoardImage()));
                 _messageIds.Add(aiBoardMsg.Id);
             }
 

@@ -104,7 +104,7 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
-                catch (Exception ie)
+                catch (Exception)
                 {
                     Console.WriteLine("Error: Counting emoji in new message.");
                 }
@@ -120,7 +120,7 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
-                catch (Exception ie)
+                catch (Exception)
                 {
                     Console.WriteLine("Error: Counting emoji in edited message.");
                 }
@@ -136,7 +136,7 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiReaction(e.User, e.Emoji, e.Channel);
                 }
-                catch (Exception ie)
+                catch (Exception)
                 {
                     Console.WriteLine("Error: Counting emoji in reactions.");
                 }
