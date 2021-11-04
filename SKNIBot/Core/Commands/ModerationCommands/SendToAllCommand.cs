@@ -50,7 +50,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = ctx.Guild.IconUrl }
                     };
 
-                    await dm.SendMessageAsync(null, false, embed);
+                    await dm.SendMessageAsync(embed);
                     sentMessagesCount++;
 
                     try

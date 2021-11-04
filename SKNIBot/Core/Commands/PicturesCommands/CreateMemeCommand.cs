@@ -13,6 +13,7 @@ using SixLabors.Primitives;
 using SixLabors.ImageSharp.Processing.Text;
 using SixLabors.ImageSharp.Processing.Drawing.Pens;
 using SKNIBot.Core.Helpers;
+using DSharpPlus.Entities;
 
 namespace SKNIBot.Core.Commands.PicturesCommands
 {
@@ -80,7 +81,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
             mem.Position = 0;
 
-            await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
+            await ctx.RespondAsync(new DiscordMessageBuilder().WithFile("MEMEM.jpg", mem));
         }
 
         [Command("memeUrl")]
@@ -101,7 +102,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
             mem.Position = 0;
 
-            await ctx.RespondWithFileAsync("MEMEM.jpg", mem);
+            await ctx.RespondAsync(new DiscordMessageBuilder().WithFile("MEMEM.jpg", mem));
         }
 
         void DrawTextOnImage(Image<Rgba32> img, string upText, string downText)
