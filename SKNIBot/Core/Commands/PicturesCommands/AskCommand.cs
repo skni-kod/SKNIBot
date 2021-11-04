@@ -35,7 +35,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 var answerPicture = client.DownloadData(answer.image);
                 var stream = new MemoryStream(answerPicture);
 
-                await ctx.RespondWithFileAsync("answer.gif", stream);
+                await ctx.RespondAsync(new DiscordMessageBuilder().WithFile("answer.gif", stream));
             }
         }
     }

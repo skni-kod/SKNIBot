@@ -91,7 +91,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             };
             embed.AddField("Hangman", output);
 
-            await ctx.RespondAsync("", false, embed);
+            await ctx.RespondAsync(embed);
         }
 
         /// <summary>
