@@ -34,7 +34,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             if (assignRoles.Count == 0)
             {
-                await ctx.RespondAsync("Na tym serwerze nie ma ról, które można sobie przypisać.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", "Na tym serwerze nie ma ról, które można sobie przypisać.");
             }
             else
             {
@@ -64,13 +64,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` nie istnieje.");
                 return;
             }
 
             if (HasUserRole(ctx.Member, role.Value))
             {
-                await ctx.RespondAsync("Posiadasz już tę rolę.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Posiadasz już rolę `{message}`.");
                 return;
             }
 
@@ -78,16 +78,16 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
                 {
-                    await ctx.RespondAsync("Moje role są za nisko abym mógł nadać tę rolę.");
+                    await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Moje role są za nisko abym mógł nadać rolę `{message}`.");
                     return;
                 }
 
                 await ctx.Member.GrantRoleAsync(role.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                await ctx.RespondAsync("Rola nadana.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` nadana.");
             }
             else
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Roli `{message}` nie ma na liście.");
             }
         }
 
@@ -103,13 +103,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` nie istnieje.");
                 return;
             }
 
             if (!HasUserRole(ctx.Member, role.Value))
             {
-                await ctx.RespondAsync("Nie posiadasz tej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Nie posiadasz roli `{message}`.");
                 return;
             }
 
@@ -117,15 +117,15 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
                 {
-                    await ctx.RespondAsync("Moje role są za nisko abym mógł odebrać tę rolę.");
+                    await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Moje role są za nisko abym mógł odebrać rolę `{message}`.");
                     return;
                 }
                 await ctx.Member.RevokeRoleAsync(role.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                await ctx.RespondAsync("Rola odebrana.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` odebrana.");
             }
             else
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Roli `{message}` nie ma na liście.");
             }
         }
 
@@ -143,13 +143,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` nie istnieje.");
                 return;
             }
 
             if (_assignRolesService.IsRoleOnList(role.Value.Id))
             {
-                await ctx.RespondAsync("Rola jest już na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` jest już na liście.");
                 return;
             }
 
@@ -159,11 +159,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 // Add role to database
                 _assignRolesService.AddRoleToDatabase(ctx.Guild.Id, role.Value.Id);
-                await ctx.RespondAsync("Rola dodana do listy ról.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` dodana do listy ról.");
             }
             else
             {
-                await ctx.RespondAsync("Nie możesz dodać tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Nie możesz dodać roli `{message}`, gdyż jest równa lub wyższa twojej najwyższej roli.");
             }
         }
 
@@ -180,13 +180,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` nie istnieje.");
                 return;
             }
 
             if (!_assignRolesService.IsRoleOnList(role.Value.Id))
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Roli `{message}` nie ma na liście.");
                 return;
             }
 
@@ -196,11 +196,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 // Add role to database
                 _assignRolesService.RemoveRoleFromDatabase(ctx.Guild.Id, role.Value.Id);
-                await ctx.RespondAsync("Rola usunięta z listy ról.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Rola `{message}` usunięta z listy ról.");
             }
             else
             {
-                await ctx.RespondAsync("Nie możesz usunąć tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, "System ról", $"{ctx.User.Mention} Nie możesz usunąć roli `{message}`, gdyż jest równa lub wyższa twojej najwyższej roli.");
             }
         }
 
