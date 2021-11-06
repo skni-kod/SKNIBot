@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.ArchCounterService;
 using System;
 using System.Collections.Generic;
@@ -26,17 +27,17 @@ namespace SKNIBot.Core.Commands.OtherCommands
             switch (actionLower)
             {
                 case "add":
-                    await ctx.RespondAsync("Dodano. Aktualna ilość nieudanych instalacji: " + _archCounterService.IncrementCounter(ctx.Guild.Id));
+                    await PostEmbedHelper.PostEmbed(ctx, "ArchCounter", "Dodano. Aktualna ilość nieudanych instalacji: " + _archCounterService.IncrementCounter(ctx.Guild.Id));
                     break;
                 case "value":
-                    await ctx.RespondAsync("Aktualna ilość nieudanych instalacji: " + _archCounterService.GetCounter(ctx.Guild.Id));
+                    await PostEmbedHelper.PostEmbed(ctx, "ArchCounter", "Aktualna ilość nieudanych instalacji: " + _archCounterService.GetCounter(ctx.Guild.Id));
                     break;
                 case "reset":
                     _archCounterService.ResetCounter(ctx.Guild.Id);
-                    await ctx.RespondAsync("Zresetowano");
+                    await PostEmbedHelper.PostEmbed(ctx, "ArchCounter", "Zresetowano");
                     break;
                 default:
-                    await ctx.RespondAsync("Dostępne akcje to: `add`, `value`, `reset`");
+                    await PostEmbedHelper.PostEmbed(ctx, "ArchCounter", "Dostępne akcje to: `add`, `value`, `reset`");
                     break;
             }
         }
