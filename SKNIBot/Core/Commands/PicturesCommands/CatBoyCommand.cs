@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Helpers;
+using SKNIBot.Core.Services.SimpleResponseService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,11 @@ namespace SKNIBot.Core.Commands.PicturesCommands
     [CommandsGroup("Obrazki")]
     class CatBoyCommand : BaseCommandModule
     {
-        private Random random;
+        private SimpleResponseService _simpleResponseService;
 
-        public CatBoyCommand()
+        public CatBoyCommand(SimpleResponseService simpleResponseService)
         {
-            random = new Random();
+            _simpleResponseService = simpleResponseService;
         }
 
         [Command("catboy")]
@@ -27,18 +28,48 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new StaticDBContext())
+            SimpleResponseResponse<SimpleResponseElement> answer = _simpleResponseService.GetAnswer("CatBoy");
+
+            if (answer.Result == SimpleResponseResult.CommandHasNoResponses)
             {
-                // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
-                var catBoys = databaseContext.SimpleResponses
-                    .Where(catboy => catboy.Command.Name == "CatBoy")
-                    .Select(p => p.Content)
-                    .ToList();
+                await PostEmbedHelper.PostEmbed(ctx, "CatBoy", "Brak odpowiedzi w bazie. Najpierw coś dodaj");
+                return;
+            }
 
-                var wordIndex = random.Next(0, catBoys.Count);
-                var response  = catBoys[wordIndex];
-
-                await PostEmbedHelper.PostEmbed(ctx, "Cat boy", member?.Mention, response);
+            switch (answer.Responses.Type)
+            {
+                case Database.Models.StaticDB.SimpleResponseType.Text:
+                    if (member == null)
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "CatBoy", answer.Responses.Content);
+                    }
+                    else
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "CatBoy", answer.Responses.Content + " " + member.Mention);
+                    }
+                    break;
+                case Database.Models.StaticDB.SimpleResponseType.ImageLink:
+                    if (member == null)
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "CatBoy", null, answer.Responses.Content);
+                    }
+                    else
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "CatBoy", member.Mention, answer.Responses.Content);
+                    }
+                    break;
+                // Currently there's no way to append video link to embed
+                case Database.Models.StaticDB.SimpleResponseType.YoutubeLink:
+                case Database.Models.StaticDB.SimpleResponseType.Other:
+                    if (member == null)
+                    {
+                        await ctx.RespondAsync(answer.Responses.Content);
+                    }
+                    else
+                    {
+                        await ctx.RespondAsync(answer.Responses.Content + " " + member.Mention);
+                    }
+                    break;
             }
         }
 
