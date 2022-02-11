@@ -46,7 +46,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 {
                     discordRoles.Add(serverRoles.Where(p => p.Value.Id == roleId).FirstOrDefault().Value);
                 }
-
+                discordRoles.RemoveAll(p => p == null);
                 List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
                 await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), null, "**Role dostępne na serwerze to:**");
             }
