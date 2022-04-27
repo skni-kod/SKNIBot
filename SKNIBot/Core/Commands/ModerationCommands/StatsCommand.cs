@@ -9,6 +9,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
@@ -22,10 +23,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         [Command("stats")]
         [Description("Wyświetla statystyki dotyczące aktualnego kanału.")]
-        [RequirePermissions(Permissions.ManageMessages)]
+        //[RequirePermissions(Permissions.ManageMessages)]
         public async Task Stats(CommandContext ctx)
         {
-            await ctx.TriggerTypingAsync();
+            await PostEmbedHelper.PostEmbed(ctx, "Stats",
+                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
+            /*await ctx.TriggerTypingAsync();
 
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
@@ -33,15 +36,17 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var userMessagesStats = CountUserMessages(messages);
             var response = await GetStatsResponse(userMessagesStats, ctx.Channel.Name, ctx.Guild);
 
-            await ctx.RespondAsync(response);
+            await ctx.RespondAsync(response);*/
         }
 
         [Command("statsall")]
         [Description("Wyświetla statystyki dla wszystkich kanałów.")]
-        [RequirePermissions(Permissions.ManageMessages)]
+        //[RequirePermissions(Permissions.ManageMessages)]
         public async Task StatsAll(CommandContext ctx)
         {
-            await ctx.TriggerTypingAsync();
+            await PostEmbedHelper.PostEmbed(ctx, "Stats",
+                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
+            /*await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
             var allMessages = new List<DiscordMessage>();
@@ -54,68 +59,70 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     allMessages.AddRange(messages);
                 }
                 catch (UnauthorizedException ex)
-                {
-                    /*        Brak dostępu
-                      __________████████_____██████
-                      _________█░░░░░░░░██_██░░░░░░█
-                      ________█░░░░░░░░░░░█░░░░░░░░░█
-                      _______█░░░░░░░███░░░█░░░░░░░░░█
-                      _______█░░░░███░░░███░█░░░████░█
-                      ______█░░░██░░░░░░░░███░██░░░░██
-                      _____█░░░░░░░░░░░░░░░░░█░░░░░░░░███
-                      ____█░░░░░░░░░░░░░██████░░░░░████░░█
-                      ____█░░░░░░░░░█████░░░████░░██░░██░░█
-                      ___██░░░░░░░███░░░░░░░░░░█░░░░░░░░███
-                      __█░░░░░░░░░░░░░░█████████░░█████████
-                      _█░░░░░░░░░░█████_████___████_█████___█
-                      _█░░░░░░░░░░█______█_███__█_____███_█___█
-                       █░░░░░░░░░░░░█___████_████____██_██████
-                        ░░░░░░░░░░░░░█████████░░░████████░░░█
-                        ░░░░░░░░░░░░░░░░█░░░░░█░░░░░░░░░░░░█
-                        ░░░░░░░░░░░░░░░░░░░░██░░░░█░░░░░░██
-                        ░░░░░░░░░░░░░░░░░░██░░░░░░░███████
-                        ░░░░░░░░░░░░░░░░██░░░░░░░░░░█░░░░░█
-                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                        ░░░░░░░░░░░█████████░░░░░░░░░░░░░░██
-                        ░░░░░░░░░░█▒▒▒▒▒▒▒▒███████████████▒▒█
-                        ░░░░░░░░░█▒▒███████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-                        ░░░░░░░░░█▒▒▒▒▒▒▒▒▒█████████████████
-                        ░░░░░░░░░░████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-                        ░░░░░░░░░░░░░░░░░░██████████████████
-                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                        ██░░░░░░░░░░░░░░░░░░░░░░░░░░░██
-                        ▓██░░░░░░░░░░░░░░░░░░░░░░░░██
-                        ▓▓▓███░░░░░░░░░░░░░░░░░░░░█
-                        ▓▓▓▓▓▓███░░░░░░░░░░░░░░░██
-                        ▓▓▓▓▓▓▓▓▓███████████████▓▓█
-                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██
-                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-                     */
-                }
-            }
+                {*/
+            /*        Brak dostępu
+              __________████████_____██████
+              _________█░░░░░░░░██_██░░░░░░█
+              ________█░░░░░░░░░░░█░░░░░░░░░█
+              _______█░░░░░░░███░░░█░░░░░░░░░█
+              _______█░░░░███░░░███░█░░░████░█
+              ______█░░░██░░░░░░░░███░██░░░░██
+              _____█░░░░░░░░░░░░░░░░░█░░░░░░░░███
+              ____█░░░░░░░░░░░░░██████░░░░░████░░█
+              ____█░░░░░░░░░█████░░░████░░██░░██░░█
+              ___██░░░░░░░███░░░░░░░░░░█░░░░░░░░███
+              __█░░░░░░░░░░░░░░█████████░░█████████
+              _█░░░░░░░░░░█████_████___████_█████___█
+              _█░░░░░░░░░░█______█_███__█_____███_█___█
+               █░░░░░░░░░░░░█___████_████____██_██████
+                ░░░░░░░░░░░░░█████████░░░████████░░░█
+                ░░░░░░░░░░░░░░░░█░░░░░█░░░░░░░░░░░░█
+                ░░░░░░░░░░░░░░░░░░░░██░░░░█░░░░░░██
+                ░░░░░░░░░░░░░░░░░░██░░░░░░░███████
+                ░░░░░░░░░░░░░░░░██░░░░░░░░░░█░░░░░█
+                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                ░░░░░░░░░░░█████████░░░░░░░░░░░░░░██
+                ░░░░░░░░░░█▒▒▒▒▒▒▒▒███████████████▒▒█
+                ░░░░░░░░░█▒▒███████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
+                ░░░░░░░░░█▒▒▒▒▒▒▒▒▒█████████████████
+                ░░░░░░░░░░████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
+                ░░░░░░░░░░░░░░░░░░██████████████████
+                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                ██░░░░░░░░░░░░░░░░░░░░░░░░░░░██
+                ▓██░░░░░░░░░░░░░░░░░░░░░░░░██
+                ▓▓▓███░░░░░░░░░░░░░░░░░░░░█
+                ▓▓▓▓▓▓███░░░░░░░░░░░░░░░██
+                ▓▓▓▓▓▓▓▓▓███████████████▓▓█
+                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██
+                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
+                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
+             */
+            /*}
+        }
 
-            var userMessagesStats = CountUserMessages(allMessages);
-            var response = await GetStatsResponse(userMessagesStats, "all", ctx.Guild);
+        var userMessagesStats = CountUserMessages(allMessages);
+        var response = await GetStatsResponse(userMessagesStats, "all", ctx.Guild);
 
-            await ctx.RespondAsync(response);
+        await ctx.RespondAsync(response);*/
         }
 
         [Command("msgstats")]
         [Description("Wyświetla statystyki wiadomości dla poszczególnych miesięcy.")]
-        [RequirePermissions(Permissions.ManageMessages)]
+        //[RequirePermissions(Permissions.ManageMessages)]
         public async Task MsgStats(CommandContext ctx)
         {
-            await ctx.TriggerTypingAsync();
+            await PostEmbedHelper.PostEmbed(ctx, "Stats",
+                ":warning:  Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
+            /*await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
             
             var messages = await GetAllMessagesFromChannel(ctx.Channel);
             var groupedMessages = GroupMessagesByMonths(messages);
             var response = await GetMsgStatsResponse(groupedMessages, ctx.Channel.Name, ctx.Guild);
 
-            await ctx.RespondAsync(response);
+            await ctx.RespondAsync(response);*/
         }
 
         [Command("msgstatsall")]
@@ -123,7 +130,9 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task MsgStatsAll(CommandContext ctx)
         {
-            await ctx.TriggerTypingAsync();
+            await PostEmbedHelper.PostEmbed(ctx, "Stats",
+                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
+            /*await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
             var allMessages = new List<DiscordMessage>();
@@ -143,7 +152,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var groupedMessages = GroupMessagesByMonths(allMessages);
             var response = await GetMsgStatsResponse(groupedMessages, "all", ctx.Guild);
 
-            await ctx.RespondAsync(response);
+            await ctx.RespondAsync(response);*/
         }
 
         private async Task<List<DiscordMessage>> GetAllMessagesFromChannel(DiscordChannel channel)
