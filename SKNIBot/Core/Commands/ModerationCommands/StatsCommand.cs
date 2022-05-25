@@ -202,6 +202,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             
             await ctx.RespondAsync(response);
         }
+        
         [Command("updateMsgStatsAll")]
         [Description("Wymusza aktualizację cache statystyk wiadomości WSZYSTKICH KANAŁÓW. UŻYWAĆ JEDYNIE W OSTATECZNOŚCI!!!")]
         //[RequirePermissions(Permissions.ManageMessages)]
@@ -233,28 +234,38 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         public async Task MsgStatsAll(CommandContext ctx)
         {
             await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
-            /*await ctx.TriggerTypingAsync();
+                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
+            await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
-            var allMessages = new List<DiscordMessage>();
+            var allMessages = new Dictionary<string, int>();
             foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
                 try
-                {
-                    var messages = await GetAllMessagesFromChannel(channel.Value);
-                    allMessages.AddRange(messages);
+                { 
+                    var messageData = _statsHookDate.FetchGroupedMessageCount(ctx.Guild.Id, channel.Key);
+                    foreach (var stat in messageData)
+                    {
+                        if (allMessages.ContainsKey(stat.Key))
+                        {
+                            allMessages[stat.Key] += stat.Value;
+                        }
+                        else
+                        {
+                            allMessages[stat.Key] = stat.Value;
+                        }
+                    }
                 }
                 catch (UnauthorizedException ex)
                 {
 
                 }
             }
-            
-            var groupedMessages = GroupMessagesByMonths(allMessages);
+
+            var groupedMessages = allMessages.ToArray().OrderByDescending(p => p.Value);
             var response = await GetMsgStatsResponse(groupedMessages, "all", ctx.Guild);
 
-            await ctx.RespondAsync(response);*/
+            await ctx.RespondAsync(response);
         }
 
         private async Task<List<DiscordMessage>> GetAllMessagesFromChannel(DiscordChannel channel)
