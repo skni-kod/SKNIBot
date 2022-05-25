@@ -18,10 +18,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Services.RolesService;
 using DSharpPlus.Exceptions;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.WelcomeMessageService;
 using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
 using SKNIBot.Core.Services.ArchCounterService;
+using SKNIBot.Core.Services.UserMessageStatsService;
+using SKNIBot.Core.Services.DateMessageStatsService;
 using SKNIBot.Core.Services.SimpleResponseService;
 using SKNIBot.Core.Services.MessageResponseService;
 
@@ -91,6 +94,8 @@ namespace SKNIBot.Core
             .AddScoped<AssignRolesService>()
             .AddScoped<SimpleResponseService>()
             .AddScoped<WelcomeMessageService>()
+            .AddScoped<UserMessageStatsService>()
+            .AddScoped<DateMessageStatsService>()
 
             .BuildServiceProvider();
         }

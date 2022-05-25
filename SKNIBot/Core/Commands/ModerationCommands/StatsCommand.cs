@@ -3,63 +3,126 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Helpers;
+using SKNIBot.Core.Services.UserMessageStatsService;
+using SKNIBot.Core.Services.DateMessageStatsService;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
     [CommandsGroup("Moderacja")]
-    public class MessageStatsCommand : BaseCommandModule
+    class MessageStatsCommand : BaseCommandModule
     {
         private const int UsernameFieldLength = 40;
         private const int MessagesCountFieldLength = 20;
 
         private int TotalFieldsLength => UsernameFieldLength + MessagesCountFieldLength;
 
+        public UserMessageStatsService _statsHookUser;
+        public DateMessageStatsService _statsHookDate;
+
+        public MessageStatsCommand(UserMessageStatsService userMessageStats)
+        {
+            _statsHookUser = userMessageStats;
+        }
+
+        [Command("updateStats")]
+        [Description("Wymusza aktualizację cache statystyk wiadomości aktualnego kanału")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task UpdateStats(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            
+            var messages = await GetAllMessagesFromChannel(ctx.Channel);
+            var userMessagesStats = CountUserMessages(messages);
+            _statsHookUser.UpdateGroupedMessageCount(userMessagesStats, ctx.Channel.Id, ctx.Guild.Id);
+            
+            await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
+        }
+        
         [Command("stats")]
         [Description("Wyświetla statystyki dotyczące aktualnego kanału.")]
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task Stats(CommandContext ctx)
         {
             await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
-            /*await ctx.TriggerTypingAsync();
+                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
+            
+            await ctx.TriggerTypingAsync();
 
-            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            await ctx.RespondAsync("To będzie szybkie... :eyes:");
 
-            var messages = await GetAllMessagesFromChannel(ctx.Channel);
-            var userMessagesStats = CountUserMessages(messages);
-            var response = await GetStatsResponse(userMessagesStats, ctx.Channel.Name, ctx.Guild);
-
-            await ctx.RespondAsync(response);*/
+            var messageData = _statsHookUser.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id);
+            var response = await GetStatsResponse(messageData, ctx.Channel.Name, ctx.Guild);
+            
+            await ctx.RespondAsync(response);
+            
         }
-
+        
+        [Command("updateStatsAll")]
+        [Description("Wymusza aktualizację cache statystyk wiadomości WSZYSTKICH KANAŁÓW. UŻYWAĆ JEDYNIE W OSTATECZNOŚCI!!!")]
+        //[RequirePermissions(Permissions.ManageMessages)]
+        public async Task UpdateStatsAll(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
+            {
+                try
+                {
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
+                    var userMessagesStats = CountUserMessages(messages);
+                    _statsHookUser.UpdateGroupedMessageCount(userMessagesStats, channel.Key, ctx.Guild.Id);
+                }
+                catch (UnauthorizedException e)
+                {
+                    
+                }
+            }
+            
+            await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
+        }
+        
         [Command("statsall")]
         [Description("Wyświetla statystyki dla wszystkich kanałów.")]
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task StatsAll(CommandContext ctx)
         {
             await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
-            /*await ctx.TriggerTypingAsync();
+                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
+            await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
-            var allMessages = new List<DiscordMessage>();
+            var allMessages = new Dictionary<ulong, int>();
 
             foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
                 try
                 {
-                    var messages = await GetAllMessagesFromChannel(channel.Value);
-                    allMessages.AddRange(messages);
+                    var messages = _statsHookUser.FetchGroupedMessageCount(ctx.Guild.Id, channel.Key);
+                    foreach (var stat in messages)
+                    {
+                        if (allMessages.ContainsKey(stat.Key))
+                        {
+                            allMessages[stat.Key] += stat.Value;
+                        }
+                        else
+                        {
+                            allMessages[stat.Key] = stat.Value;
+                        }
+                    }
                 }
                 catch (UnauthorizedException ex)
-                {*/
+                {
             /*        Brak dostępu
               __________████████_____██████
               _________█░░░░░░░░██_██░░░░░░█
@@ -99,32 +162,71 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
              */
-            /*}
+            }
         }
 
-        var userMessagesStats = CountUserMessages(allMessages);
-        var response = await GetStatsResponse(userMessagesStats, "all", ctx.Guild);
+            var sortedStats = allMessages.ToArray().OrderByDescending(p => p.Value);
+            var response = await GetStatsResponse(sortedStats, "all", ctx.Guild);
 
-        await ctx.RespondAsync(response);*/
+            await ctx.RespondAsync(response);
         }
-
+        
+        [Command("updateMsgStats")]
+        [Description("Wymusza aktualizację cache statystyk wiadomości aktualnego kanału")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task UpdateMsgStats(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            
+            var messages = await GetAllMessagesFromChannel(ctx.Channel);
+            var userMessagesStats = GroupMessagesByMonths(messages);
+            _statsHookDate.UpdateGroupedMessageCount(userMessagesStats, ctx.Channel.Id, ctx.Guild.Id);
+            
+            await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
+        }
+        
         [Command("msgstats")]
         [Description("Wyświetla statystyki wiadomości dla poszczególnych miesięcy.")]
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task MsgStats(CommandContext ctx)
         {
             await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning:  Komenda wyłączona do czasu poprawy. Powoduje zbyt duże zużycie pamięci. Planuję ją wkrótce poprawić ale możesz się sam zgłosić https://github.com/skni-kod/SKNIBot/issues/62");
-            /*await ctx.TriggerTypingAsync();
+                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
+            await ctx.TriggerTypingAsync();
+
+            await ctx.RespondAsync("To będzie szybkie... :eyes:");
+
+            var messageData = _statsHookDate.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id);
+            var response = await GetMsgStatsResponse(messageData, ctx.Channel.Name, ctx.Guild);
+            
+            await ctx.RespondAsync(response);
+        }
+        [Command("updateMsgStatsAll")]
+        [Description("Wymusza aktualizację cache statystyk wiadomości WSZYSTKICH KANAŁÓW. UŻYWAĆ JEDYNIE W OSTATECZNOŚCI!!!")]
+        //[RequirePermissions(Permissions.ManageMessages)]
+        public async Task UpdateMsgStatsAll(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
             
-            var messages = await GetAllMessagesFromChannel(ctx.Channel);
-            var groupedMessages = GroupMessagesByMonths(messages);
-            var response = await GetMsgStatsResponse(groupedMessages, ctx.Channel.Name, ctx.Guild);
+            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
+            {
+                try
+                {
+                    var messages = await GetAllMessagesFromChannel(channel.Value);
+                    var userMessagesStats = GroupMessagesByMonths(messages);
+                    _statsHookDate.UpdateGroupedMessageCount(userMessagesStats, channel.Key, ctx.Guild.Id);
 
-            await ctx.RespondAsync(response);*/
+                }
+                catch (UnauthorizedException e)
+                {
+                    
+                }
+            }
+            
+            await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
         }
-
         [Command("msgstatsall")]
         [Description("Wyświetla statystyki wiadomości we wszystkich kanałach dla poszczególnych miesięcy.")]
         [RequirePermissions(Permissions.ManageMessages)]
@@ -188,6 +290,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 .OrderByDescending(p => p.Value)
                 .ToList();
         }
+
 
         private IEnumerable<KeyValuePair<string, int>> GroupMessagesByMonths(List<DiscordMessage> messages)
         {

@@ -14,6 +14,8 @@ namespace SKNIBot.Core.Database
         public virtual DbSet<AssignRole> AssignRoles { get; set; }
         public virtual DbSet<WelcomeMessage> WelcomeMessages { get; set; }
         public virtual DbSet<ServerVariable> ServerVariables { get; set; }
+        public virtual DbSet<UserMessageStat> UserMessageStats { get; set; }
+        public virtual DbSet<DateMessageStat> DateMessageStats { get; set; }
 
         public virtual DbSet<SpotifyEarWorm> SpotifyEarWorms { get; set; }
 
