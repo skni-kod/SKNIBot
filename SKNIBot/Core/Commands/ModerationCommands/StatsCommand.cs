@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
-using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.UserMessageStatsService;
 using SKNIBot.Core.Services.DateMessageStatsService;
@@ -25,12 +21,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
         private int TotalFieldsLength => UsernameFieldLength + MessagesCountFieldLength;
 
-        public UserMessageStatsService _statsHookUser;
-        public DateMessageStatsService _statsHookDate;
+        private UserMessageStatsService _statsHookUser;
+        private DateMessageStatsService _statsHookDate;
 
-        public MessageStatsCommand(UserMessageStatsService userMessageStats)
+        public MessageStatsCommand(UserMessageStatsService userMessageStats, DateMessageStatsService dateMessageStats)
         {
             _statsHookUser = userMessageStats;
+            _statsHookDate = dateMessageStats;
         }
 
         [Command("updateStats")]
@@ -41,9 +38,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
             
-            var messages = await GetAllMessagesFromChannel(ctx.Channel);
-            var userMessagesStats = CountUserMessages(messages);
-            _statsHookUser.UpdateGroupedMessageCount(userMessagesStats, ctx.Channel.Id, ctx.Guild.Id);
+            var messagesStats = await GetStatsOfChannel(ctx.Channel);
+            _statsHookUser.UpdateGroupedMessageCount(messagesStats.Item1, ctx.Channel.Id, ctx.Guild.Id);
+            
+            _statsHookDate.UpdateGroupedMessageCount(messagesStats.Item2, ctx.Channel.Id, ctx.Guild.Id);
             
             await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
         }
@@ -53,14 +51,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task Stats(CommandContext ctx)
         {
-            await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
-            
             await ctx.TriggerTypingAsync();
 
             await ctx.RespondAsync("To będzie szybkie... :eyes:");
 
-            var messageData = _statsHookUser.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id);
+            var messageData = _statsHookUser.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id).OrderByDescending(p => p.Value);
             var response = await GetStatsResponse(messageData, ctx.Channel.Name, ctx.Guild);
             
             await ctx.RespondAsync(response);
@@ -69,7 +64,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         
         [Command("updateStatsAll")]
         [Description("Wymusza aktualizację cache statystyk wiadomości WSZYSTKICH KANAŁÓW. UŻYWAĆ JEDYNIE W OSTATECZNOŚCI!!!")]
-        //[RequirePermissions(Permissions.ManageMessages)]
+        [RequirePermissions(Permissions.ManageMessages)]
         public async Task UpdateStatsAll(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -79,13 +74,15 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             {
                 try
                 {
-                    var messages = await GetAllMessagesFromChannel(channel.Value);
-                    var userMessagesStats = CountUserMessages(messages);
-                    _statsHookUser.UpdateGroupedMessageCount(userMessagesStats, channel.Key, ctx.Guild.Id);
+                    var messageStats = await GetStatsOfChannel(channel.Value);
+                    
+                    _statsHookUser.UpdateGroupedMessageCount(messageStats.Item1, channel.Key, ctx.Guild.Id);
+            
+                    _statsHookDate.UpdateGroupedMessageCount(messageStats.Item2, channel.Key, ctx.Guild.Id);
                 }
                 catch (UnauthorizedException e)
                 {
-                    
+                    _ = e;
                 }
             }
             
@@ -97,8 +94,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task StatsAll(CommandContext ctx)
         {
-            await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
@@ -123,46 +118,47 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
                 catch (UnauthorizedException ex)
                 {
-            /*        Brak dostępu
-              __________████████_____██████
-              _________█░░░░░░░░██_██░░░░░░█
-              ________█░░░░░░░░░░░█░░░░░░░░░█
-              _______█░░░░░░░███░░░█░░░░░░░░░█
-              _______█░░░░███░░░███░█░░░████░█
-              ______█░░░██░░░░░░░░███░██░░░░██
-              _____█░░░░░░░░░░░░░░░░░█░░░░░░░░███
-              ____█░░░░░░░░░░░░░██████░░░░░████░░█
-              ____█░░░░░░░░░█████░░░████░░██░░██░░█
-              ___██░░░░░░░███░░░░░░░░░░█░░░░░░░░███
-              __█░░░░░░░░░░░░░░█████████░░█████████
-              _█░░░░░░░░░░█████_████___████_█████___█
-              _█░░░░░░░░░░█______█_███__█_____███_█___█
-               █░░░░░░░░░░░░█___████_████____██_██████
-                ░░░░░░░░░░░░░█████████░░░████████░░░█
-                ░░░░░░░░░░░░░░░░█░░░░░█░░░░░░░░░░░░█
-                ░░░░░░░░░░░░░░░░░░░░██░░░░█░░░░░░██
-                ░░░░░░░░░░░░░░░░░░██░░░░░░░███████
-                ░░░░░░░░░░░░░░░░██░░░░░░░░░░█░░░░░█
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                ░░░░░░░░░░░█████████░░░░░░░░░░░░░░██
-                ░░░░░░░░░░█▒▒▒▒▒▒▒▒███████████████▒▒█
-                ░░░░░░░░░█▒▒███████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-                ░░░░░░░░░█▒▒▒▒▒▒▒▒▒█████████████████
-                ░░░░░░░░░░████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-                ░░░░░░░░░░░░░░░░░░██████████████████
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
-                ██░░░░░░░░░░░░░░░░░░░░░░░░░░░██
-                ▓██░░░░░░░░░░░░░░░░░░░░░░░░██
-                ▓▓▓███░░░░░░░░░░░░░░░░░░░░█
-                ▓▓▓▓▓▓███░░░░░░░░░░░░░░░██
-                ▓▓▓▓▓▓▓▓▓███████████████▓▓█
-                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██
-                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-             */
-            }
+                    _ = ex;
+                    /*        Brak dostępu
+                      __________████████_____██████
+                      _________█░░░░░░░░██_██░░░░░░█
+                      ________█░░░░░░░░░░░█░░░░░░░░░█
+                      _______█░░░░░░░███░░░█░░░░░░░░░█
+                      _______█░░░░███░░░███░█░░░████░█
+                      ______█░░░██░░░░░░░░███░██░░░░██
+                      _____█░░░░░░░░░░░░░░░░░█░░░░░░░░███
+                      ____█░░░░░░░░░░░░░██████░░░░░████░░█
+                      ____█░░░░░░░░░█████░░░████░░██░░██░░█
+                      ___██░░░░░░░███░░░░░░░░░░█░░░░░░░░███
+                      __█░░░░░░░░░░░░░░█████████░░█████████
+                      _█░░░░░░░░░░█████_████___████_█████___█
+                      _█░░░░░░░░░░█______█_███__█_____███_█___█
+                       █░░░░░░░░░░░░█___████_████____██_██████
+                        ░░░░░░░░░░░░░█████████░░░████████░░░█
+                        ░░░░░░░░░░░░░░░░█░░░░░█░░░░░░░░░░░░█
+                        ░░░░░░░░░░░░░░░░░░░░██░░░░█░░░░░░██
+                        ░░░░░░░░░░░░░░░░░░██░░░░░░░███████
+                        ░░░░░░░░░░░░░░░░██░░░░░░░░░░█░░░░░█
+                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                        ░░░░░░░░░░░█████████░░░░░░░░░░░░░░██
+                        ░░░░░░░░░░█▒▒▒▒▒▒▒▒███████████████▒▒█
+                        ░░░░░░░░░█▒▒███████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
+                        ░░░░░░░░░█▒▒▒▒▒▒▒▒▒█████████████████
+                        ░░░░░░░░░░████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
+                        ░░░░░░░░░░░░░░░░░░██████████████████
+                        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█
+                        ██░░░░░░░░░░░░░░░░░░░░░░░░░░░██
+                        ▓██░░░░░░░░░░░░░░░░░░░░░░░░██
+                        ▓▓▓███░░░░░░░░░░░░░░░░░░░░█
+                        ▓▓▓▓▓▓███░░░░░░░░░░░░░░░██
+                        ▓▓▓▓▓▓▓▓▓███████████████▓▓█
+                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██
+                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
+                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
+                     */
+                }
         }
 
             var sortedStats = allMessages.ToArray().OrderByDescending(p => p.Value);
@@ -171,6 +167,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.RespondAsync(response);
         }
         
+        /*
         [Command("updateMsgStats")]
         [Description("Wymusza aktualizację cache statystyk wiadomości aktualnego kanału")]
         [RequirePermissions(Permissions.ManageMessages)]
@@ -185,24 +182,24 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             
             await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
         }
+        */
         
         [Command("msgstats")]
         [Description("Wyświetla statystyki wiadomości dla poszczególnych miesięcy.")]
         //[RequirePermissions(Permissions.ManageMessages)]
         public async Task MsgStats(CommandContext ctx)
         {
-            await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
             await ctx.TriggerTypingAsync();
 
             await ctx.RespondAsync("To będzie szybkie... :eyes:");
 
-            var messageData = _statsHookDate.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id);
-            var response = await GetMsgStatsResponse(messageData, ctx.Channel.Name, ctx.Guild);
+            var messageData = _statsHookDate.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id).OrderByDescending(p => p.Key);
+            var response = GetMsgStatsResponse(messageData, ctx.Channel.Name);
             
             await ctx.RespondAsync(response);
         }
         
+        /*
         [Command("updateMsgStatsAll")]
         [Description("Wymusza aktualizację cache statystyk wiadomości WSZYSTKICH KANAŁÓW. UŻYWAĆ JEDYNIE W OSTATECZNOŚCI!!!")]
         //[RequirePermissions(Permissions.ManageMessages)]
@@ -228,13 +225,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             
             await ctx.RespondAsync("Cache przeładowany! Nowe statystyki już dostępne");
         }
+        */
+        
         [Command("msgstatsall")]
         [Description("Wyświetla statystyki wiadomości we wszystkich kanałach dla poszczególnych miesięcy.")]
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task MsgStatsAll(CommandContext ctx)
         {
-            await PostEmbedHelper.PostEmbed(ctx, "Stats",
-                ":warning: Komenda w trakcie przebudowy. Tymczasowo odblokowana do testów");
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... :eyes:");
 
@@ -258,12 +255,12 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
                 catch (UnauthorizedException ex)
                 {
-
+                    _ = ex;
                 }
             }
 
-            var groupedMessages = allMessages.ToArray().OrderByDescending(p => p.Value);
-            var response = await GetMsgStatsResponse(groupedMessages, "all", ctx.Guild);
+            var groupedMessages = allMessages.ToArray().OrderByDescending(p => p.Key);
+            var response = GetMsgStatsResponse(groupedMessages, "all");
 
             await ctx.RespondAsync(response);
         }
@@ -271,11 +268,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private async Task<List<DiscordMessage>> GetAllMessagesFromChannel(DiscordChannel channel)
         {
             var messagesList = new List<DiscordMessage>();
-            var lastMessageID = (await channel.GetMessagesAsync(1)).FirstOrDefault()?.Id;
+            var lastMessageId = (await channel.GetMessagesAsync(1)).FirstOrDefault()?.Id;
 
-            while (lastMessageID != null)
+            while (lastMessageId != null)
             {
-                var last100Messages = await channel.GetMessagesBeforeAsync(lastMessageID.Value, 100);
+                var last100Messages = await channel.GetMessagesBeforeAsync(lastMessageId.Value, 100);
                 messagesList.AddRange(last100Messages);
 
                 if (last100Messages.Count < 100)
@@ -283,11 +280,70 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     break;
                 }
 
-                lastMessageID = last100Messages.Last().Id;
+                lastMessageId = last100Messages.Last().Id;
             }
 
             return messagesList;
         }
+
+        private async Task<(IEnumerable<KeyValuePair<ulong, int>>, IEnumerable<KeyValuePair<string, int>>)> GetStatsOfChannel(DiscordChannel channel)
+        {
+            var messagesListByUser = new Dictionary<ulong, int>();
+            var messagesListByDate = new Dictionary<string, int>();
+            var lastMessageId = (await channel.GetMessagesAsync(1)).FirstOrDefault()?.Id;
+
+            while (lastMessageId != null)
+            {
+                var last100Messages = await channel.GetMessagesBeforeAsync(lastMessageId.Value, 100);
+                var lastUserGroupedMessages = last100Messages
+                    .GroupBy(p => p.Author.Id, (authorId, messages) =>
+                        new
+                        {
+                            AuthorId = authorId,
+                            MessagesCount = messages.Count()
+                        });
+                var lastDateGroupedMessages = last100Messages
+                    .GroupBy(p => p.CreationTimestamp.ToString("yyyy/MM"), (monthAndYear, messagesInMonth) => new
+                    {
+                        Date = monthAndYear,
+                        MessagesCount = messagesInMonth.Count()
+                    });
+
+                foreach (var message in lastUserGroupedMessages)
+                {
+                    if (messagesListByUser.ContainsKey(message.AuthorId))
+                    {
+                        messagesListByUser[message.AuthorId] += message.MessagesCount;
+                    }
+                    else
+                    {
+                        messagesListByUser[message.AuthorId] = message.MessagesCount;
+                    }
+                }
+
+                foreach (var message in lastDateGroupedMessages)
+                {
+                    if (messagesListByDate.ContainsKey(message.Date))
+                    {
+                        messagesListByDate[message.Date] += message.MessagesCount;
+                    }
+                    else
+                    {
+                        messagesListByDate[message.Date] = message.MessagesCount;
+                    }
+                }
+
+                if (last100Messages.Count < 100)
+                {
+                    break;
+                }
+
+                lastMessageId = last100Messages.Last().Id;
+            }
+
+            return (messagesListByUser.AsEnumerable(), messagesListByDate.AsEnumerable());
+        }
+        
 
         private IEnumerable<KeyValuePair<ulong, int>> CountUserMessages(List<DiscordMessage> messages)
         {
@@ -340,7 +396,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
                 catch (NotFoundException ex)
                 {
-
+                    _ = ex;
                 }
             }
 
@@ -349,7 +405,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             return response.ToString();
         }
 
-        private async Task<string> GetMsgStatsResponse(IEnumerable<KeyValuePair<string, int>> groupedMessages, string channelName, DiscordGuild guild)
+        private string GetMsgStatsResponse(IEnumerable<KeyValuePair<string, int>> groupedMessages, string channelName)
         {
             var response = new StringBuilder();
 
@@ -363,7 +419,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
             foreach (var monthData in groupedMessages.Take(25))
             {
-                var month = monthData.Key.PadRight(UsernameFieldLength);
+                var month = monthData.Key.PadRight(7, '0').PadRight(UsernameFieldLength);
                 var messagesCount = monthData.Value.ToString().PadRight(MessagesCountFieldLength);
 
                 response.Append($"{month}{messagesCount}\n");
