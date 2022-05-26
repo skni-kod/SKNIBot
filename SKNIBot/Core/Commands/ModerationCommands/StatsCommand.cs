@@ -9,8 +9,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
-using SKNIBot.Core.Database.Models.DynamicDB;
-using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.UserMessageStatsService;
 using SKNIBot.Core.Services.DateMessageStatsService;
 
@@ -44,21 +42,30 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             servers.UnionWith(_statsHookDate.GetServerList());
             foreach (var server in servers)
             {
-                
-                foreach (var channel in (await Bot.DiscordClient.GetGuildAsync(server)).Channels.Where(p => p.Value.Type == ChannelType.Text))
+
+                try
                 {
-                    try
+                    foreach (var channel in (await Bot.DiscordClient.GetGuildAsync(server)).Channels.Where(p =>
+                                 p.Value.Type == ChannelType.Text))
                     {
-                        var messageStats = await GetStatsOfChannel(channel.Value);
-                        
-                        _statsHookUser.UpdateGroupedMessageCount(messageStats.Item1, channel.Key, server);
-                
-                        _statsHookDate.UpdateGroupedMessageCount(messageStats.Item2, channel.Key, server);
+                        try
+                        {
+                            var messageStats = await GetStatsOfChannel(channel.Value);
+
+                            _statsHookUser.UpdateGroupedMessageCount(messageStats.Item1, channel.Key, server);
+
+                            _statsHookDate.UpdateGroupedMessageCount(messageStats.Item2, channel.Key, server);
+                        }
+                        catch (UnauthorizedException e)
+                        {
+                            _ = e;
+                        }
                     }
-                    catch (UnauthorizedException e)
-                    {
-                        _ = e;
-                    }
+                }
+                catch
+                {
+                    _statsHookUser.DeleteServerCache(server);
+                    _statsHookDate.DeleteServerCache(server);
                 }
             }
             Console.Out.WriteLine("Stats cache reloaded!");

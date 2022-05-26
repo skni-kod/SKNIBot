@@ -5,19 +5,19 @@
         public UserMessageStat()
         {
             count = 0;
-            ChannelID = 0;
-            User = 0;
+            ChannelID = "Unknown";
+            UserID = "Unknown";
         }
-        public UserMessageStat(int cnt, ulong channel, ulong user)
+        public UserMessageStat(int cnt, string channel, string user)
          {
              count = cnt;
              ChannelID = channel;
-             User = user;
+             UserID = user;
          }
         public int ID { get; set; }
         public int ServerID { get; set; }
-        public ulong ChannelID { get; set; }
-        public ulong User { get; set; }
+        public string ChannelID { get; set; }
+        public string UserID { get; set; }
         public int count { get; set; }
         public virtual Server Server { get; set; }
     }

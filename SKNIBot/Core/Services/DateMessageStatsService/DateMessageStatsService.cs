@@ -20,7 +20,7 @@ namespace SKNIBot.Core.Services.DateMessageStatsService
                 {
                     {
                         Server dbServer = GetServerFromDatabase(databaseContext, serverId);
-                        DateMessageStat newStat = new DateMessageStat(count, channelId, date)
+                        DateMessageStat newStat = new DateMessageStat(count, channelId.ToString(), date)
                         {
                             Server = dbServer
                         };
@@ -41,9 +41,20 @@ namespace SKNIBot.Core.Services.DateMessageStatsService
             using (var databaseContext = new DynamicDBContext())
             {
                 Server dbServer = GetServerFromDatabase(databaseContext, serverId);
-                return dbServer.DateMessageStats.Where(p => p.ChannelID == channelId).Select(p => new KeyValuePair<string, int>(p.Date, p.count)).ToList();
+                return dbServer.DateMessageStats.Where(p => ulong.Parse(p.ChannelID) == channelId).Select(p => new KeyValuePair<string, int>(p.Date, p.count)).ToList();
             }
         }
+        public void DeleteServerCache(ulong serverId)
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                var toDelete = databaseContext.UserMessageStats.Where(p => (ulong) p.ServerID == serverId);
+                databaseContext.UserMessageStats.RemoveRange(toDelete);
+                databaseContext.SaveChanges();
+            }
+
+        }
+         
         private Server GetServerFromDatabase(DynamicDBContext databaseContext, ulong serverId)
          {
              Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).Include(p => p.DateMessageStats).FirstOrDefault();
