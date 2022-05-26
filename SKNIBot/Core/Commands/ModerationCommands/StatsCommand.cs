@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.UserMessageStatsService;
 using SKNIBot.Core.Services.DateMessageStatsService;
@@ -18,16 +21,47 @@ namespace SKNIBot.Core.Commands.ModerationCommands
     {
         private const int UsernameFieldLength = 40;
         private const int MessagesCountFieldLength = 20;
+        private const int CacheReloadInterval = 1000 * 60 * 60 * 24;
 
         private int TotalFieldsLength => UsernameFieldLength + MessagesCountFieldLength;
 
         private UserMessageStatsService _statsHookUser;
         private DateMessageStatsService _statsHookDate;
+        private Timer _cacheReloadTimer;
 
         public MessageStatsCommand(UserMessageStatsService userMessageStats, DateMessageStatsService dateMessageStats)
         {
             _statsHookUser = userMessageStats;
             _statsHookDate = dateMessageStats;
+            _cacheReloadTimer = new Timer(CacheReloadCallback, null, 40000, Timeout.Infinite);
+        }
+
+        private async void CacheReloadCallback(object state)
+        {
+            _cacheReloadTimer.Change(CacheReloadInterval, Timeout.Infinite);
+            Console.Out.WriteLine("Starting full stats cache reload... This will take a lot of time...");
+            var servers = _statsHookUser.GetServerList();
+            servers.UnionWith(_statsHookDate.GetServerList());
+            foreach (var server in servers)
+            {
+                
+                foreach (var channel in (await Bot.DiscordClient.GetGuildAsync(server)).Channels.Where(p => p.Value.Type == ChannelType.Text))
+                {
+                    try
+                    {
+                        var messageStats = await GetStatsOfChannel(channel.Value);
+                        
+                        _statsHookUser.UpdateGroupedMessageCount(messageStats.Item1, channel.Key, server);
+                
+                        _statsHookDate.UpdateGroupedMessageCount(messageStats.Item2, channel.Key, server);
+                    }
+                    catch (UnauthorizedException e)
+                    {
+                        _ = e;
+                    }
+                }
+            }
+            Console.Out.WriteLine("Stats cache reloaded!");
         }
 
         [Command("updateStats")]
@@ -53,7 +87,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             await ctx.TriggerTypingAsync();
 
-            await ctx.RespondAsync("To będzie szybkie... :eyes:");
 
             var messageData = _statsHookUser.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id).OrderByDescending(p => p.Value);
             var response = await GetStatsResponse(messageData, ctx.Channel.Name, ctx.Guild);
@@ -68,7 +101,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         public async Task UpdateStatsAll(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync("To chwilę potrwa... :eyes:");
+            await ctx.RespondAsync("To chwilę potrwa... Skocz sobie na obiad i do sklepu... :eyes:");
             
             foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
             {
@@ -190,8 +223,6 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         public async Task MsgStats(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-
-            await ctx.RespondAsync("To będzie szybkie... :eyes:");
 
             var messageData = _statsHookDate.FetchGroupedMessageCount(ctx.Guild.Id, ctx.Channel.Id).OrderByDescending(p => p.Key);
             var response = GetMsgStatsResponse(messageData, ctx.Channel.Name);

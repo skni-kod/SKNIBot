@@ -14,19 +14,21 @@ namespace SKNIBot.Core.Services.UserMessageStatsService
         public bool UpdateGroupedMessageCount(IEnumerable<KeyValuePair<ulong, int>> data, ulong channelId,
             ulong serverId)
         {
-            foreach (var (user, count) in data)
+            using (var databaseContext = new DynamicDBContext())
             {
-                using (var databaseContext = new DynamicDBContext())
+                var statList = new List<UserMessageStat>();
+                foreach (var (user, count) in data)
                 {
-                    Server dbServer = GetServerFromDatabase(databaseContext, serverId); 
-                    UserMessageStat newStat = new UserMessageStat(count, channelId, user)
-                    {
-                        Server =  dbServer
-                    };
-                    
-                    databaseContext.Add(newStat);
-                    databaseContext.SaveChanges();
+                        Server dbServer = GetServerFromDatabase(databaseContext, serverId); 
+                        UserMessageStat newStat = new UserMessageStat(count, channelId, user)
+                        {
+                            Server =  dbServer
+                        };
+                        
+                        statList.Add(newStat);
                 }
+                databaseContext.AddRange(statList);
+                databaseContext.SaveChanges();
             }
             return false;
         }
@@ -54,6 +56,14 @@ namespace SKNIBot.Core.Services.UserMessageStatsService
                  databaseContext.SaveChanges();
              }
              return dbServer;
+         }
+        public HashSet<ulong> GetServerList()
+         {
+             using (var databaseContext = new DynamicDBContext())
+             {
+                 var servers = databaseContext.Servers.Select(p => ulong.Parse(p.ServerID)).ToHashSet();
+                 return servers;
+             }
          }
     }
 }
