@@ -226,7 +226,7 @@ namespace SKNIBot.Core
 
             switch (e.Exception)
             {
-                case Checks​Failed​Exception ex:
+                case ChecksFailedException ex:
                     {
                         
                         messageToSend.Append("Brak wystarczających uprawnień").AppendLine();
