@@ -48,8 +48,9 @@ namespace SKNIBot.Core.Services.DateMessageStatsService
         {
             using (var databaseContext = new DynamicDBContext())
             {
-                var toDelete = databaseContext.UserMessageStats.Where(p => (ulong) p.ServerID == serverId);
-                databaseContext.UserMessageStats.RemoveRange(toDelete);
+                var serverIdString = serverId.ToString();
+                var toDelete = databaseContext.DateMessageStats.Where(p => databaseContext.Servers.FirstOrDefault(s => s.ID == p.ServerID).ServerID == serverIdString);
+                databaseContext.DateMessageStats.RemoveRange(toDelete);
                 databaseContext.SaveChanges();
             }
 
