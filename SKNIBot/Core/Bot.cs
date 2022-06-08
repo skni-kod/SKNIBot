@@ -8,10 +8,8 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
-using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Emzi0767.Utilities;
-using SKNIBot.Core.Commands.VideoCommands;
 using SKNIBot.Core.Settings;
 using SKNIBot.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +20,8 @@ using SKNIBot.Core.Helpers;
 using SKNIBot.Core.Services.WelcomeMessageService;
 using SKNIBot.Core.Handlers.WelcomeMessageHandlers;
 using SKNIBot.Core.Services.ArchCounterService;
+using SKNIBot.Core.Services.UserMessageStatsService;
+using SKNIBot.Core.Services.DateMessageStatsService;
 using SKNIBot.Core.Services.SimpleResponseService;
 using SKNIBot.Core.Services.MessageResponseService;
 
@@ -91,6 +91,8 @@ namespace SKNIBot.Core
             .AddScoped<AssignRolesService>()
             .AddScoped<SimpleResponseService>()
             .AddScoped<WelcomeMessageService>()
+            .AddScoped<UserMessageStatsService>()
+            .AddScoped<DateMessageStatsService>()
 
             .BuildServiceProvider();
         }
@@ -224,7 +226,7 @@ namespace SKNIBot.Core
 
             switch (e.Exception)
             {
-                case Checks​Failed​Exception ex:
+                case ChecksFailedException ex:
                     {
                         
                         messageToSend.Append("Brak wystarczających uprawnień").AppendLine();

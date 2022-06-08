@@ -16,5 +16,7 @@ namespace SKNIBot.Core.Database.Models.DynamicDB
         public virtual List<AssignRole> AssignRoles { get; set; }
         public virtual WelcomeMessage WelcomeMessage { get; set; }
         public virtual ServerVariable ServerVariable { get; set; }
+        public virtual List<UserMessageStat> UserMessageStats { get; set; }
+        public virtual List<DateMessageStat> DateMessageStats { get; set; }
     }
 }
