@@ -72,11 +72,7 @@ Aktualnie wspierane argumenty `title`,`content`. Nie podanie żadnego z argument
         
         private async Task WriteHelp(CommandContext ctx)
         {
-            var embed = new DiscordEmbedBuilder()
-                .WithColor(new DiscordColor(0f, 0f, 1f));
-
-            embed.AddField("Pomoc", _EmbedHelpText);
-            await ctx.RespondAsync(embed: embed);
+            await PostEmbedHelper.PostEmbed(ctx, "Pomoc", _EmbedHelpText,color: "#0000FF");
         }
     }
 }
