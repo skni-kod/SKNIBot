@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.TextCommands
@@ -14,7 +16,9 @@ namespace SKNIBot.Core.Commands.TextCommands
         public async Task Say(CommandContext ctx, [Description("Co chcesz powiedzieć?")] [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
-            await PostEmbedHelper.PostEmbed(ctx, "Bocik przemówił", message);
+            await new DiscordMessageBuilder()
+                .WithContent(message)
+                .SendAsync(ctx.Channel);
         }
 
         [Command("mówd")]
@@ -24,7 +28,9 @@ namespace SKNIBot.Core.Commands.TextCommands
         {
             await ctx.TriggerTypingAsync();
             await ctx.Channel.DeleteMessageAsync(ctx.Message);
-            await PostEmbedHelper.PostEmbed(ctx, "Bocik przemówił", message);
+            await new DiscordMessageBuilder()
+                .WithContent(message)
+                .SendAsync(ctx.Channel);
         }
     }
 }
