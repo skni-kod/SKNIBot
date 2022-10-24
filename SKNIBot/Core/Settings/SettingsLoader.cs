@@ -104,7 +104,7 @@ namespace SKNIBot.Core.Settings
         }
 
         /// <summary>
-        /// Loads settings and developersfrom environoment variables.
+        /// Loads settings and developers from environoment variables.
         /// </summary>
         private static void LoadFromEnvorinment()
         {
@@ -136,6 +136,10 @@ namespace SKNIBot.Core.Settings
                 Console.WriteLine(eq.Message);
                 System.Environment.Exit(ExitCodes.environmentVariableHasWrongType);
             }
+            catch
+            {
+                System.Environment.Exit(ExitCodes.otherErrorDuringReadingSettings);
+            }
         }
 
         /// <summary>
@@ -145,26 +149,32 @@ namespace SKNIBot.Core.Settings
         {
             try
             {
-                var settingsFile = new StreamReader(_settingsFile);
-                SettingsContainer = JsonConvert.DeserializeObject<SettingsContainer>(settingsFile.ReadToEnd());
-                settingsFile.Close();
+                var settingsFile = File.ReadAllText(_settingsFile);
+                SettingsContainer = JsonConvert.DeserializeObject<SettingsContainer>(settingsFile);
             }
             catch(FileNotFoundException eq)
             {
                 Console.WriteLine(eq.Message);
                 System.Environment.Exit(ExitCodes.settingsFileDoesntExits);
             }
+            catch
+            {
+                System.Environment.Exit(ExitCodes.otherErrorDuringReadingSettings);
+            }
 
             try
             {
-                var developersFile = new StreamReader(_developersFile);
-                DevelopersContainer = JsonConvert.DeserializeObject<DevelopersContainer>(developersFile.ReadToEnd());
-                developersFile.Close();
+                var developersFile = File.ReadAllText(_developersFile);
+                DevelopersContainer = JsonConvert.DeserializeObject<DevelopersContainer>(developersFile);
             }
             catch (FileNotFoundException eq)
             {
                 Console.WriteLine(eq.Message);
                 System.Environment.Exit(ExitCodes.developerFileDoesntExist);
+            }
+            catch
+            {
+                System.Environment.Exit(ExitCodes.otherErrorDuringReadingSettings);
             }
 
         }
