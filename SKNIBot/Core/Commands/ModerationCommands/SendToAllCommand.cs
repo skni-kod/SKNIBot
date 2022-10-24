@@ -62,7 +62,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     Bot.DiscordClient.Logger.Log(LogLevel.Information, "SKNI Bot",
                         $"Wysłano wiadomość do {member.Value.DisplayName} ({member.Value.Username}#{member.Value.Discriminator})", DateTime.Now);        
                 }
-                catch (Exception ex)
+                catch
                 {
                     await ctx.Channel.SendMessageAsync($"Nie udało się wysłać orędzia do {member.Value.DisplayName} ({member.Value.Username}#{member.Value.Discriminator})");
                 }
