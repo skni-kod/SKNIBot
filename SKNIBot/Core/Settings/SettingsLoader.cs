@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
+using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Settings
 {
@@ -22,16 +23,16 @@ namespace SKNIBot.Core.Settings
     }
 
     [Serializable]
-    public class VariableIsNotCorrectTypeException : Exception
+    public class VariableHasWrongTypeException : Exception
     {
-        public VariableIsNotCorrectTypeException()
+        public VariableHasWrongTypeException()
         { }
 
-        public VariableIsNotCorrectTypeException(string message)
+        public VariableHasWrongTypeException(string message)
             : base(message)
         { }
 
-        public VariableIsNotCorrectTypeException(string message, Exception innerException)
+        public VariableHasWrongTypeException(string message, Exception innerException)
             : base(message, innerException)
         { }
     }
@@ -128,12 +129,12 @@ namespace SKNIBot.Core.Settings
             catch(VariableNotPresentException eq)
             {
                 Console.WriteLine(eq.Message);
-                System.Environment.Exit(103);
+                System.Environment.Exit(ExitCodes.environmentVaraibleNotPresent);
             }
-            catch(VariableIsNotCorrectTypeException eq)
+            catch(VariableHasWrongTypeException eq)
             {
                 Console.WriteLine(eq.Message);
-                System.Environment.Exit(104);
+                System.Environment.Exit(ExitCodes.environmentVariableHasWrongType);
             }
         }
 
@@ -151,7 +152,7 @@ namespace SKNIBot.Core.Settings
             catch(FileNotFoundException eq)
             {
                 Console.WriteLine(eq.Message);
-                System.Environment.Exit(101);
+                System.Environment.Exit(ExitCodes.settingsFileDoesntExits);
             }
 
             try
@@ -163,7 +164,7 @@ namespace SKNIBot.Core.Settings
             catch (FileNotFoundException eq)
             {
                 Console.WriteLine(eq.Message);
-                System.Environment.Exit(102);
+                System.Environment.Exit(ExitCodes.developerFileDoesntExist);
             }
 
         }
@@ -204,7 +205,7 @@ namespace SKNIBot.Core.Settings
             }
             else
             {
-                throw new VariableIsNotCorrectTypeException("Variable " + variable + " is not correct type. Should be ulong, but is " + envVariable);
+                throw new VariableHasWrongTypeException("Variable " + variable + " is not correct type. Should be ulong, but is " + envVariable);
             }
         }
     }
