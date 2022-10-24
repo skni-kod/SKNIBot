@@ -8,5 +8,9 @@
   "waaai_key": "link-key",
 
   "jdoodle_client_id": "jdoodle-id",
-  "jdoodle_client_secret": "jdoodle-secret"
+  "jdoodle_client_secret": "jdoodle-secret",
+
+  "spotify_client_id": "spotify_client_id",
+  "spotify_client_secret": "spotify_client_secret"
+
 }
