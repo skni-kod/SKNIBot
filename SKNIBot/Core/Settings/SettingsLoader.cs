@@ -36,6 +36,9 @@ namespace SKNIBot.Core.Settings
         { }
     }
 
+    /// <summary>
+    /// Settings loader class that provides functionality to load settings for application.
+    /// </summary>
     public static class SettingsLoader
     {
         public static SettingsContainer SettingsContainer { get; private set; }
@@ -74,6 +77,9 @@ namespace SKNIBot.Core.Settings
 
         private static EnvironmentVariableTarget _target;
 
+        /// <summary>
+        /// Default constructor that loads settings and developers for application.
+        /// </summary>
         static SettingsLoader()
         {
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -96,6 +102,9 @@ namespace SKNIBot.Core.Settings
             }
         }
 
+        /// <summary>
+        /// Loads settings and developersfrom environoment variables.
+        /// </summary>
         private static void LoadFromEnvorinment()
         {
             try
@@ -128,6 +137,9 @@ namespace SKNIBot.Core.Settings
             }
         }
 
+        /// <summary>
+        /// Loads settings and developers from file.
+        /// </summary>
         private static void LoadFromFile()
         {
             try
@@ -156,6 +168,11 @@ namespace SKNIBot.Core.Settings
 
         }
 
+        /// <summary>
+        /// Loads string from environment variable.
+        /// </summary>
+        /// <param name="variable">Environment varaible name.</param>
+        /// <returns>>Value of environment varaible as string.</returns>
         private static string GetStringFromEnvironment(string variable)
         {
             string envVariable = System.Environment.GetEnvironmentVariable(variable, _target);
@@ -169,6 +186,11 @@ namespace SKNIBot.Core.Settings
             }
         }
 
+        /// <summary>
+        /// Loads ulong from environment variable.
+        /// </summary>
+        /// <param name="variable">Environment varaible name.</param>
+        /// <returns>Value of environment varaible as ulong.</returns>
         private static ulong GetUlongFromEnvironment(string variable)
         {
             string envVariable = System.Environment.GetEnvironmentVariable(variable, _target);
