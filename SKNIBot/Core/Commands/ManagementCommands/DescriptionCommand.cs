@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Helpers;
 
 namespace SKNIBot.Core.Commands.ManagementCommands
@@ -37,12 +38,9 @@ namespace SKNIBot.Core.Commands.ManagementCommands
                 {
                     await ctx.Client.UpdateStatusAsync(new DiscordActivity(message));
                 }
-                catch (Exception ie)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Can't set status.");
-                    Console.WriteLine("Exception: " + ie.Message);
-                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                    Bot.DiscordClient.Logger.LogError($"Error during setting status, exception occured: {ex.Message}");
                 }
             }
             else
@@ -59,12 +57,9 @@ namespace SKNIBot.Core.Commands.ManagementCommands
                 {
                     Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(_description));
                 }
-                catch (Exception ie)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Can't update status.");
-                    Console.WriteLine("Exception: " + ie.Message);
-                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                    Bot.DiscordClient.Logger.LogError($"Error during updating status, exception occured: {ex.Message}");
                 }
             }
 

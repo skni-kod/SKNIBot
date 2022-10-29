@@ -9,6 +9,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Database.Models.DynamicDB;
 using SKNIBot.Core.Helpers.Pagination;
@@ -79,7 +80,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         TotalTime = 0
                     });
 
-                    Console.WriteLine("New lost soul has been added: " + soulId);
+                    Bot.DiscordClient.Logger.LogInformation($"New lost soul has been added to count online time: {soulId}");
                 }
 
                 databaseContext.SaveChanges();
