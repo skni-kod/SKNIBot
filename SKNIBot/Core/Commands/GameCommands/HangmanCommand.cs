@@ -149,24 +149,25 @@ namespace SKNIBot.Core.Commands.GameCommands
                 if (Category == null)
                 {
                     wordList = databaseContext.HangmanWords
+                        .Where(p => p.IsDeleted == false)
                         .Select(p => p.Word);
                 }
                 else if (Category == "państwa")
                 {
                     wordList = databaseContext.HangmanWords
-                        .Where(p => p.HangmanCategoryID == 1)
+                        .Where(p => p.HangmanCategoryID == 1 && p.IsDeleted == false)
                         .Select(p => p.Word);
                 }
                 else if (Category == "zwierzęta")
                 {
                     wordList = databaseContext.HangmanWords
-                        .Where(p => p.HangmanCategoryID == 2)
+                        .Where(p => p.HangmanCategoryID == 2 && p.IsDeleted == false)
                         .Select(p => p.Word);
                 }
                 else if (Category == "rzeczy")
                 {
                     wordList = databaseContext.HangmanWords
-                        .Where(p => p.HangmanCategoryID == 3)
+                        .Where(p => p.HangmanCategoryID == 3 && p.IsDeleted == false)
                         .Select(p => p.Word);
                 }
                 var words = wordList.ToList();

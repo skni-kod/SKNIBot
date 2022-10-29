@@ -17,7 +17,7 @@ namespace SKNIBot.Core.Services.MessageResponseService
 
             using (var databaseContext = new StaticDBContext())
             {
-                List<MessageResponse> responses = databaseContext.MessageResponses.ToList();
+                List<MessageResponse> responses = databaseContext.MessageResponses.Where(p => p.IsDeleted == false  ).ToList();
                 foreach(var response in responses)
                 {
                     MessageResponses.Add(response.Message, response.Response);
