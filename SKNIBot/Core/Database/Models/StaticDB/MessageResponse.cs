@@ -9,5 +9,6 @@ namespace SKNIBot.Core.Database.Models.StaticDB
         public int ID { get; set; }
         public string Message { get; set; }
         public string Response { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace SKNIBot.Core.Services.SimpleResponseService
                     return new SimpleResponseResponse<SimpleResponseElement>(SimpleResponseResult.NoSuchCommand);
                 }
 
-                var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName);
+                var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName && p.IsDeleted == false);
                 var randomIndex = _random.Next(responses.Count());
 
                 if(responses.Count() == 0)
@@ -52,7 +52,7 @@ namespace SKNIBot.Core.Services.SimpleResponseService
                     return new SimpleResponseResponse<List<SimpleResponseElement>>(SimpleResponseResult.NoSuchCommand);
                 }
 
-                var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName);
+                var responses = databaseContext.SimpleResponses.Where(p => p.Command.Name == commandName && p.IsDeleted == false);
                 if (responses.Count() == 0)
                 {
                     return new SimpleResponseResponse<List<SimpleResponseElement>>(SimpleResponseResult.CommandHasNoResponses);

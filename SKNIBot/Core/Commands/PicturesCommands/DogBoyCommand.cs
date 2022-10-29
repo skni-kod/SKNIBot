@@ -31,7 +31,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             {
                 // String.Equals doesn't work in SQLite provider (comparison is case sensitive) so it must be replaced with DbFunctions.Like().
                 var dogBoys = databaseContext.SimpleResponses
-                    .Where(catboy => catboy.Command.Name == "DogBoy")
+                    .Where(catboy => catboy.Command.Name == "DogBoy" && catboy.IsDeleted == false)
                     .Select(p => p.Content)
                     .ToList();
 

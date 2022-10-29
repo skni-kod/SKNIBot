@@ -60,7 +60,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 await ctx.TriggerTypingAsync();
 
                 pictureLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name == picName))
+                    .Where(vid => vid.Command.Name == "Picture" && vid.IsDeleted == false && vid.Names.Any(p => p.Name == picName && p.IsDeleted == false))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 
