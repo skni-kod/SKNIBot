@@ -47,7 +47,10 @@ namespace SKNIBot.Core
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
                 Intents = DiscordIntents.All
-            };
+#if DEBUG
+                ,MinimumLogLevel = LogLevel.Debug
+#endif
+        };
 
             DiscordClient = new DiscordClient(connectionConfig);
 
@@ -106,9 +109,9 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Counting emoji in new message.");
+                    DiscordClient.Logger.LogError($"Counting emoji in new message, exception occured: {ex.Message}");
                 }
             }
         }
@@ -122,9 +125,9 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiInMessage(e.Message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Counting emoji in edited message.");
+                    DiscordClient.Logger.LogError($"Counting emoji in edited message, exception occured: {ex.Message}");
                 }
             }
         }
@@ -138,9 +141,9 @@ namespace SKNIBot.Core
                     EmojiCounterService emojiCounterService = new EmojiCounterService();
                     await emojiCounterService.CountEmojiReaction(e.User, e.Emoji, e.Channel);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Counting emoji in reactions.");
+                    DiscordClient.Logger.LogError($"Counting emoji in reactions, exception occured: {ex.Message}");
                 }
             }
         }
@@ -158,10 +161,18 @@ namespace SKNIBot.Core
             var responses = _messageResponseService.GetResponses(e.Message.Content);
             if (responses.Count > 0)
             {
-                await e.Channel.TriggerTypingAsync();
-                foreach (var response in responses)
+                try
                 {
-                    await e.Channel.SendMessageAsync(response);
+                    await e.Channel.TriggerTypingAsync();
+                    foreach (var response in responses)
+                    {
+                        await e.Channel.SendMessageAsync(response);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    DiscordClient.Logger.LogError($"Bot tried to respond on server: {e.Guild.Name} on channel: {e.Channel.Name} " + 
+                                                  $"with {responses.Count} responses, but exception occured: {ex.Message}");
                 }
             }
         }
