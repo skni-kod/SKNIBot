@@ -4,6 +4,7 @@
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; }
 
         public int MediaID { get; set; }
         public virtual Media Media { get; set; }

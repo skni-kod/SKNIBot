@@ -6,6 +6,7 @@ namespace SKNIBot.Core.Database.Models.StaticDB
     {
         public int ID { get; set; }
         public string Link { get; set; }
+        public bool IsDeleted { get; set; }
 
         public int CommandID { get; set; }
         public virtual Command Command { get; set; }

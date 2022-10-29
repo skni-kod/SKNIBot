@@ -5,6 +5,7 @@
     {
         public int ID { get; set; }
         public string Content { get; set; }
+        public bool IsDeleted { get; set; }
 
         public SimpleResponseType Type {get; set;}
 

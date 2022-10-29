@@ -6,6 +6,7 @@ namespace SKNIBot.Core.Database.Models.StaticDB
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; }
 
         public List<Media> Media { get; set; }
     }
