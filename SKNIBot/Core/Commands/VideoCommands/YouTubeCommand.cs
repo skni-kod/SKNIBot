@@ -53,7 +53,7 @@ namespace SKNIBot.Core.Commands.VideoCommands
             {
                 var stringBuilder = new StringBuilder();
                 var categories = databaseContext.Media
-                    .Where(p => p.Command.Name == "YouTube")
+                    .Where(p => p.Command.Name == "YouTube" && p.IsDeleted == false)
                     .Select(p =>
                         new
                         {

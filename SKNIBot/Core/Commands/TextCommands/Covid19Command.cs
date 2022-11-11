@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SKNIBot.Core.Containers.TextContainers.Covid19;
 using SKNIBot.Core.Helpers;
@@ -58,7 +59,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                 return;
             }
 
-            Console.WriteLine("Updating COVID-19 cache...");
+            Bot.DiscordClient.Logger.LogInformation("Updating COVID-19 cache...");
             using (var client = new WebClient())
             {
                 var url = client.DownloadString("https://coronavirus-tracker-api.herokuapp.com/all");
@@ -66,7 +67,7 @@ namespace SKNIBot.Core.Commands.TextCommands
                 _covidCache = JsonConvert.DeserializeObject<Covid19Container>(url);
                 _lastCacheUpdate = DateTime.Now;
             }
-            Console.WriteLine("Done!");
+            Bot.DiscordClient.Logger.LogInformation("Updating COVID-19 cache done!");
         }
 
         private DiscordEmbed BuildSummaryEmbed()

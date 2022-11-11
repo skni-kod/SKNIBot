@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using Proxima.Core;
 using Proxima.Core.Boards;
 using Proxima.Core.Boards.Friendly;
@@ -162,7 +163,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
         private void GameSession_OnThinkingOutput(object sender, Proxima.Core.AI.ThinkingOutputEventArgs e)
         {
-            Console.WriteLine($"{e.AIResult.Depth}: TN:{e.AIResult.Stats.TotalNodes} NPS:{e.AIResult.NodesPerSecond}");
+            Bot.DiscordClient.Logger.LogInformation($"{e.AIResult.Depth}: TN:{e.AIResult.Stats.TotalNodes} NPS:{e.AIResult.NodesPerSecond}");
         }
 
         private Stream GetBoardImage()

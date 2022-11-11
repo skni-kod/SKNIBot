@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database;
 using SKNIBot.Core.Database.Models.DynamicDB;
 using System;
@@ -77,14 +78,9 @@ namespace SKNIBot.Core.Services
                         }
                     }
                 }
-                catch (Exception ie)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Counting emoji in new message.");
-                    Console.WriteLine("Message: " + message?.Content);
-                    Console.WriteLine("Channel: " + message?.Channel);
-                    Console.WriteLine("Exception: " + ie.Message);
-                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                    Bot.DiscordClient.Logger.LogError($"Error during counting emoji in new message {message?.Content}, on channel: {message?.Channel}, exception occured: {ex.Message}");
                 }
             }
         }

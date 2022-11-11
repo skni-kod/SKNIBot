@@ -9,7 +9,7 @@ namespace SKNIBot.Core.Database.Logger
     {
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            Console.WriteLine($"[{DateTime.Now:G}] [ENTITYFRAMEWORK] - {state}");
+            Bot.DiscordClient.Logger.LogInformation($"[{DateTime.Now:G}] [ENTITYFRAMEWORK] - {state}");
         }
 
         public bool IsEnabled(LogLevel logLevel)

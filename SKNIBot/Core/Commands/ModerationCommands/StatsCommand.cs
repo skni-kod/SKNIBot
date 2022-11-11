@@ -11,6 +11,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using SKNIBot.Core.Services.UserMessageStatsService;
 using SKNIBot.Core.Services.DateMessageStatsService;
+using Microsoft.Extensions.Logging;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
@@ -37,7 +38,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         private async void CacheReloadCallback(object state)
         {
             _cacheReloadTimer.Change(CacheReloadInterval, Timeout.Infinite);
-            Console.Out.WriteLine("Starting full stats cache reload... This will take a lot of time...");
+            Bot.DiscordClient.Logger.LogInformation("Starting full stats cache reload... This will take a lot of time...");
             var servers = _statsHookUser.GetServerList();
             servers.UnionWith(_statsHookDate.GetServerList());
             foreach (var server in servers)
@@ -68,7 +69,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                     _statsHookDate.DeleteServerCache(server);
                 }
             }
-            Console.Out.WriteLine("Stats cache reloaded!");
+            Bot.DiscordClient.Logger.LogInformation("Message stats cache reloaded!");
         }
 
         [Command("updateStats")]

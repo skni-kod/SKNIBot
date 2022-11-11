@@ -47,7 +47,7 @@ namespace SKNIBot.Core.Commands.TextCommands
             //find random image with JavaWhy category
             using (var db = new StaticDBContext())
             {
-                var links = db.Media.Where(m => m.Command.Name == "JavaWhy" && m.Category.Name == "JavaWhy")
+                var links = db.Media.Where(m => m.Command.Name == "JavaWhy" && m.Category.Name == "JavaWhy" && m.IsDeleted == false)
                     .Select(m => m.Link).ToList();
 
                 embed.ImageUrl = links.RandomItem();

@@ -29,7 +29,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
                 }
 
                 var pictureLink = databaseContext.Media
-                    .Where(vid => vid.Command.Name == "Picture" && vid.Names.Any(p => p.Name.ToLower() == pictureName.ToLower()))
+                    .Where(vid => vid.Command.Name == "Picture" && vid.IsDeleted == false && vid.Names.Any(p => p.Name.ToLower() == pictureName.ToLower() && p.IsDeleted == false))
                     .Select(p => p.Link)
                     .FirstOrDefault();
 
@@ -51,7 +51,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             {
                 var stringBuilder = new StringBuilder();
                 var categories = databaseContext.Media
-                    .Where(p => p.Command.Name == "Picture")
+                    .Where(p => p.Command.Name == "Picture" && p.IsDeleted == false)
                     .Select(p =>
                         new
                         {
