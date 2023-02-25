@@ -75,7 +75,8 @@ namespace SKNIBot.Core
             DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
             DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
             DiscordClient.GuildMemberAdded += DiscordClient_UserJoinedAsync;
-            DiscordClient.MessageCreated += DiscordClient_MessageCreated;
+            // Temporary disable, see issue #115 on GitHub
+            // DiscordClient.MessageCreated += DiscordClient_MessageCreated;
 
             await DiscordClient.ConnectAsync();
         }
