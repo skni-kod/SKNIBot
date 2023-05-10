@@ -28,7 +28,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
             {
                 var client = new WebClient();
 
-                await PostEmbedHelper.PostEmbed(ctx, "Http pies", numer, "https://httpstatusdogs.com/img/" + ctx.Message.Content.Split(' ')[1] + ".jpg");
+                await PostEmbedHelper.PostEmbed(ctx, "Http pies", numer, "https://http.dog/" + ctx.Message.Content.Split(' ')[1] + ".jpg");
             }
             //Jeżeli użytkownik prosi o kody ppsów podajemy je
             else if (numer == "kody")
