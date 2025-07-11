@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -21,8 +19,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Drawing;
-using SixLabors.ImageSharp.Processing.Text;
+using SixLabors.ImageSharp.Drawing.Processing;
 using Color = Proxima.Core.Commons.Colors.Color;
 
 namespace SKNIBot.Core.Commands.GameCommands
@@ -65,7 +62,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 CreateSession();
 
-                var boardMessage = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Nowa gra utworzona:**").WithFile("board.png", GetBoardImage()));
+                var boardMessage = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Nowa gra utworzona:**").AddFile("board.png", GetBoardImage()));
                 _messageIds.Add(boardMessage.Id);
             }
             else
@@ -122,7 +119,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 _selectedPositions.Add(fromPosition);
                 _selectedPositions.Add(toPosition);
 
-                var playerBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch gracza:**").WithFile("board.png", GetBoardImage()));
+                var playerBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch gracza:**").AddFile("board.png", GetBoardImage()));
                 _messageIds.Add(playerBoardMsg.Id);
 
                 var thinkingMessage = await ctx.RespondAsync("Myślę...");
@@ -134,7 +131,7 @@ namespace SKNIBot.Core.Commands.GameCommands
 
                 await thinkingMessage.DeleteAsync();
 
-                var aiBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch AI:**").WithFile("board.png", GetBoardImage()));
+                var aiBoardMsg = await ctx.RespondAsync(new DiscordMessageBuilder().WithContent("**Ruch AI:**").AddFile("board.png", GetBoardImage()));
                 _messageIds.Add(aiBoardMsg.Id);
             }
 
@@ -146,7 +143,7 @@ namespace SKNIBot.Core.Commands.GameCommands
             foreach (var imagePath in imagesList)
             {
                 var pureName = imagePath.Split('/').Last().Split('.').First();
-                _images.Add(pureName, Image.Load(imagePath));
+                _images.Add(pureName, Image.Load<Rgba32>(imagePath));
             }
         }
 
@@ -176,7 +173,7 @@ namespace SKNIBot.Core.Commands.GameCommands
                 for (var y = 0; y < 8; y++)
                 {
                     var field = odd ? _images["Field1"] : _images["Field2"];
-                    board.Mutate(p => p.DrawImage(field, PixelBlenderMode.Overlay, 1, new SixLabors.Primitives.Point(15 + x * 64, y * 64)));
+                    board.Mutate(p => p.DrawImage(field, new Point(15 + x * 64, y * 64), 1f));
 
                     odd = !odd;
                 }
@@ -186,20 +183,20 @@ namespace SKNIBot.Core.Commands.GameCommands
 
             for (var x = 1; x <= 8; x++)
             {
-                board.Mutate(p => p.DrawText(((char)(x + 'a' - 1)).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new SixLabors.Primitives.PointF(x * 64 - 25, 513)));
-                board.Mutate(p => p.DrawText((8 - x + 1).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new SixLabors.Primitives.PointF(0, (x - 1) * 64 + 20)));
+                board.Mutate(p => p.DrawText(((char)(x + 'a' - 1)).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new PointF(x * 64 - 25, 513)));
+                board.Mutate(p => p.DrawText((8 - x + 1).ToString(), SystemFonts.CreateFont("Liberation Mono", 20, FontStyle.Bold), new Rgba32(255, 255, 255), new PointF(0, (x - 1) * 64 + 20)));
             }
 
             var friendlyBoard = new FriendlyBoard(_gameSession.Bitboard);
             foreach (var piece in friendlyBoard.Pieces)
             {
                 var image = _images[GetImageNameByPiece(piece.Type, piece.Color)];
-                board.Mutate(p => p.DrawImage(image, 1, new SixLabors.Primitives.Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64)));
+                board.Mutate(p => p.DrawImage(image, new Point(15 + (piece.Position.X - 1) * 64, (8 - piece.Position.Y) * 64), 1f));
             }
 
             foreach (var selected in _selectedPositions)
             {
-                board.Mutate(p => p.DrawImage(_images["InternalSelection"], 1, new SixLabors.Primitives.Point(15 + (selected.X - 1) * 64, (8 - selected.Y) * 64)));
+                board.Mutate(p => p.DrawImage(_images["InternalSelection"], new Point(15 + (selected.X - 1) * 64, (8 - selected.Y) * 64), 1f));
             }
 
             var stream = new MemoryStream();
