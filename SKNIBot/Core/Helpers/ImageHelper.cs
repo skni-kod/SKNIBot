@@ -27,7 +27,7 @@ namespace SKNIBot.Core.Helpers
             var picture = web.DownloadData(uri);
             var stream = new MemoryStream(picture);
 
-            return Image.Load(stream);
+            return Image.Load<Rgba32>(stream);
         }
     }
 }

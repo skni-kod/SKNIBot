@@ -9,9 +9,7 @@ using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.ImageSharp.Processing.Text;
-using SixLabors.ImageSharp.Processing.Drawing.Pens;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SKNIBot.Core.Helpers;
 using DSharpPlus.Entities;
 
@@ -30,23 +28,15 @@ namespace SKNIBot.Core.Commands.PicturesCommands
         private const float ScreenHeightUpPercent = 0.4f;
         private const int OutlineSize = 5;
 
-        private readonly Pen<Rgba32> _outlinePen;
-
-        private TextGraphicsOptions _textOptions;
+        private readonly Pen _outlinePen;
 
         public CreateMemeCommand()
         {
             FontCollection collection = new FontCollection();
-            FontFamily family = collection.Install("Fonts/liberation-mono/LiberationMono-Regular.ttf");
+            FontFamily family = collection.Add("Fonts/liberation-mono/LiberationMono-Regular.ttf");
             _dummyFont = family.CreateFont(20);
 
-            _textOptions = new TextGraphicsOptions()
-            {
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
-
-            _outlinePen = Pens.Solid(Rgba32.Black, OutlineSize);
+            _outlinePen = Pens.Solid(Color.Black, OutlineSize);
         }
 
         [Command("meme")]
@@ -81,7 +71,7 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
             mem.Position = 0;
 
-            await ctx.RespondAsync(new DiscordMessageBuilder().WithFile("MEMEM.jpg", mem));
+            await ctx.RespondAsync(new DiscordMessageBuilder().AddFile("MEMEM.jpg", mem));
         }
 
         [Command("memeUrl")]
@@ -102,27 +92,27 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
             mem.Position = 0;
 
-            await ctx.RespondAsync(new DiscordMessageBuilder().WithFile("MEMEM.jpg", mem));
+            await ctx.RespondAsync(new DiscordMessageBuilder().AddFile("MEMEM.jpg", mem));
         }
 
         void DrawTextOnImage(Image<Rgba32> img, string upText, string downText)
         {
-            _textOptions.WrapTextWidth = img.Width - HorizontalSpacing * 2;
+            float wrapWidth = img.Width - HorizontalSpacing * 2;
 
-            (int fontSize, RectangleF sizeRect) = GetAdjustedFont(upText, _textOptions.WrapTextWidth, img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
+            (int fontSize, RectangleF sizeRect) = GetAdjustedFont(upText, wrapWidth, img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
             Font font = new Font(_dummyFont, fontSize);
 
-            var startPoint = new PointF(HorizontalSpacing, VerticalSpacing);
+            var startPoint = new PointF(img.Width / 2f, VerticalSpacing);  // center X, top padding
+
             DrawTextOnPosition(img, upText, font, startPoint);
 
             if (downText != null)
             {
-                (fontSize, sizeRect) = GetAdjustedFont(downText, _textOptions.WrapTextWidth,
-                    img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
+                (fontSize, sizeRect) = GetAdjustedFont(downText, wrapWidth, img.Height * ScreenHeightUpPercent, MaxFontSize, MinFontSize);
                 Font fontDown = new Font(_dummyFont, fontSize);
 
-                float y = img.Height - sizeRect.Height;
-                startPoint = new PointF(HorizontalSpacing, y);
+                float y = img.Height - sizeRect.Height - VerticalSpacing; // trochę odstępu od dołu
+                startPoint = new PointF(img.Width / 2f, y);
 
                 DrawTextOnPosition(img, downText, fontDown, startPoint);
             }
@@ -130,34 +120,64 @@ namespace SKNIBot.Core.Commands.PicturesCommands
 
         void DrawTextOnPosition(Image<Rgba32> img, string text, Font font, PointF startPoint)
         {
-            img.Mutate(c => c
-                .DrawText(_textOptions, text.ToUpper(), font, _outlinePen, startPoint)
-                .DrawText(_textOptions, text.ToUpper(), font, Rgba32.White, startPoint));
-        }
+            var textOptions = new RichTextOptions(font)
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
+                Origin = startPoint
+            };
 
-        public (int, RectangleF) GetAdjustedFont(string graphicString, float containerWidth, float containerHeight, int maxFontSize,
-            int minFontSize)
+            img.Mutate(ctx =>
+            {
+                int outlineThickness = 2;
+
+                for (int x = -outlineThickness; x <= outlineThickness; x++)
+                {
+                    for (int y = -outlineThickness; y <= outlineThickness; y++)
+                    {
+                        if (x == 0 && y == 0)
+                            continue;
+
+                        var offsetOptions = new RichTextOptions(font)
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Top,
+                            Origin = new PointF(startPoint.X + x, startPoint.Y + y)
+                        };
+
+                        ctx.DrawText(offsetOptions, text.ToUpper(), Color.Black);
+                    }
+                }
+
+                ctx.DrawText(textOptions, text.ToUpper(), Color.White);
+            });
+        }
+        
+        public (int, RectangleF) GetAdjustedFont(string graphicString, float containerWidth, float containerHeight, int maxFontSize, int minFontSize)
         {
             var sizeRect = new RectangleF();
+
             for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
             {
                 var testFont = new Font(_dummyFont, adjustedSize);
-                var renderOptions = new RendererOptions(testFont)
+
+                var textOptions = new TextOptions(testFont)
                 {
-                    WrappingWidth = containerWidth
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Origin = new PointF(0, 0)
                 };
 
-                // Test the string with the new size
-                sizeRect = TextMeasurer.MeasureBounds(graphicString, renderOptions);
+                var bounds = TextMeasurer.MeasureBounds(graphicString, textOptions);
+                sizeRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+
                 float volume = sizeRect.Height * sizeRect.Width;
 
                 if (volume < containerWidth * containerHeight)
                 {
-                    // Good font, return it
                     return (adjustedSize, sizeRect);
                 }
             }
-            
             return (minFontSize, sizeRect);
         }
     }
