@@ -290,3 +290,6 @@ __pycache__/
 /SKNIBot/release.json
 /SKNIBot/settings.json
 SKNIBot/developers.json
+
+.env
+.env.example

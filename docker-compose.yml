@@ -1,0 +1,9 @@
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./SKNIBot/DynamicDatabase.sqlite:/app/DynamicDatabase.sqlite
+      - ./SKNIBot/StaticDatabase.sqlite:/app/StaticDatabase.sqlite
+    env_file:
+      - ./.env
