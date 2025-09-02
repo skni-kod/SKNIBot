@@ -1,0 +1,33 @@
+name: Staging deploy
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build_push.yml
+
+  deploy:
+    needs: [build]
+    environment: staging
+    runs-on: self-hosted
+    steps:
+      - name: Staging deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          port: ${{ secrets.REMOTE_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            cd /home/sknibot_staging
+
+            docker compose --file docker-compose.stag.yml pull && docker compose --file docker-compose.stag.yml up -d
+            docker system prune -a -f
