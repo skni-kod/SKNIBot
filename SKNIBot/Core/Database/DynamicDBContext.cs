@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SKNIBot.Core.Database.Logger;
 using SKNIBot.Core.Database.Models.DynamicDB;
@@ -23,7 +24,6 @@ namespace SKNIBot.Core.Database
         {
 
         }
-
         private static DbContextOptions GetOptions(string connectionString)
         {
             return SqliteDbContextOptionsBuilderExtensions.UseSqlite(new DbContextOptionsBuilder(), connectionString).Options;
@@ -31,6 +31,12 @@ namespace SKNIBot.Core.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = Environment.GetEnvironmentVariable("DYNAMIC_DB_PATH") 
+                                       ?? "DynamicDatabase.sqlite";
+                optionsBuilder.UseSqlite($"Data Source={connectionString}");
+            }
 #if DEBUG
             optionsBuilder.UseLoggerFactory(new DbLoggerFactory());
 #endif

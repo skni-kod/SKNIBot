@@ -31,6 +31,13 @@ namespace SKNIBot.Core.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = Environment.GetEnvironmentVariable("STATIC_DB_PATH") 
+                                       ?? "StaticDatabase.sqlite";
+
+                optionsBuilder.UseSqlite($"Data Source={connectionString}");
+            }
 #if DEBUG
             optionsBuilder.UseLoggerFactory(new DbLoggerFactory());
 #endif
