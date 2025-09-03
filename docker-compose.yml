@@ -3,7 +3,7 @@ services:
     build: .
     restart: unless-stopped
     volumes:
-      - ./SKNIBot/DynamicDatabase.sqlite:/app/DynamicDatabase.sqlite
-      - ./SKNIBot/StaticDatabase.sqlite:/app/StaticDatabase.sqlite
+      - ./SKNIBot/DynamicDatabase.sqlite:${DYNAMIC_DB_PATH}
+      - ./SKNIBot/StaticDatabase.sqlite:${STATIC_DB_PATH}
     env_file:
       - ./.env
