@@ -27,7 +27,7 @@ jobs:
           script: |
             set -e
 
-            cd /home/sknibot_staging
+            cd /home/docker_project/sknibot_staging
 
-            docker compose --file docker-compose.stag.yml pull && docker compose --file docker-compose.stag.yml up -d
+            docker compose --f docker-compose.stag.yml pull && docker compose --f docker-compose.stag.yml up -d
             docker system prune -a -f
