@@ -5,15 +5,28 @@ on:
     branches: [develop]
 
 permissions:
-  contents: read
+  contents: write
+  actions: read
   packages: write
+  id-token: write
+  attestations: write
 
 jobs:
+  tag:
+    uses: skni-kod/skni-platform-workflows/.github/workflows/create-date-tag.yaml@main
+    with:
+      commit_id: ${{ github.sha }}
+
   build:
-    uses: ./.github/workflows/build_push.yml
+    needs: tag
+    uses: skni-kod/skni-platform-workflows/.github/workflows/docker-build.yaml@main
+    with:
+      commit_id: ${{ github.sha }}
+      image_name: ${{ github.event.repository.name }}
+      tag: ${{ needs.tag.outputs.version }}
 
   deploy:
-    needs: [build]
+    needs: build
     environment: staging
     runs-on: self-hosted
     steps:
