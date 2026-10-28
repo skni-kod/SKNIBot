@@ -22,7 +22,7 @@ jobs:
     uses: skni-kod/skni-platform-workflows/.github/workflows/docker-build.yaml@main
     with:
       commit_id: ${{ github.sha }}
-      image_name: ${{ github.event.repository.name }}
+      image_name: "skni-bot"
       tag: ${{ needs.tag.outputs.version }}
 
   deploy:
