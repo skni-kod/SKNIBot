@@ -11,5 +11,6 @@ namespace SKNIBot.Core.Settings
         public string JDoodle_Client_Secret { get; set; }
         public string Spotify_Client_Id { get; set; }
         public string Spotify_Client_Secret { get; set; }
+        public int StatsScrapeDelayMs { get; set; }
     }
 }

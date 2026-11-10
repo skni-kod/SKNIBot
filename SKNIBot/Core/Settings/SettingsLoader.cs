@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using SKNIBot.Core.Helpers;
 
@@ -63,6 +60,7 @@ namespace SKNIBot.Core.Settings
         private static readonly string _skniBotSpotifyClientId = "SKNIBotDebugSpotifyClientId";
         private static readonly string _skniBotSpotifyClientSecret = "SKNIBotDebugSpotifyClientSecret";
         private static readonly string _skniBotDevelopers = "SKNIBotDebugDevelopers";
+        private static readonly string _skniBotStatsScrapeDelayMs = "SKNIBotDebugStatsScrapeDelayMs";
 #else
         private static readonly string _skniBotUseEnv = "SKNIBotUseEnv";
         private static readonly string _skniBotDiscordToken = "SKNIBotDiscordToken";
@@ -74,6 +72,7 @@ namespace SKNIBot.Core.Settings
         private static readonly string _skniBotSpotifyClientId = "SKNIBotSpotifyClientId";
         private static readonly string _skniBotSpotifyClientSecret = "SKNIBotSpotifyClientSecret";
         private static readonly string _skniBotDevelopers = "SKNIBotDevelopers";
+        private static readonly string _skniBotStatsScrapeDelayMs = "SKNIBotStatsScrapeDelayMs";
 #endif
 
         private static EnvironmentVariableTarget _target;
@@ -119,7 +118,8 @@ namespace SKNIBot.Core.Settings
                     JDoodle_Client_ID = GetStringFromEnvironment(_skniBotJDoodleClientId),
                     JDoodle_Client_Secret = GetStringFromEnvironment(_skniBotJDoodleClientSecret),
                     Spotify_Client_Id = GetStringFromEnvironment(_skniBotSpotifyClientId),
-                    Spotify_Client_Secret = GetStringFromEnvironment(_skniBotSpotifyClientSecret)
+                    Spotify_Client_Secret = GetStringFromEnvironment(_skniBotSpotifyClientSecret),
+                    StatsScrapeDelayMs = GetIntFromEnvironment(_skniBotStatsScrapeDelayMs)
                 };
                 DevelopersContainer = new DevelopersContainer
                 {
@@ -216,6 +216,28 @@ namespace SKNIBot.Core.Settings
             else
             {
                 throw new VariableHasWrongTypeException("Variable " + variable + " is not correct type. Should be ulong, but is " + envVariable);
+            }
+        }
+
+        /// <summary>
+        /// Loads int from environment variable.
+        /// </summary>
+        /// <param name="variable">Environment varaible name.</param>
+        /// <returns>Value of environment varaible as int.</returns>
+        private static int GetIntFromEnvironment(string variable)
+        {
+            string envVariable = System.Environment.GetEnvironmentVariable(variable, _target);
+            if (envVariable == null)
+            {
+                throw new VariableNotPresentException("Variable " + variable + " not present in environemnt");
+            }
+            if (int.TryParse(envVariable, out int result))
+            {
+                return result;
+            }
+            else
+            {
+                throw new VariableHasWrongTypeException("Variable " + variable + " is not correct type. Should be int, but is " + envVariable);
             }
         }
     }

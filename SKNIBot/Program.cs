@@ -1,13 +1,12 @@
-﻿using System;
-using SKNIBot.Core;
+﻿using SKNIBot.Core;
 
 namespace SKNIBot
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            new Bot().Run();
+            await new Bot().Run();
             while (Console.ReadLine() != "quit");
         }
     }
