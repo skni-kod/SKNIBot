@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using SKNIBot.Core.Settings;
 using SKNIBot.Core.Services.UserMessageStatsService;
 using SKNIBot.Core.Services.DateMessageStatsService;
 using Microsoft.Extensions.Logging;
 
 namespace SKNIBot.Core.Commands.ModerationCommands
 {
-    [CommandsGroup("Moderacja")]
+    [CommandsGroup("Moderacja - Statystyki wiadomości")]
     class MessageStatsCommand : BaseCommandModule
     {
         private const int UsernameFieldLength = 40;
         private const int MessagesCountFieldLength = 20;
         private const int CacheReloadInterval = 1000 * 60 * 60 * 24;
-
+        
         private int TotalFieldsLength => UsernameFieldLength + MessagesCountFieldLength;
 
         private UserMessageStatsService _statsHookUser;
@@ -46,9 +42,13 @@ namespace SKNIBot.Core.Commands.ModerationCommands
 
                 try
                 {
-                    foreach (var channel in (await Bot.DiscordClient.GetGuildAsync(server)).Channels.Where(p =>
-                                 p.Value.Type == ChannelType.Text))
+                    var guild = await Bot.DiscordClient.GetGuildAsync(server);
+                    await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
+                    var textChannels = guild.Channels.Where(p => p.Value.Type == ChannelType.Text).ToList();
+                    
+                    for (int i = 0; i < textChannels.Count; i++)
                     {
+                        var channel = textChannels[i];
                         try
                         {
                             var messageStats = await GetStatsOfChannel(channel.Value);
@@ -60,6 +60,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                         catch (UnauthorizedException e)
                         {
                             _ = e;
+                        }
+
+                        if (i < textChannels.Count - 1)
+                        {
+                            await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
                         }
                     }
                 }
@@ -111,8 +116,10 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync("To chwilę potrwa... Skocz sobie na obiad i do sklepu... :eyes:");
             
-            foreach (var channel in ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text))
+            var textChannels = ctx.Guild.Channels.Where(p => p.Value.Type == ChannelType.Text).ToList();
+            for (int i = 0; i < textChannels.Count; i++)
             {
+                var channel = textChannels[i];
                 try
                 {
                     var messageStats = await GetStatsOfChannel(channel.Value);
@@ -124,6 +131,11 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 catch (UnauthorizedException e)
                 {
                     _ = e;
+                }
+
+                if (i < textChannels.Count - 1)
+                {
+                    await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
                 }
             }
             
@@ -308,6 +320,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
         {
             var messagesList = new List<DiscordMessage>();
             var lastMessageId = (await channel.GetMessagesAsync(1)).FirstOrDefault()?.Id;
+            
+            await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
 
             while (lastMessageId != null)
             {
@@ -320,6 +334,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
 
                 lastMessageId = last100Messages.Last().Id;
+                await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
             }
 
             return messagesList;
@@ -330,6 +345,8 @@ namespace SKNIBot.Core.Commands.ModerationCommands
             var messagesListByUser = new Dictionary<ulong, int>();
             var messagesListByDate = new Dictionary<string, int>();
             var lastMessageId = (await channel.GetMessagesAsync(1)).FirstOrDefault()?.Id;
+            
+            await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
 
             while (lastMessageId != null)
             {
@@ -378,6 +395,7 @@ namespace SKNIBot.Core.Commands.ModerationCommands
                 }
 
                 lastMessageId = last100Messages.Last().Id;
+                await Task.Delay(SettingsLoader.SettingsContainer.StatsScrapeDelayMs);
             }
 
             return (messagesListByUser.AsEnumerable(), messagesListByDate.AsEnumerable());

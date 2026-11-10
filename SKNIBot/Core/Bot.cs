@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.AsyncEvents;
 using DSharpPlus.CommandsNext;
@@ -32,14 +29,14 @@ namespace SKNIBot.Core
         public static DiscordClient DiscordClient { get; set; }
         private CommandsNextExtension _commands { get; set; }
         private MessageResponseService _messageResponseService;
-        public void Run()
+        public async Task Run()
         {
-            Connect();
+            await Connect();
             SetNetworkParameters();
             RegisterCommands();
         }
 
-        private async void Connect()
+        private async Task Connect()
         {
             var connectionConfig = new DiscordConfiguration
             {
